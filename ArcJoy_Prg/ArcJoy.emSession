@@ -1,0 +1,63 @@
+<!DOCTYPE CrossStudio_Session_File>
+<session>
+ <Bookmarks/>
+ <Breakpoints groups="Breakpoints" active_group="Breakpoints"/>
+ <ExecutionProfileWindow/>
+ <FrameBufferWindow>
+  <FrameBufferWindow bufferHeight="-1" addressSpace="" addressText="" bufferWidth="-1"/>
+ </FrameBufferWindow>
+ <Memory1/>
+ <Memory2/>
+ <Memory3/>
+ <Memory4/>
+ <Project>
+  <ProjectSessionItem path="ArcJoy"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;Application"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;Board Definition"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;Board Support"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;None"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Drivers"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Libraries"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Log"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Segger_RTT"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;Segger Startup Files"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;UTF8/UTF16 converter"/>
+ </Project>
+ <Register1/>
+ <Register2/>
+ <Register3/>
+ <Register4/>
+ <Threads>
+  <ThreadsWindow showLists=""/>
+ </Threads>
+ <TraceWindow>
+  <Trace enabled="Yes"/>
+ </TraceWindow>
+ <Watch1>
+  <Watches active="1" update="Never"/>
+ </Watch1>
+ <Watch2>
+  <Watches active="0" update="Never"/>
+ </Watch2>
+ <Watch3>
+  <Watches active="0" update="Never"/>
+ </Watch3>
+ <Watch4>
+  <Watches active="0" update="Never"/>
+ </Watch4>
+ <Files>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="589" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="574" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="186" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util_platform.h" selected="0" top="165" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="63" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util_platform.c" selected="0" top="42" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="84" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/mouse/app_usbd_hid_mouse_desc.h" selected="0" top="69" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="245" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/app_usbd_hid.h" selected="0" top="224" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="139" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.h" selected="0" top="121" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="319" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd.c" selected="0" top="304" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="144" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd_core.c" selected="0" top="135" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="51" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd_string_desc.c" selected="0" top="21" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1112" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="0" top="1082" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="170" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic_internal.h" selected="0" top="149" codecName="Default"/>
+ </Files>
+ <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
+</session>
