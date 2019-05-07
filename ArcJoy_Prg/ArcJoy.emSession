@@ -14,15 +14,9 @@
   <ProjectSessionItem path="ArcJoy"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;Application"/>
-  <ProjectSessionItem path="ArcJoy;ArcJoy;Board Definition"/>
-  <ProjectSessionItem path="ArcJoy;ArcJoy;Board Support"/>
-  <ProjectSessionItem path="ArcJoy;ArcJoy;None"/>
-  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Drivers"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Libraries"/>
-  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Log"/>
-  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Segger_RTT"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Properitary_RF"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;Segger Startup Files"/>
-  <ProjectSessionItem path="ArcJoy;ArcJoy;UTF8/UTF16 converter"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -47,7 +41,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="589" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="574" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="39" y="91" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="0" top="82" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="186" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util_platform.h" selected="0" top="165" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="63" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util_platform.c" selected="0" top="42" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="84" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/mouse/app_usbd_hid_mouse_desc.h" selected="0" top="69" codecName="Default"/>
@@ -56,8 +50,13 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="319" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd.c" selected="0" top="304" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="144" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd_core.c" selected="0" top="135" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="51" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd_string_desc.c" selected="0" top="21" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1112" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="0" top="1082" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="31" y="970" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="1" top="966" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="170" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic_internal.h" selected="0" top="149" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="160" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_clock.c" selected="0" top="150" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1056" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.c" selected="0" top="1048" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="46" y="187" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/ses_startup_nrf52840.s" selected="0" top="177" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 4.16/source/thumb_crt0.s" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="71" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/timer/app_timer.c" selected="0" top="71" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcJoy_Prg/src/nRF5_SDK/components/proprietary_rf/esb" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
