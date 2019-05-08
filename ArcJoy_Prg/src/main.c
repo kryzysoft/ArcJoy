@@ -655,6 +655,7 @@ int main(void)
     };
 
     ret = NRF_LOG_INIT(NULL);
+    NRF_LOG_DEFAULT_BACKENDS_INIT();
     APP_ERROR_CHECK(ret);
 
 
@@ -685,7 +686,6 @@ int main(void)
     init_bsp();
     init_cli();
     NRF_LOG_INFO("Hello USB!");
-
     ret = app_usbd_init(&usbd_config);
     APP_ERROR_CHECK(ret);
 
@@ -712,7 +712,7 @@ int main(void)
         app_usbd_enable();
         app_usbd_start();
     }
-
+//SEGGER_RTT_WriteString(0, "Hello World from SEGGER!\r\n");
     while (true)
     {
         while (app_usbd_event_queue_process())
