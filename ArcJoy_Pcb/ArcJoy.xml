@@ -1,0 +1,918 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>G:\Projekty\ArcJoy\ArcJoy_Pcb\ArcJoy.sch</source>
+    <date>09/05/2019 20:11:41</date>
+    <tool>Eeschema (5.1.0)-1</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>ArcJoy</title>
+        <company/>
+        <rev>1</rev>
+        <date>2019-04-29</date>
+        <source>ArcJoy.sch</source>
+        <comment number="1" value="Schematic"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="U1">
+      <value>BM832A</value>
+      <footprint>Fanstel:BM832-1-BM832</footprint>
+      <libsource lib="Fanstel" part="BM832" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC09D59</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>MCP1711T-22I_OT</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23-5</footprint>
+      <datasheet>ww1.microchip.com/downloads/en/devicedoc/20005415d.pdf</datasheet>
+      <libsource lib="K_Regulators" part="MCP1711T-22I_OT" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC244C8</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>Conn_01x06</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x06" description="Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC3B2AE</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>Conn_01x02</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC641F2</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>Conn_01x02</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC64E65</tstamp>
+    </comp>
+    <comp ref="J4">
+      <value>Conn_01x02</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC6559E</tstamp>
+    </comp>
+    <comp ref="J5">
+      <value>Conn_01x02</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC657C0</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>1u</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">CL31B105KAHNNNE</field>
+      </fields>
+      <libsource lib="K_Capacitors" part="1u_25V_10%" description="Unpolarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC3753A</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>1u</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">CL31B105KAHNNNE</field>
+      </fields>
+      <libsource lib="K_Capacitors" part="1u_25V_10%" description="Unpolarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC37D74</tstamp>
+    </comp>
+    <comp ref="J6">
+      <value>Conn_01x02</value>
+      <footprint>K_Connectors:NINIGI_TB-3.5-P-2P_BL</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC3B27E</tstamp>
+    </comp>
+    <comp ref="J7">
+      <value>Conn_01x02</value>
+      <footprint>K_Connectors:NINIGI_TB-3.5-P-2P_BL</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC3B7B6</tstamp>
+    </comp>
+    <comp ref="J8">
+      <value>Conn_01x02</value>
+      <footprint>K_Connectors:NINIGI_TB-3.5-P-2P_BL</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC3BB63</tstamp>
+    </comp>
+    <comp ref="J9">
+      <value>Conn_01x02</value>
+      <footprint>K_Connectors:NINIGI_TB-3.5-P-2P_BL</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC3BED4</tstamp>
+    </comp>
+    <comp ref="J10">
+      <value>Conn_01x02</value>
+      <footprint>K_Connectors:NINIGI_TB-3.5-P-2P_BL</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC3C1EB</tstamp>
+    </comp>
+    <comp ref="J11">
+      <value>Conn_01x02</value>
+      <footprint>K_Connectors:NINIGI_TB-3.5-P-2P_BL</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC3C4B7</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC6119D</tstamp>
+    </comp>
+    <comp ref="R7">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC61C1C</tstamp>
+    </comp>
+    <comp ref="R9">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC622C8</tstamp>
+    </comp>
+    <comp ref="R8">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC62810</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC692FE</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC6ACC6</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC6C39A</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC6DEAF</tstamp>
+    </comp>
+    <comp ref="R6">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC71A05</tstamp>
+    </comp>
+    <comp ref="R10">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC73B58</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>OSRB5131A</value>
+      <footprint>LED_THT:LED_D5.0mm-3</footprint>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">OSRB5131A</field>
+      </fields>
+      <libsource lib="K_LED" part="OSRB5131A" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC7110C</tstamp>
+    </comp>
+    <comp ref="R11">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC86B26</tstamp>
+    </comp>
+    <comp ref="R12">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC87CC7</tstamp>
+    </comp>
+    <comp ref="J12">
+      <value>Conn_01x02</value>
+      <footprint>K_Connectors:NINIGI_TB-3.5-P-2P_BL</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC61BBB</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>LGE2301</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23</footprint>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">LGE2301-LGE</field>
+      </fields>
+      <libsource lib="K_Transistors" part="LGE2301" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC74BFA</tstamp>
+    </comp>
+    <comp ref="F1">
+      <value>0.375A</value>
+      <footprint>K_Fuses:Fuse_2.6x6.1</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">BSMD-T0.375A</field>
+      </fields>
+      <libsource lib="K_Fuses" part="0.375A" description="Fuse"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CDAB0E5</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>A6S-6101-H</value>
+      <footprint>Button_Switch_SMD:SW_DIP_SPSTx06_Slide_Omron_A6S-610x_W8.9mm_P2.54mm</footprint>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">A6S-6101-H</field>
+      </fields>
+      <libsource lib="K_Switches" part="A6S-6101-H" description="6x DIP Switch, Single Pole Single Throw (SPST) switch, small symbol"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CCCC163</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">CL31B104KCFNNNE</field>
+      </fields>
+      <libsource lib="K_Capacitors" part="100n_100V_10%" description="Unpolarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC7AA2C</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>10u</value>
+      <footprint>Capacitor_Tantalum_SMD:CP_EIA-6032-28_Kemet-C</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">T491C106K016AT</field>
+      </fields>
+      <libsource lib="K_Capacitors" part="10u_16V_10%" description="Polarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CC7B86B</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>10n</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">12065C103KAT2A</field>
+      </fields>
+      <libsource lib="K_Capacitors" part="10n_50V_10%" description="Unpolarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5CCF69DF</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Connector_Generic" part="Conn_01x02">
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x02</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector_Generic" part="Conn_01x06">
+      <description>Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x06</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Fanstel" part="BM832">
+      <footprints>
+        <fp>*BM832*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">BM832</field>
+        <field name="Footprint">BM832-1_BM832</field>
+      </fields>
+      <pins>
+        <pin num="P$1" name="P$1-GND" type="BiDi"/>
+        <pin num="P$2" name="P$2-GND" type="BiDi"/>
+        <pin num="P$3" name="P$3-GND" type="BiDi"/>
+        <pin num="P$4" name="P$4-GND" type="BiDi"/>
+        <pin num="P$5" name="P$5-GND" type="BiDi"/>
+        <pin num="P$6" name="P$6-P25" type="BiDi"/>
+        <pin num="P$7" name="P$7-P26" type="BiDi"/>
+        <pin num="P$8" name="P$8-P27" type="BiDi"/>
+        <pin num="P$9" name="P$9-P28" type="BiDi"/>
+        <pin num="P$10" name="P$10-P29" type="BiDi"/>
+        <pin num="P$11" name="P$11-P30" type="BiDi"/>
+        <pin num="P$12" name="P$12-P31" type="BiDi"/>
+        <pin num="P$13" name="P$13-GND" type="BiDi"/>
+        <pin num="P$14" name="P$14-VDD" type="BiDi"/>
+        <pin num="P$15" name="P$15-GND" type="BiDi"/>
+        <pin num="P$16" name="P$16-P00" type="BiDi"/>
+        <pin num="P$17" name="P$17-P01" type="BiDi"/>
+        <pin num="P$18" name="P$18-GND" type="BiDi"/>
+        <pin num="P$19" name="P$19-GND" type="BiDi"/>
+        <pin num="P$20" name="P$20-P03" type="BiDi"/>
+        <pin num="P$21" name="P$21-P04" type="BiDi"/>
+        <pin num="P$22" name="P$22-P02" type="BiDi"/>
+        <pin num="P$23" name="P$23-P05" type="BiDi"/>
+        <pin num="P$24" name="P$24-P07" type="BiDi"/>
+        <pin num="P$25" name="P$25-P06" type="BiDi"/>
+        <pin num="P$26" name="P$26-P09" type="BiDi"/>
+        <pin num="P$27" name="P$27-P08" type="BiDi"/>
+        <pin num="P$28" name="P$28-VDD" type="BiDi"/>
+        <pin num="P$29" name="P$29-P10" type="BiDi"/>
+        <pin num="P$30" name="P$30-GND" type="BiDi"/>
+        <pin num="P$31" name="P$31-RX-P11" type="BiDi"/>
+        <pin num="P$32" name="P$32-TX-P12" type="BiDi"/>
+        <pin num="P$33" name="P$33-P014" type="BiDi"/>
+        <pin num="P$34" name="P$34-P13" type="BiDi"/>
+        <pin num="P$35" name="P$35-P015" type="BiDi"/>
+        <pin num="P$36" name="P$36-P016" type="BiDi"/>
+        <pin num="P$37" name="P$37-P017" type="BiDi"/>
+        <pin num="P$38" name="P$38-P18" type="BiDi"/>
+        <pin num="P$39" name="P$39-P019" type="BiDi"/>
+        <pin num="P$40" name="P$40-P21-RST" type="BiDi"/>
+        <pin num="P$41" name="P$41-P20" type="BiDi"/>
+        <pin num="P$42" name="P$42-SWCLK" type="BiDi"/>
+        <pin num="P$43" name="P$43-SWDIO" type="BiDi"/>
+        <pin num="P$44" name="P$44-P22" type="BiDi"/>
+        <pin num="P$45" name="P$45-GND" type="BiDi"/>
+        <pin num="P$46" name="P$46-P23" type="BiDi"/>
+        <pin num="P$47" name="P$47-P24" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Capacitors" part="100n_100V_10%">
+      <description>Unpolarized capacitor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">100n_100V_10%</field>
+        <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
+        <field name="Value">100n</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">CL31B104KCFNNNE</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Capacitors" part="10n_50V_10%">
+      <description>Unpolarized capacitor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">10n_50V_10%</field>
+        <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
+        <field name="Value">10n</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">12065C103KAT2A</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Capacitors" part="10u_16V_10%">
+      <description>Polarized capacitor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>CP_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">10u_16V_10%</field>
+        <field name="Footprint">Capacitor_Tantalum_SMD:CP_EIA-6032-28_Kemet-C</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">T491C106K016AT</field>
+        <field name="Value">10u</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Capacitors" part="1u_25V_10%">
+      <description>Unpolarized capacitor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">1u_25V_10%</field>
+        <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
+        <field name="Value">1u</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">CL31B105KAHNNNE</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Fuses" part="0.375A">
+      <description>Fuse</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>*Fuse*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">F</field>
+        <field name="Value">0.375A</field>
+        <field name="Footprint">K_Fuses:Fuse_2.6x6.1</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">BSMD-T0.375A</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_LED" part="OSRB5131A">
+      <footprints>
+        <fp>*Avago*PLCC4*3.2x2.8mm*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">OSRB5131A</field>
+        <field name="Footprint">LED_THT:LED_D5.0mm-3</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">OSRB5131A</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RA" type="passive"/>
+        <pin num="2" name="K" type="passive"/>
+        <pin num="3" name="BA" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Regulators" part="MCP1711T-22I_OT">
+      <docs>ww1.microchip.com/downloads/en/devicedoc/20005415d.pdf</docs>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">MCP1711T-22I_OT</field>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-23-5</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VIN" type="power_in"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="~SHDN" type="input"/>
+        <pin num="4" name="NC" type="NotConnected"/>
+        <pin num="5" name="VOUT" type="power_out"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Resistors" part="10k_1206_1%">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">10k_1206_1%</field>
+        <field name="Footprint">Resistor_SMD:R_1206_3216Metric</field>
+        <field name="Value">10k</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Switches" part="A6S-6101-H">
+      <description>6x DIP Switch, Single Pole Single Throw (SPST) switch, small symbol</description>
+      <footprints>
+        <fp>SW?DIP?x6*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">A6S-6101-H</field>
+        <field name="Footprint">Button_Switch_SMD:SW_DIP_SPSTx06_Slide_Omron_A6S-610x_W8.9mm_P2.54mm</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">A6S-6101-H</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+        <pin num="3" name="~" type="passive"/>
+        <pin num="4" name="~" type="passive"/>
+        <pin num="5" name="~" type="passive"/>
+        <pin num="6" name="~" type="passive"/>
+        <pin num="7" name="~" type="passive"/>
+        <pin num="8" name="~" type="passive"/>
+        <pin num="9" name="~" type="passive"/>
+        <pin num="10" name="~" type="passive"/>
+        <pin num="11" name="~" type="passive"/>
+        <pin num="12" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Transistors" part="LGE2301">
+      <footprints>
+        <fp>SOT?23*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">LGE2301</field>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-23</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">LGE2301-LGE</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="input"/>
+        <pin num="2" name="S" type="passive"/>
+        <pin num="3" name="D" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Connector_Generic">
+      <uri>G:\KiCad_Stuff\KiCad_official\kicad-symbols/Connector_Generic.lib</uri>
+    </library>
+    <library logical="Fanstel">
+      <uri>G:/KiCad_Stuff/FanstelLib/Fanstel-kicad-library/Fanstel-modules.lib</uri>
+    </library>
+    <library logical="K_Capacitors">
+      <uri>G:/KiCad_Stuff/K_Library/K_Capacitors.lib</uri>
+    </library>
+    <library logical="K_Fuses">
+      <uri>G:/KiCad_Stuff/K_Library/K_Fuses.lib</uri>
+    </library>
+    <library logical="K_LED">
+      <uri>G:/KiCad_Stuff/K_Library/K_LED.lib</uri>
+    </library>
+    <library logical="K_Regulators">
+      <uri>G:/KiCad_Stuff/K_Library/K_Regulators.lib</uri>
+    </library>
+    <library logical="K_Resistors">
+      <uri>G:/KiCad_Stuff/K_Library/K_Resistors.lib</uri>
+    </library>
+    <library logical="K_Switches">
+      <uri>G:/KiCad_Stuff/K_Library/K_Switches.lib</uri>
+    </library>
+    <library logical="K_Transistors">
+      <uri>G:/KiCad_Stuff/K_Library/K_Transistors.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="Net-(D1-Pad3)">
+      <node ref="D1" pin="3"/>
+      <node ref="R12" pin="1"/>
+    </net>
+    <net code="2" name="Net-(D1-Pad1)">
+      <node ref="D1" pin="1"/>
+      <node ref="R11" pin="1"/>
+    </net>
+    <net code="3" name="/LED_B">
+      <node ref="U1" pin="P$33"/>
+      <node ref="R12" pin="2"/>
+    </net>
+    <net code="4" name="/LED_R">
+      <node ref="R11" pin="2"/>
+      <node ref="U1" pin="P$35"/>
+    </net>
+    <net code="5" name="GND">
+      <node ref="C5" pin="2"/>
+      <node ref="C4" pin="2"/>
+      <node ref="SW1" pin="3"/>
+      <node ref="SW1" pin="6"/>
+      <node ref="SW1" pin="5"/>
+      <node ref="SW1" pin="4"/>
+      <node ref="SW1" pin="2"/>
+      <node ref="SW1" pin="1"/>
+      <node ref="J1" pin="3"/>
+      <node ref="J5" pin="2"/>
+      <node ref="J4" pin="2"/>
+      <node ref="J2" pin="2"/>
+      <node ref="J3" pin="2"/>
+      <node ref="U1" pin="P$1"/>
+      <node ref="U1" pin="P$13"/>
+      <node ref="U1" pin="P$30"/>
+      <node ref="U1" pin="P$5"/>
+      <node ref="U1" pin="P$4"/>
+      <node ref="U1" pin="P$3"/>
+      <node ref="U1" pin="P$2"/>
+      <node ref="U2" pin="2"/>
+      <node ref="U1" pin="P$19"/>
+      <node ref="U1" pin="P$18"/>
+      <node ref="U1" pin="P$45"/>
+      <node ref="U1" pin="P$15"/>
+      <node ref="J11" pin="2"/>
+      <node ref="J10" pin="2"/>
+      <node ref="J9" pin="2"/>
+      <node ref="J8" pin="2"/>
+      <node ref="J7" pin="2"/>
+      <node ref="J6" pin="2"/>
+      <node ref="C1" pin="2"/>
+      <node ref="C2" pin="2"/>
+      <node ref="J12" pin="2"/>
+      <node ref="Q1" pin="1"/>
+      <node ref="D1" pin="2"/>
+      <node ref="C3" pin="2"/>
+    </net>
+    <net code="6" name="/UP">
+      <node ref="R7" pin="2"/>
+      <node ref="U1" pin="P$27"/>
+      <node ref="J3" pin="1"/>
+    </net>
+    <net code="7" name="/BUTTON4">
+      <node ref="J9" pin="1"/>
+      <node ref="R1" pin="2"/>
+      <node ref="U1" pin="P$24"/>
+    </net>
+    <net code="8" name="/BUTTON6">
+      <node ref="R6" pin="2"/>
+      <node ref="U1" pin="P$26"/>
+      <node ref="J11" pin="1"/>
+    </net>
+    <net code="9" name="/BUTTON5">
+      <node ref="R10" pin="2"/>
+      <node ref="U1" pin="P$25"/>
+      <node ref="J10" pin="1"/>
+    </net>
+    <net code="10" name="/BUTTON1">
+      <node ref="J6" pin="1"/>
+      <node ref="U1" pin="P$21"/>
+      <node ref="R2" pin="2"/>
+    </net>
+    <net code="11" name="Net-(F1-Pad2)">
+      <node ref="F1" pin="2"/>
+      <node ref="J12" pin="1"/>
+    </net>
+    <net code="12" name="Net-(F1-Pad1)">
+      <node ref="Q1" pin="3"/>
+      <node ref="F1" pin="1"/>
+    </net>
+    <net code="13" name="+2V2">
+      <node ref="C5" pin="1"/>
+      <node ref="C2" pin="1"/>
+      <node ref="U1" pin="P$28"/>
+      <node ref="R4" pin="1"/>
+      <node ref="J1" pin="1"/>
+      <node ref="R1" pin="1"/>
+      <node ref="R2" pin="1"/>
+      <node ref="R6" pin="1"/>
+      <node ref="R3" pin="1"/>
+      <node ref="C4" pin="1"/>
+      <node ref="C3" pin="1"/>
+      <node ref="R9" pin="1"/>
+      <node ref="R7" pin="1"/>
+      <node ref="R5" pin="1"/>
+      <node ref="U2" pin="5"/>
+      <node ref="R10" pin="1"/>
+      <node ref="R8" pin="1"/>
+    </net>
+    <net code="14" name="/RIGHT">
+      <node ref="U1" pin="P$44"/>
+      <node ref="J5" pin="1"/>
+      <node ref="R9" pin="2"/>
+    </net>
+    <net code="15" name="/DOWN">
+      <node ref="J4" pin="1"/>
+      <node ref="R8" pin="2"/>
+      <node ref="U1" pin="P$7"/>
+    </net>
+    <net code="16" name="/LEFT">
+      <node ref="R5" pin="2"/>
+      <node ref="U1" pin="P$20"/>
+      <node ref="J2" pin="1"/>
+    </net>
+    <net code="17" name="/BUTTON3">
+      <node ref="J8" pin="1"/>
+      <node ref="U1" pin="P$23"/>
+      <node ref="R4" pin="2"/>
+    </net>
+    <net code="18" name="/BUTTON2">
+      <node ref="U1" pin="P$22"/>
+      <node ref="R3" pin="2"/>
+      <node ref="J7" pin="1"/>
+    </net>
+    <net code="19" name="Net-(SW1-Pad9)">
+      <node ref="SW1" pin="9"/>
+      <node ref="U1" pin="P$11"/>
+    </net>
+    <net code="20" name="Net-(SW1-Pad10)">
+      <node ref="U1" pin="P$10"/>
+      <node ref="SW1" pin="10"/>
+    </net>
+    <net code="21" name="Net-(SW1-Pad11)">
+      <node ref="U1" pin="P$9"/>
+      <node ref="SW1" pin="11"/>
+    </net>
+    <net code="22" name="Net-(SW1-Pad12)">
+      <node ref="U1" pin="P$8"/>
+      <node ref="SW1" pin="12"/>
+    </net>
+    <net code="23" name="/BT-ON">
+      <node ref="SW1" pin="7"/>
+      <node ref="U1" pin="P$17"/>
+    </net>
+    <net code="24" name="Net-(SW1-Pad8)">
+      <node ref="SW1" pin="8"/>
+      <node ref="U1" pin="P$16"/>
+    </net>
+    <net code="25" name="Net-(C1-Pad1)">
+      <node ref="U2" pin="1"/>
+      <node ref="C1" pin="1"/>
+      <node ref="U2" pin="3"/>
+      <node ref="Q1" pin="2"/>
+    </net>
+    <net code="26" name="Net-(U2-Pad4)">
+      <node ref="U2" pin="4"/>
+    </net>
+    <net code="27" name="Net-(U1-PadP$32)">
+      <node ref="U1" pin="P$32"/>
+    </net>
+    <net code="28" name="Net-(U1-PadP$12)">
+      <node ref="U1" pin="P$12"/>
+    </net>
+    <net code="29" name="Net-(U1-PadP$41)">
+      <node ref="U1" pin="P$41"/>
+    </net>
+    <net code="30" name="Net-(U1-PadP$31)">
+      <node ref="U1" pin="P$31"/>
+    </net>
+    <net code="31" name="Net-(U1-PadP$14)">
+      <node ref="U1" pin="P$14"/>
+    </net>
+    <net code="32" name="Net-(U1-PadP$6)">
+      <node ref="U1" pin="P$6"/>
+    </net>
+    <net code="33" name="Net-(U1-PadP$39)">
+      <node ref="U1" pin="P$39"/>
+    </net>
+    <net code="34" name="Net-(U1-PadP$29)">
+      <node ref="U1" pin="P$29"/>
+    </net>
+    <net code="35" name="Net-(U1-PadP$47)">
+      <node ref="U1" pin="P$47"/>
+    </net>
+    <net code="36" name="Net-(U1-PadP$37)">
+      <node ref="U1" pin="P$37"/>
+    </net>
+    <net code="37" name="Net-(U1-PadP$46)">
+      <node ref="U1" pin="P$46"/>
+    </net>
+    <net code="38" name="Net-(U1-PadP$36)">
+      <node ref="U1" pin="P$36"/>
+    </net>
+    <net code="39" name="Net-(U1-PadP$34)">
+      <node ref="U1" pin="P$34"/>
+    </net>
+    <net code="40" name="/SWCLK">
+      <node ref="U1" pin="P$42"/>
+      <node ref="J1" pin="2"/>
+    </net>
+    <net code="41" name="/SWO">
+      <node ref="U1" pin="P$38"/>
+      <node ref="J1" pin="6"/>
+    </net>
+    <net code="42" name="/SWDIO">
+      <node ref="U1" pin="P$43"/>
+      <node ref="J1" pin="4"/>
+    </net>
+    <net code="43" name="/nRESET">
+      <node ref="J1" pin="5"/>
+      <node ref="U1" pin="P$40"/>
+    </net>
+  </nets>
+</export>
