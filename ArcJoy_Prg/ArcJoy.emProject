@@ -70,6 +70,8 @@
     <folder Name="Application">
       <file file_name="src/main.c" />
       <file file_name="src/sdk_config.h" />
+      <file file_name="joyApp.c/joyApp.c" />
+      <file file_name="src/joyApp.h" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="src/nRF5_SDK/external/segger_rtt/SEGGER_RTT.c" />
