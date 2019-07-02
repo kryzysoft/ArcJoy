@@ -87,7 +87,7 @@ void system_off( void )
 #endif //NRF52
 
     // Turn off LEDs before sleeping to conserve energy.
-    bsp_board_leds_off();
+//    bsp_board_leds_off();
 
     // Set nRF5 into System OFF. Reading out value and looping after setting the register
     // to guarantee System OFF in nRF52.
@@ -97,31 +97,31 @@ void system_off( void )
 }
 
 
-void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
-{
-    switch (p_event->evt_id)
-    {
-        case NRF_ESB_EVENT_TX_SUCCESS:
-            break;
-        case NRF_ESB_EVENT_TX_FAILED:
-            (void) nrf_esb_flush_tx();
-            break;
-        case NRF_ESB_EVENT_RX_RECEIVED:
-            // Get the most recent element from the RX FIFO.
-            while (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS) ;
-
-            // For each LED, set it as indicated in the rx_payload, but invert it for the button
-            // which is pressed. This is because the ack payload from the PRX is reflecting the
-            // state from before receiving the packet.
-//            nrf_gpio_pin_write(LED_1, !( ((rx_payload.data[0] & 0x01) == 0) ^ (button_state_1 == BTN_PRESSED)) );
-//            nrf_gpio_pin_write(LED_2, !( ((rx_payload.data[0] & 0x02) == 0) ^ (button_state_2 == BTN_PRESSED)) );
-//            nrf_gpio_pin_write(LED_3, !( ((rx_payload.data[0] & 0x04) == 0) ^ (button_state_3 == BTN_PRESSED)) );
-//            nrf_gpio_pin_write(LED_4, !( ((rx_payload.data[0] & 0x08) == 0) ^ (button_state_4 == BTN_PRESSED)) );
-            break;
-    }
-
-    esb_completed = true;
-}
+//void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
+//{
+//    switch (p_event->evt_id)
+//    {
+//        case NRF_ESB_EVENT_TX_SUCCESS:
+//            break;
+//        case NRF_ESB_EVENT_TX_FAILED:
+//            (void) nrf_esb_flush_tx();
+//            break;
+//        case NRF_ESB_EVENT_RX_RECEIVED:
+//            // Get the most recent element from the RX FIFO.
+//            while (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS) ;
+//
+//            // For each LED, set it as indicated in the rx_payload, but invert it for the button
+//            // which is pressed. This is because the ack payload from the PRX is reflecting the
+//            // state from before receiving the packet.
+////            nrf_gpio_pin_write(LED_1, !( ((rx_payload.data[0] & 0x01) == 0) ^ (button_state_1 == BTN_PRESSED)) );
+////            nrf_gpio_pin_write(LED_2, !( ((rx_payload.data[0] & 0x02) == 0) ^ (button_state_2 == BTN_PRESSED)) );
+////            nrf_gpio_pin_write(LED_3, !( ((rx_payload.data[0] & 0x04) == 0) ^ (button_state_3 == BTN_PRESSED)) );
+////            nrf_gpio_pin_write(LED_4, !( ((rx_payload.data[0] & 0x08) == 0) ^ (button_state_4 == BTN_PRESSED)) );
+//            break;
+//    }
+//
+//    esb_completed = true;
+//}
 
 
 void clocks_start( void )
@@ -135,40 +135,40 @@ void clocks_start( void )
 
 uint32_t esb_init( void )
 {
-    uint32_t err_code;
-    uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
-    uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
-    uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
-
-#ifndef NRF_ESB_LEGACY
-    nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
-#else // NRF_ESB_LEGACY
-    nrf_esb_config_t nrf_esb_config         = NRF_ESB_LEGACY_CONFIG;
-#endif // NRF_ESB_LEGACY
-    nrf_esb_config.retransmit_count         = 6;
-    nrf_esb_config.selective_auto_ack       = false;
-    nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
-    nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
-    nrf_esb_config.event_handler            = nrf_esb_event_handler;
-    nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
-
-    err_code = nrf_esb_init(&nrf_esb_config);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_base_address_0(base_addr_0);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_base_address_1(base_addr_1);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_prefixes(addr_prefix, 8);
-    VERIFY_SUCCESS(err_code);
-
-    tx_payload.length  = 3;
-    tx_payload.pipe    = 0;
-    tx_payload.data[0] = 0x00;
-
-    return NRF_SUCCESS;
+//    uint32_t err_code;
+//    uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
+//    uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
+//    uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
+//
+//#ifndef NRF_ESB_LEGACY
+//    nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
+//#else // NRF_ESB_LEGACY
+//    nrf_esb_config_t nrf_esb_config         = NRF_ESB_LEGACY_CONFIG;
+//#endif // NRF_ESB_LEGACY
+//    nrf_esb_config.retransmit_count         = 6;
+//    nrf_esb_config.selective_auto_ack       = false;
+//    nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
+//    nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
+//    nrf_esb_config.event_handler            = nrf_esb_event_handler;
+//    nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
+//
+//    err_code = nrf_esb_init(&nrf_esb_config);
+//    VERIFY_SUCCESS(err_code);
+//
+//    err_code = nrf_esb_set_base_address_0(base_addr_0);
+//    VERIFY_SUCCESS(err_code);
+//
+//    err_code = nrf_esb_set_base_address_1(base_addr_1);
+//    VERIFY_SUCCESS(err_code);
+//
+//    err_code = nrf_esb_set_prefixes(addr_prefix, 8);
+//    VERIFY_SUCCESS(err_code);
+//
+//    tx_payload.length  = 3;
+//    tx_payload.pipe    = 0;
+//    tx_payload.data[0] = 0x00;
+//
+//    return NRF_SUCCESS;
 }
 
 
@@ -224,6 +224,13 @@ uint32_t gpio_check_and_esb_tx()
 #define JOY_UP       8
 #define JOY_DOWN    26
 
+#define JOY_BUTTON_1 4
+#define JOY_BUTTON_2 2
+#define JOY_BUTTON_3 5
+#define JOY_BUTTON_4 7
+#define JOY_BUTTON_5 6
+#define JOY_BUTTON_6 9
+
 /*
 #define BUTTON_1     4
 #define BUTTON_2     2
@@ -252,6 +259,18 @@ void dipSwitchInit(void)
     nrf_delay_ms(1);
 }
 
+void dipSwitchDisable(void)
+{
+    nrf_gpio_cfg_default(DIPSWITCH_1);
+    nrf_gpio_cfg_default(DIPSWITCH_2);
+    nrf_gpio_cfg_default(DIPSWITCH_3);
+    nrf_gpio_cfg_default(DIPSWITCH_4);
+    nrf_gpio_cfg_default(DIPSWITCH_5);
+    nrf_gpio_cfg_default(DIPSWITCH_6);
+}
+
+
+
 uint8_t dipSwitchReadState(void)
 {
   uint8_t retVal = 0;
@@ -267,6 +286,8 @@ uint8_t dipSwitchReadState(void)
   retVal = retVal << 1;
   retVal |= nrf_gpio_pin_read(DIPSWITCH_1);
   
+  retVal ^= 0x3F;
+
   return retVal;
 }
 
@@ -280,23 +301,171 @@ void joyInit(void)
     nrf_delay_ms(1);
 }
 
-void recover_state()
+void joyDisable(void)
 {
-    uint32_t            loop_count = 0;
-    if ((NRF_POWER->GPREGRET >> 4) == RESET_MEMORY_TEST_BYTE)
-    {
-        // Take the loop_count value.
-        loop_count          = (uint8_t)(NRF_POWER->GPREGRET & 0xFUL);
-        NRF_POWER->GPREGRET = 0;
-    }
-
-    loop_count++;
-    NRF_POWER->GPREGRET = ( (RESET_MEMORY_TEST_BYTE << 4) | loop_count);
-
-    tx_payload.data[1] = loop_count << 4;
+    nrf_gpio_cfg_default(JOY_LEFT);
+    nrf_gpio_cfg_default(JOY_RIGHT);
+    nrf_gpio_cfg_default(JOY_UP);
+    nrf_gpio_cfg_default(JOY_DOWN);
+    // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
+    nrf_delay_ms(1);
 }
 
+enum
+{
+  NONE = 0,
+  LEFT = 1,
+  RIGHT = 2,
+  UP = 4,
+  DOWN = 8
+};
+
+uint8_t joyReadState(void)
+{
+  uint8_t joyState = 0x0F;
+
+  if(nrf_gpio_pin_read(JOY_LEFT)) joyState &= (~LEFT);
+  if(nrf_gpio_pin_read(JOY_RIGHT)) joyState &= (~RIGHT);
+  if(nrf_gpio_pin_read(JOY_UP)) joyState &= (~UP);
+  if(nrf_gpio_pin_read(JOY_DOWN)) joyState &= (~DOWN);
+
+  return joyState ;
+} 
+
+void joyButtonsInit(void)
+{
+    nrf_gpio_cfg_sense_input(JOY_BUTTON_1, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+    nrf_gpio_cfg_sense_input(JOY_BUTTON_2, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+    nrf_gpio_cfg_sense_input(JOY_BUTTON_3, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+    nrf_gpio_cfg_sense_input(JOY_BUTTON_4, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+    nrf_gpio_cfg_sense_input(JOY_BUTTON_5, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+    nrf_gpio_cfg_sense_input(JOY_BUTTON_6, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+    // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
+    nrf_delay_ms(1);
+}
+
+void joyButtonsDisable(void)
+{
+    nrf_gpio_cfg_default(JOY_BUTTON_2);
+    nrf_gpio_cfg_default(JOY_BUTTON_3);
+    nrf_gpio_cfg_default(JOY_BUTTON_4);
+    nrf_gpio_cfg_default(JOY_BUTTON_5);
+    nrf_gpio_cfg_default(JOY_BUTTON_6);
+    // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
+    nrf_delay_ms(1);
+}
+
+uint8_t joyButtonsReadState(void)
+{
+  uint8_t retVal = 0;
+  retVal |= nrf_gpio_pin_read(JOY_BUTTON_1);
+  retVal = retVal << 1;
+  retVal |= nrf_gpio_pin_read(JOY_BUTTON_2);
+  retVal = retVal << 1;
+  retVal |= nrf_gpio_pin_read(JOY_BUTTON_3);
+  retVal = retVal << 1;
+  retVal |= nrf_gpio_pin_read(JOY_BUTTON_4);
+  retVal = retVal << 1;
+  retVal |= nrf_gpio_pin_read(JOY_BUTTON_5);
+  retVal = retVal << 1;
+  retVal |= nrf_gpio_pin_read(JOY_BUTTON_6);
+
+  retVal ^= 0x3F;
+  
+  return retVal;
+} 
+
+void nrf_esb_event_handler(nrf_esb_evt_t const * p_event);
+
+void radioInit(void)
+{
+    uint32_t err_code;
+    uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
+    uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
+    uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
+
+    nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
+    nrf_esb_config.retransmit_count         = 6;
+    nrf_esb_config.selective_auto_ack       = false;
+    nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
+    nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
+    nrf_esb_config.event_handler            = nrf_esb_event_handler;
+    nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
+
+    err_code = nrf_esb_init(&nrf_esb_config);
+//    VERIFY_SUCCESS(err_code);
+
+    err_code = nrf_esb_set_base_address_0(base_addr_0);
+//    VERIFY_SUCCESS(err_code);
+
+    err_code = nrf_esb_set_base_address_1(base_addr_1);
+//    VERIFY_SUCCESS(err_code);
+
+    err_code = nrf_esb_set_prefixes(addr_prefix, 8);
+//    VERIFY_SUCCESS(err_code);
+
+    tx_payload.length  = 2;
+    tx_payload.pipe    = 0;
+    tx_payload.data[0] = 0x00;
+
+    return NRF_SUCCESS;
+
+}
+
+
+enum
+{
+  FRAME_HEARTBEAT = 0,
+  FRAME_JOYSTATE = 1
+};
+
+void radioSendState(uint8_t joyButtons, uint8_t joystick)
+{
+    tx_payload.length  = 3;
+    tx_payload.pipe    = 0;
+    tx_payload.data[0] = FRAME_JOYSTATE;
+    tx_payload.data[1] = joystick;
+    tx_payload.data[2] = joyButtons;
+    tx_payload.noack = false;
+
+    nrf_esb_write_payload(&tx_payload);
+}
+
+void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
+{
+    switch (p_event->evt_id)
+    {
+        case NRF_ESB_EVENT_TX_SUCCESS:
+            nrf_gpio_pin_write(LED_B,1);
+            nrf_gpio_pin_write(LED_R,0);
+            break;
+        case NRF_ESB_EVENT_TX_FAILED:
+            nrf_gpio_pin_write(LED_B,0);
+            nrf_gpio_pin_write(LED_R,1);
+            nrf_esb_flush_tx();
+            break;
+        case NRF_ESB_EVENT_RX_RECEIVED:
+            // Get the most recent element from the RX FIFO.
+            while (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS) ;
+
+            // For each LED, set it as indicated in the rx_payload, but invert it for the button
+            // which is pressed. This is because the ack payload from the PRX is reflecting the
+            // state from before receiving the packet.
+//            nrf_gpio_pin_write(LED_1, !( ((rx_payload.data[0] & 0x01) == 0) ^ (button_state_1 == BTN_PRESSED)) );
+//            nrf_gpio_pin_write(LED_2, !( ((rx_payload.data[0] & 0x02) == 0) ^ (button_state_2 == BTN_PRESSED)) );
+//            nrf_gpio_pin_write(LED_3, !( ((rx_payload.data[0] & 0x04) == 0) ^ (button_state_3 == BTN_PRESSED)) );
+//            nrf_gpio_pin_write(LED_4, !( ((rx_payload.data[0] & 0x08) == 0) ^ (button_state_4 == BTN_PRESSED)) );
+            break;
+    }
+
+//    esb_completed = true;
+}
+
+
+volatile uint8_t joyState = NONE;
 volatile uint8_t dipSwitchState = 0;
+volatile uint8_t joyButtonsState = 0;
+
 
 int main(void)
 {
@@ -308,19 +477,28 @@ int main(void)
 
     ledInit();
     dipSwitchInit();
+    joyInit();
+    joyButtonsInit();
+    radioInit();
 
     while(true)
     {
 
       nrf_gpio_pin_write(LED_R,0);
-      nrf_gpio_pin_write(LED_B,1);
-      nrf_delay_ms(100);
-      nrf_gpio_pin_write(LED_R,1);
       nrf_gpio_pin_write(LED_B,0);
-      nrf_delay_ms(100);
       dipSwitchState = dipSwitchReadState();
+      joyState = joyReadState();
+      joyButtonsState = joyButtonsReadState();
+      radioSendState(joyButtonsState,joyState);
+      nrf_delay_ms(100);
+      nrf_gpio_pin_write(LED_R,0);
+      nrf_gpio_pin_write(LED_B,0);
+      nrf_delay_ms(300);
     }
-
+    dipSwitchDisable();
+    joyButtonsDisable();
+    joyDisable();
+    system_off();
     // Recover state if the device was woken from System OFF.
     recover_state();
 

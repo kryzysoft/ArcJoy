@@ -2,7 +2,6 @@
 <session>
  <Bookmarks/>
  <Breakpoints groups="Breakpoints" active_group="Breakpoints">
-  <BreakpointListItem trigger="" line="304" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="src/main.c" useHWbreakpoint="false"/>
   <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
  </Breakpoints>
  <ExecutionProfileWindow/>
@@ -46,8 +45,10 @@
   <Trace enabled="Yes"/>
  </TraceWindow>
  <Watch1>
-  <Watches active="1" update="Never">
-   <Watchpoint expression="dipSwitchState" name="dipSwitchState" radix="-1" linenumber="288" filename="src/main.c"/>
+  <Watches active="1" update="Twice a Second">
+   <Watchpoint expression="dipSwitchState" name="dipSwitchState" radix="-1" linenumber="468" filename="src/main.c"/>
+   <Watchpoint expression="joyState" name="joyState" radix="16" linenumber="497" filename="src/main.c"/>
+   <Watchpoint expression="joyButtonsState" name="joyButtonsState" radix="-1" linenumber="467" filename="src/main.c"/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -60,18 +61,21 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="232" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="212" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="473" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="480" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/log/src/nrf_log_backend_rtt.c" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="46" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/sdk_common.h" selected="0" top="21" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="217" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/boards/boards.c" selected="0" top="181" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="30" y="681" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpio.h" selected="0" top="658" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="181" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/boards/boards.c" selected="0" top="158" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="554" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpio.h" selected="0" top="536" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="3879" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/nrf52810_bitfields.h" selected="0" top="3869" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="72" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/boards/pca10040.h" selected="0" top="54" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="69" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/boards/pca10040.h" selected="0" top="150" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/ses_startup_nrf_common.s" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/ses_startup_nrf52810.s" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/system_nrf52810.c" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/nrf.h" selected="0" top="93" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="76" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/boards/boards.h" selected="0" top="59" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="161" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/sdk_macros.h" selected="0" top="138" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="65" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/drivers_nrf/nrf_soc_nosd/nrf_error.h" selected="0" top="47" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcJoy_Prg/src" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>
