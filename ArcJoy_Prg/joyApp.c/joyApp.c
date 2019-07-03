@@ -4,6 +4,7 @@
 #include "nrf_esb.h"
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
+#include "nrf_drv_timer.h"
 
 static void clocksStart(void);
 static void ledInit(void);
@@ -20,7 +21,8 @@ static void radioInit(void);
 static void radioSendState(uint8_t joyButtons, uint8_t joystick);
 static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event);
 static void systemOff(void);
-
+static void timerHeartbeatEventHandler(nrf_timer_event_t event_type, void* p_context);
+static void timerInit(void);
 
 #define LED_R 15
 #define LED_B 14
@@ -55,6 +57,7 @@ static void systemOff(void);
 
 static nrf_esb_payload_t tx_payload = NRF_ESB_CREATE_PAYLOAD(0, 0x01, 0x00);
 static nrf_esb_payload_t rx_payload;
+static const nrf_drv_timer_t heartbeatTimer = NRF_DRV_TIMER_INSTANCE(0);
 
 
 void JOYAPP_Run(void)
@@ -69,23 +72,55 @@ void JOYAPP_Run(void)
   joyInit();
   joyButtonsInit();
   radioInit();
+  timerInit();
+
+  bool led = false;
 
   while(true)
   {
-    nrf_gpio_pin_write(LED_R,0);
-    nrf_gpio_pin_write(LED_B,0);
-    dipSwitchState = dipSwitchReadState();
-    joyState = joyReadState();
-    joyButtonsState = joyButtonsReadState();
-    radioSendState(joyButtonsState,joyState);
-    nrf_delay_ms(100);
-    nrf_gpio_pin_write(LED_R,0);
-    nrf_gpio_pin_write(LED_B,0);
-    nrf_delay_ms(300);
+      __WFE();
+      __WFE();
+      nrf_delay_ms(1);
+          if(led)
+          {
+            nrf_gpio_pin_write(LED_B,1);
+            nrf_gpio_pin_write(LED_R,0);
+          }
+          else
+          {
+            nrf_gpio_pin_write(LED_B,0);
+            nrf_gpio_pin_write(LED_R,1);
+          }
+          led = !led;
+
+
+//    nrf_gpio_pin_write(LED_R,0);
+//    nrf_gpio_pin_write(LED_B,0);
+//    dipSwitchState = dipSwitchReadState();
+//    joyState = joyReadState();
+//    joyButtonsState = joyButtonsReadState();
+//    radioSendState(joyButtonsState,joyState);
+//    nrf_delay_ms(100);
+//    nrf_gpio_pin_write(LED_R,0);
+//    nrf_gpio_pin_write(LED_B,0);
+//    nrf_delay_ms(300);
   }
 }
 
-static void clocksStart( void )
+static void timerInit(void)
+{
+    uint32_t time_ms = 5000;
+    nrf_drv_timer_config_t timerConfig = NRF_DRV_TIMER_DEFAULT_CONFIG;
+    nrf_drv_timer_init(&heartbeatTimer, &timerConfig, timerHeartbeatEventHandler);
+
+    uint32_t time_ticks = nrf_drv_timer_ms_to_ticks(&heartbeatTimer, time_ms);
+    nrf_drv_timer_extended_compare(
+         &heartbeatTimer, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
+    nrf_drv_timer_enable(&heartbeatTimer);
+
+}
+
+static void clocksStart(void)
 {
     // Start HFCLK and wait for it to start.
     NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
@@ -270,6 +305,20 @@ static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event)
             break;
         case NRF_ESB_EVENT_RX_RECEIVED:
             while (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS);
+            break;
+    }
+}
+
+//static bool led = false;
+
+void timerHeartbeatEventHandler(nrf_timer_event_t event_type, void* p_context)
+{
+
+    switch (event_type)
+    {
+        case NRF_TIMER_EVENT_COMPARE0:
+          break;
+        default:
             break;
     }
 }

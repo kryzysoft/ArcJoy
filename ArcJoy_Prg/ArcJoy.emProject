@@ -66,6 +66,7 @@
       <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/prs/nrfx_prs.c" />
       <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_uart.c" />
       <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_uarte.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_timer.c" />
     </folder>
     <folder Name="Application">
       <file file_name="src/main.c" />
