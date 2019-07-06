@@ -1,9 +1,7 @@
 <!DOCTYPE CrossStudio_Session_File>
 <session>
  <Bookmarks/>
- <Breakpoints groups="Breakpoints" active_group="Breakpoints">
-  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
- </Breakpoints>
+ <Breakpoints groups="Breakpoints" active_group="Breakpoints"/>
  <ExecutionProfileWindow/>
  <FrameBufferWindow>
   <FrameBufferWindow bufferHeight="-1" addressSpace="" addressText="" bufferWidth="-1"/>
@@ -28,7 +26,7 @@
   <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Drivers"/>
  </Project>
  <Register1>
-  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/msp;CPU/psp;CPU/cfbp;CPU/internal;TIMER0/TASKS_START;TIMER0/TASKS_STOP;TIMER0/TASKS_COUNT;TIMER0/TASKS_CLEAR;TIMER0/TASKS_SHUTDOWN;TIMER0/SHORTS;TIMER0/INTENSET;TIMER0/INTENCLR;TIMER0/MODE;TIMER0/BITMODE;TIMER0/PRESCALER;TIMER1/TASKS_START;TIMER1/TASKS_STOP;TIMER1/TASKS_COUNT;TIMER1/TASKS_CLEAR;TIMER1/TASKS_SHUTDOWN;TIMER1/SHORTS;TIMER1/INTENSET;TIMER1/INTENCLR;TIMER1/MODE;TIMER1/BITMODE;TIMER1/PRESCALER;TIMER2/TASKS_START;TIMER2/TASKS_STOP;TIMER2/TASKS_COUNT;TIMER2/TASKS_CLEAR;TIMER2/TASKS_SHUTDOWN;TIMER2/SHORTS;TIMER2/INTENSET;TIMER2/INTENCLR;TIMER2/MODE;TIMER2/BITMODE;TIMER2/PRESCALER" binaryNodes="" asciiNodes="" openNodes="TIMER0;TIMER1;TIMER2;TIMER2/TASKS_START" name="ArcJoy" decimalNodes="" octalNodes="" unsignedNodes=""/>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/msp;CPU/psp;CPU/cfbp;CPU/internal;TIMER0/TASKS_START;TIMER0/TASKS_STOP;TIMER0/TASKS_COUNT;TIMER0/TASKS_CLEAR;TIMER0/TASKS_SHUTDOWN;TIMER0/SHORTS;TIMER0/INTENSET;TIMER0/INTENCLR;TIMER0/MODE;TIMER0/BITMODE;TIMER0/PRESCALER;TIMER1/TASKS_START;TIMER1/TASKS_STOP;TIMER1/TASKS_COUNT;TIMER1/TASKS_CLEAR;TIMER1/TASKS_SHUTDOWN;TIMER1/SHORTS;TIMER1/INTENSET;TIMER1/INTENCLR;TIMER1/MODE;TIMER1/BITMODE;TIMER1/PRESCALER;TIMER2/TASKS_START;TIMER2/TASKS_STOP;TIMER2/TASKS_COUNT;TIMER2/TASKS_CLEAR;TIMER2/TASKS_SHUTDOWN;TIMER2/SHORTS;TIMER2/INTENSET;TIMER2/INTENCLR;TIMER2/MODE;TIMER2/BITMODE;TIMER2/PRESCALER;RTC0/TASKS_START;RTC0/TASKS_STOP;RTC0/TASKS_CLEAR;RTC0/TASKS_TRIGOVRFLW;RTC0/EVENTS_TICK;RTC0/EVENTS_OVRFLW;RTC0/INTENSET;RTC0/INTENCLR;RTC0/EVTEN;RTC0/EVTENSET;RTC0/EVTENCLR;RTC0/COUNTER;RTC0/PRESCALER;RTC1/TASKS_START;RTC1/TASKS_STOP;RTC1/TASKS_CLEAR;RTC1/TASKS_TRIGOVRFLW;RTC1/EVENTS_TICK;RTC1/EVENTS_OVRFLW;RTC1/INTENSET;RTC1/INTENCLR;RTC1/EVTEN;RTC1/EVTENSET;RTC1/EVTENCLR;RTC1/COUNTER;RTC1/PRESCALER;GPIOTE/EVENTS_PORT;GPIOTE/INTENSET;GPIOTE/INTENCLR" binaryNodes="" asciiNodes="" openNodes="RTC0/TASKS_START;RTC0/TASKS_STOP;RTC0/TASKS_CLEAR;RTC0/INTENSET;RTC0/EVTENCLR;GPIOTE;GPIOTE/EVENTS_PORT;GPIOTE/INTENSET;GPIOTE/INTENCLR" name="ArcJoy" decimalNodes="" octalNodes="" unsignedNodes=""/>
  </Register1>
  <Register2>
   <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/msp;CPU/psp;CPU/cfbp;CPU/internal" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="ArcJoy" decimalNodes="" octalNodes="" unsignedNodes=""/>
@@ -50,6 +48,7 @@
    <Watchpoint expression="dipSwitchState" name="dipSwitchState" radix="-1" linenumber="45" filename="src/main.c"/>
    <Watchpoint expression="joyState" name="joyState" radix="16" linenumber="56" filename="src/main.c"/>
    <Watchpoint expression="joyButtonsState" name="joyButtonsState" radix="-1" linenumber="44" filename="src/main.c"/>
+   <Watchpoint expression="GPIOTE_CONFIG_OUT_TASK_TOGGLE" name="GPIOTE_CONFIG_OUT_TASK_TOGGLE" radix="16" linenumber="261" filename="joyApp.c/joyApp.c"/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -62,11 +61,17 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="24" y="111" useTextEdit="1" useBinaryEdit="0" left="0" path="joyApp.c/joyApp.c" selected="0" top="89" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="79" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/include/nrfx_timer.h" selected="0" top="62" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="291" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="0" top="256" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="43" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_timer.h" selected="0" top="30" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="44" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="27" codecName=""/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="152" useTextEdit="1" useBinaryEdit="0" left="0" path="joyApp.c/joyApp.c" selected="1" top="98" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="114" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/include/nrfx_rtc.h" selected="0" top="96" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="290" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_rtc.h" selected="0" top="277" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="17" y="30" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="174" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_rtc.c" selected="0" top="164" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="732" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/integration/nrfx/legacy/apply_old_config.h" selected="0" top="722" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="156" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="0" top="128" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="1" y="555" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpio.h" selected="0" top="474" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="186" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/include/nrfx_gpiote.h" selected="0" top="172" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="50" y="260" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_gpiote.c" selected="0" top="234" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="86" y="433" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpiote.h" selected="0" top="417" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcJoy_Prg/src/nRF5_SDK/modules/nrfx/drivers/src" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

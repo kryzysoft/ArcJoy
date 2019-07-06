@@ -5,8 +5,12 @@
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "nrf_drv_timer.h"
+#include "nrf_drv_rtc.h"
+#include "nrf_drv_clock.h"
+#include "nrfx_gpiote.h"
 
-static void clocksStart(void);
+static void clockStart(void);
+static void clockStop(void);
 static void ledInit(void);
 static void dipSwitchInit(void);
 static void dipSwitchDisable(void);
@@ -18,11 +22,16 @@ static void joyButtonsInit(void);
 static void joyButtonsDisable(void);
 static uint8_t joyButtonsReadState(void);
 static void radioInit(void);
+static void radioDisable(void);
 static void radioSendState(uint8_t joyButtons, uint8_t joystick);
 static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event);
 static void systemOff(void);
 static void timerHeartbeatEventHandler(nrf_timer_event_t event_type, void* p_context);
 static void timerInit(void);
+static void lfclkConfig(void);
+static void rtc_config(void);
+static void rtc_handler(nrf_drv_rtc_int_type_t int_type);
+static void goToSleep(void);
 
 #define LED_R 15
 #define LED_B 14
@@ -39,12 +48,12 @@ static void timerInit(void);
 #define JOY_UP       8
 #define JOY_DOWN    26
 
-#define JOY_BUTTON_1 4
-#define JOY_BUTTON_2 2
-#define JOY_BUTTON_3 5
-#define JOY_BUTTON_4 7
-#define JOY_BUTTON_5 6
-#define JOY_BUTTON_6 9
+#define JOY_BUTTON_1 9
+#define JOY_BUTTON_2 6
+#define JOY_BUTTON_3 7
+#define JOY_BUTTON_4 5
+#define JOY_BUTTON_5 2
+#define JOY_BUTTON_6 4
 
 #define NONE  0
 #define LEFT  1
@@ -55,77 +64,127 @@ static void timerInit(void);
 #define FRAME_HEARTBEAT 0
 #define FRAME_JOYSTATE  1
 
+#define MAX_RADIO_FAILS 5
+
 static nrf_esb_payload_t tx_payload = NRF_ESB_CREATE_PAYLOAD(0, 0x01, 0x00);
 static nrf_esb_payload_t rx_payload;
 static const nrf_drv_timer_t heartbeatTimer = NRF_DRV_TIMER_INSTANCE(0);
 
+const nrf_drv_rtc_t rtc = NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance of nrf_drv_rtc for RTC0. */
+#define COMPARE_COUNTERTIME  (4UL)  
+
+static volatile bool radioSuccess = false;
+static volatile bool radioDone = false;
+
+static volatile bool sendHeartbeat = false;
+static volatile bool sendJoyState = false;
+
+
+static void joyEvent(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
 
 void JOYAPP_Run(void)
 {
   uint8_t joyState = NONE;
   uint8_t dipSwitchState = 0;
   uint8_t joyButtonsState = 0;
+  uint32_t fails = 0;
 
-  clocksStart();
   ledInit();
-  dipSwitchInit();
+//  dipSwitchInit();
   joyInit();
   joyButtonsInit();
+  lfclkConfig();
+  rtc_config();
   radioInit();
-  timerInit();
 
   bool led = false;
 
+
   while(true)
   {
-      __WFE();
-      __WFE();
-      nrf_delay_ms(1);
-          if(led)
-          {
-            nrf_gpio_pin_write(LED_B,1);
-            nrf_gpio_pin_write(LED_R,0);
-          }
-          else
-          {
-            nrf_gpio_pin_write(LED_B,0);
-            nrf_gpio_pin_write(LED_R,1);
-          }
-          led = !led;
+    while(sendHeartbeat || sendJoyState)
+    {
+      if(sendHeartbeat)
+      {
+        sendHeartbeat = false;
+        clockStart();
+        radioSuccess = false;
+        radioInit();
+        joyState = joyReadState();
+        joyButtonsState = joyButtonsReadState();
+        radioDone = false;
+        radioSendState(joyButtonsState,joyState);;
+        while(!radioDone)
+        {
 
+        }
+        radioDisable();
+        clockStop();
+        if(radioSuccess)
+        {
+          fails = 0;
+          nrf_gpio_pin_write(LED_B,1);
+        }
+        else
+        {
+          fails++;
+          nrf_gpio_pin_write(LED_R,1);
+        }
+        nrf_delay_ms(20);
+        nrf_gpio_pin_write(LED_B,0);
+        nrf_gpio_pin_write(LED_R,0);
+      }
+      if(sendJoyState)
+      {
+        sendJoyState = false;
+        clockStart();
+        radioSuccess = false;
+        radioInit();
+        joyState = joyReadState();
+        joyButtonsState = joyButtonsReadState();
+        radioDone = false;
+        radioSendState(joyButtonsState,joyState);;
+        while(!radioDone)
+        {
 
-//    nrf_gpio_pin_write(LED_R,0);
-//    nrf_gpio_pin_write(LED_B,0);
-//    dipSwitchState = dipSwitchReadState();
-//    joyState = joyReadState();
-//    joyButtonsState = joyButtonsReadState();
-//    radioSendState(joyButtonsState,joyState);
-//    nrf_delay_ms(100);
-//    nrf_gpio_pin_write(LED_R,0);
-//    nrf_gpio_pin_write(LED_B,0);
-//    nrf_delay_ms(300);
+        }
+        radioDisable();
+        clockStop();
+      }
+    }
+    if(fails < MAX_RADIO_FAILS)
+    {
+      goToSleep();
+    }
+    else
+    {
+      joyDisable();
+      joyButtonsDisable();
+      nrf_gpio_cfg_sense_input(JOY_BUTTON_1, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+      systemOff();
+    }
   }
 }
 
-static void timerInit(void)
+static void goToSleep(void)
 {
-    uint32_t time_ms = 5000;
-    nrf_drv_timer_config_t timerConfig = NRF_DRV_TIMER_DEFAULT_CONFIG;
-    nrf_drv_timer_init(&heartbeatTimer, &timerConfig, timerHeartbeatEventHandler);
-
-    uint32_t time_ticks = nrf_drv_timer_ms_to_ticks(&heartbeatTimer, time_ms);
-    nrf_drv_timer_extended_compare(
-         &heartbeatTimer, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
-    nrf_drv_timer_enable(&heartbeatTimer);
-
+  __SEV();
+  __WFE();
+  __WFE();
 }
 
-static void clocksStart(void)
+static void clockStart(void)
 {
     // Start HFCLK and wait for it to start.
     NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
     NRF_CLOCK->TASKS_HFCLKSTART = 1;
     while (NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
+}
+
+static void clockStop(void)
+{
+    // Start HFCLK and wait for it to start.
+    NRF_CLOCK->TASKS_HFCLKSTOP = 1;
 }
 
 static void ledInit(void)
@@ -144,6 +203,7 @@ static void dipSwitchInit(void)
     nrf_gpio_cfg_input(DIPSWITCH_4, NRF_GPIO_PIN_PULLUP);
     nrf_gpio_cfg_input(DIPSWITCH_5, NRF_GPIO_PIN_PULLUP);
     nrf_gpio_cfg_input(DIPSWITCH_6, NRF_GPIO_PIN_PULLUP);
+
     // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
     nrf_delay_ms(1);
 }
@@ -185,6 +245,19 @@ static void joyInit(void)
     nrf_gpio_cfg_input(JOY_UP, NRF_GPIO_PIN_NOPULL);
     nrf_gpio_cfg_input(JOY_DOWN, NRF_GPIO_PIN_NOPULL);
     // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
+    nrfx_gpiote_init();
+    nrfx_gpiote_in_config_t config = NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(true);
+    nrfx_gpiote_in_init(JOY_LEFT,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_RIGHT,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_UP,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_DOWN,&config,joyEvent);
+
+   nrfx_gpiote_in_event_enable(JOY_LEFT,true);
+   nrfx_gpiote_in_event_enable(JOY_RIGHT,true);
+   nrfx_gpiote_in_event_enable(JOY_UP,true);
+   nrfx_gpiote_in_event_enable(JOY_DOWN,true);
+
+
     nrf_delay_ms(1);
 }
 
@@ -207,23 +280,45 @@ static uint8_t joyReadState(void)
   if(nrf_gpio_pin_read(JOY_UP)) joyState &= (~UP);
   if(nrf_gpio_pin_read(JOY_DOWN)) joyState &= (~DOWN);
 
-  return joyState ;
+  return joyState;
 } 
+
+static void joyEvent(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
+{
+  sendJoyState = true;
+}
 
 static void joyButtonsInit(void)
 {
-    nrf_gpio_cfg_sense_input(JOY_BUTTON_1, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
-    nrf_gpio_cfg_sense_input(JOY_BUTTON_2, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
-    nrf_gpio_cfg_sense_input(JOY_BUTTON_3, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
-    nrf_gpio_cfg_sense_input(JOY_BUTTON_4, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
-    nrf_gpio_cfg_sense_input(JOY_BUTTON_5, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
-    nrf_gpio_cfg_sense_input(JOY_BUTTON_6, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+    nrf_gpio_cfg_input(JOY_BUTTON_1, NRF_GPIO_PIN_NOPULL);
+    nrf_gpio_cfg_input(JOY_BUTTON_2, NRF_GPIO_PIN_NOPULL);
+    nrf_gpio_cfg_input(JOY_BUTTON_3, NRF_GPIO_PIN_NOPULL);
+    nrf_gpio_cfg_input(JOY_BUTTON_4, NRF_GPIO_PIN_NOPULL);
+    nrf_gpio_cfg_input(JOY_BUTTON_5, NRF_GPIO_PIN_NOPULL);
+    nrf_gpio_cfg_input(JOY_BUTTON_6, NRF_GPIO_PIN_NOPULL);
+
+    nrfx_gpiote_in_config_t config = NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(true);
+    nrfx_gpiote_in_init(JOY_BUTTON_1,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_BUTTON_2,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_BUTTON_3,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_BUTTON_4,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_BUTTON_5,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_BUTTON_6,&config,joyEvent);
+
+   nrfx_gpiote_in_event_enable(JOY_BUTTON_1,true);
+   nrfx_gpiote_in_event_enable(JOY_BUTTON_2,true);
+   nrfx_gpiote_in_event_enable(JOY_BUTTON_3,true);
+   nrfx_gpiote_in_event_enable(JOY_BUTTON_4,true);
+   nrfx_gpiote_in_event_enable(JOY_BUTTON_5,true);
+   nrfx_gpiote_in_event_enable(JOY_BUTTON_6,true);
+
     // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
     nrf_delay_ms(1);
 }
 
 static void joyButtonsDisable(void)
 {
+    nrf_gpio_cfg_default(JOY_BUTTON_1);
     nrf_gpio_cfg_default(JOY_BUTTON_2);
     nrf_gpio_cfg_default(JOY_BUTTON_3);
     nrf_gpio_cfg_default(JOY_BUTTON_4);
@@ -278,6 +373,11 @@ static void radioInit(void)
     tx_payload.data[0] = 0x00;
 }
 
+static void radioDisable(void)
+{
+  nrf_esb_disable();
+}
+
 static void radioSendState(uint8_t joyButtons, uint8_t joystick)
 {
     tx_payload.length  = 3;
@@ -292,15 +392,13 @@ static void radioSendState(uint8_t joyButtons, uint8_t joystick)
 
 static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event)
 {
+    radioDone = true;
     switch (p_event->evt_id)
     {
         case NRF_ESB_EVENT_TX_SUCCESS:
-            nrf_gpio_pin_write(LED_B,1);
-            nrf_gpio_pin_write(LED_R,0);
+            radioSuccess = true;
             break;
         case NRF_ESB_EVENT_TX_FAILED:
-            nrf_gpio_pin_write(LED_B,0);
-            nrf_gpio_pin_write(LED_R,1);
             nrf_esb_flush_tx();
             break;
         case NRF_ESB_EVENT_RX_RECEIVED:
@@ -309,23 +407,58 @@ static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event)
     }
 }
 
-//static bool led = false;
-
-void timerHeartbeatEventHandler(nrf_timer_event_t event_type, void* p_context)
-{
-
-    switch (event_type)
-    {
-        case NRF_TIMER_EVENT_COMPARE0:
-          break;
-        default:
-            break;
-    }
-}
 
 static void systemOff( void )
 {
     NRF_POWER->SYSTEMOFF = 0x1;
     (void) NRF_POWER->SYSTEMOFF;
     while (true);
+}
+
+static void lfclkConfig(void)
+{
+    nrf_drv_clock_init();
+    nrf_drv_clock_lfclk_request(NULL);
+}
+
+static void rtc_config(void)
+{
+    uint32_t err_code;
+
+    //Initialize RTC instance
+    nrfx_rtc_config_t rtcConfig = NRFX_RTC_DEFAULT_CONFIG;
+  //  nrf_drv_rtc_config_t config = NRF_DRV_RTC_DEFAULT_CONFIG;
+    rtcConfig.prescaler = 4095;
+    
+    nrfx_rtc_init(&rtc, &rtcConfig, rtc_handler);
+
+//    nrf_drv_rtc_init(&rtc, &config, rtc_handler);
+    
+    //Enable tick event & interrupt
+//    nrf_drv_rtc_tick_enable(&rtc,true);
+
+
+    //Set compare channel to trigger interrupt after COMPARE_COUNTERTIME seconds
+
+  //  err_code = nrf_drv_rtc_cc_set(&rtc,0,COMPARE_COUNTERTIME * 24,true);
+  nrfx_rtc_cc_set(&rtc,0,COMPARE_COUNTERTIME*8, true);
+
+    //Power on RTC instance
+    nrfx_rtc_enable(&rtc);
+//    nrf_drv_rtc_enable(&rtc);
+}
+
+/** @brief: Function for handling the RTC0 interrupts.
+ * Triggered on TICK and COMPARE0 match.
+ */
+
+volatile bool ledState = false;
+static void rtc_handler(nrf_drv_rtc_int_type_t int_type)
+{
+    if (int_type == NRF_DRV_RTC_INT_COMPARE0)
+    {
+      sendHeartbeat = true;
+      nrfx_rtc_counter_clear(&rtc);
+      nrfx_rtc_cc_set(&rtc,0,COMPARE_COUNTERTIME*8, true);
+    }
 }
