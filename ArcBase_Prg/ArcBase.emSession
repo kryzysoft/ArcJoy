@@ -11,14 +11,13 @@
  <Memory3/>
  <Memory4/>
  <Project>
-  <ProjectSessionItem path="usbd_hid_generic_pca10056"/>
-  <ProjectSessionItem path="usbd_hid_generic_pca10056;usbd_hid_generic_pca10056"/>
-  <ProjectSessionItem path="usbd_hid_generic_pca10056;usbd_hid_generic_pca10056;Application"/>
-  <ProjectSessionItem path="usbd_hid_generic_pca10056;usbd_hid_generic_pca10056;Board Definition"/>
-  <ProjectSessionItem path="usbd_hid_generic_pca10056;usbd_hid_generic_pca10056;Board Support"/>
-  <ProjectSessionItem path="usbd_hid_generic_pca10056;usbd_hid_generic_pca10056;None"/>
-  <ProjectSessionItem path="usbd_hid_generic_pca10056;usbd_hid_generic_pca10056;nRF_Drivers"/>
-  <ProjectSessionItem path="usbd_hid_generic_pca10056;usbd_hid_generic_pca10056;nRF_Libraries"/>
+  <ProjectSessionItem path="ArcBase"/>
+  <ProjectSessionItem path="ArcBase;ArcBase"/>
+  <ProjectSessionItem path="ArcBase;ArcBase;Application"/>
+  <ProjectSessionItem path="ArcBase;ArcBase;None"/>
+  <ProjectSessionItem path="ArcBase;ArcBase;nRF_Libraries"/>
+  <ProjectSessionItem path="ArcBase;ArcBase;nRF_Properitary_RF"/>
+  <ProjectSessionItem path="ArcBase;ArcBase;Segger Startup Files"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -43,7 +42,11 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="39" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="15" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="38" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="0" top="38" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="17" y="1052" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="1" top="1036" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="25" y="1661" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.c" selected="0" top="1511" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="15" y="297" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/ses_startup_nrf52840.s" selected="0" top="289" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="1" y="134" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/timer/app_timer.c" selected="0" top="125" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="usbd_hid_generic_pca10056" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="ArcBase" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcBase_Prg/src/nRF5_SDK/components/proprietary_rf/esb" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
