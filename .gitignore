@@ -1,5 +1,6 @@
-
 /!Arch/*
-/ArcJoy_Prg/Output/*
 *.zip
+/ArcBase_Prg/Output/*
+/ArcJoy_Pcb/ArcJoy.bak
+/ArcJoy_Prg/Output/*
 /ArcBase_Prg/Output/*
