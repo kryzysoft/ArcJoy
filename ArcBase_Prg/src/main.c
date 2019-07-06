@@ -101,7 +101,7 @@ NRF_CLI_DEF(m_cli_uart,
 /**
  * @brief Mouse speed (value sent via HID when board button is pressed).
  * */
-#define CONFIG_MOUSE_MOVE_SPEED (3)
+#define CONFIG_MOUSE_MOVE_SPEED (1)
 
 /**
  * @brief Mouse move repeat time in milliseconds
@@ -230,6 +230,17 @@ uint8_t led_nr;
 nrf_esb_payload_t rx_payload;
 
 /*lint -save -esym(40, BUTTON_1) -esym(40, BUTTON_2) -esym(40, BUTTON_3) -esym(40, BUTTON_4) -esym(40, LED_1) -esym(40, LED_2) -esym(40, LED_3) -esym(40, LED_4) */
+static volatile bool left = false;
+static volatile bool right = false;
+static volatile bool up = false;
+static volatile bool down = false;
+
+#define NONE  0
+#define LEFT  1
+#define RIGHT 2
+#define UP    4
+#define DOWN  8
+
 
 void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
 {
@@ -245,6 +256,14 @@ void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
             NRF_LOG_DEBUG("RX RECEIVED EVENT");
             if (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS)
             {
+                if((rx_payload.data[1] & LEFT) != 0) left = true;
+                else left = false;
+                if((rx_payload.data[1] & RIGHT) != 0) right = true;
+                else right = false;
+                if((rx_payload.data[1] & UP) != 0) up = true;
+                else up = false;
+                if((rx_payload.data[1] & DOWN) != 0) down = true;
+                else down = false;
                 // Set LEDs identical to the ones on the PTX.
                 nrf_gpio_pin_write(LED_1, !(rx_payload.data[1]%8>0 && rx_payload.data[1]%8<=4));
                 nrf_gpio_pin_write(LED_2, !(rx_payload.data[1]%8>1 && rx_payload.data[1]%8<=5));
@@ -544,12 +563,24 @@ static void mouse_move_timer_handler(void * p_context)
     UNUSED_PARAMETER(p_context);
     bool used = false;
 
-    if (bsp_button_is_pressed(BTN_MOUSE_X_POS))
+    if (left)
     {
+
+        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, -CONFIG_MOUSE_MOVE_SPEED);
+        used = true;
+    }
+    if (right)
+    {
+
         hid_generic_mouse_action(HID_GENERIC_MOUSE_X, CONFIG_MOUSE_MOVE_SPEED);
         used = true;
     }
-    if (bsp_button_is_pressed(BTN_MOUSE_Y_POS))
+    if (up)
+    {
+        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, -CONFIG_MOUSE_MOVE_SPEED);
+        used = true;
+    }
+    if (down)
     {
         hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
         used = true;
@@ -711,13 +742,14 @@ int main(void)
         app_usbd_start();
     }
 
-
+    app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL);
     clocks_start();
     esb_init();
     nrf_esb_start_rx();
 
     while (true)
     {
+    mouse_move_timer_handler(NULL);
         while (app_usbd_event_queue_process())
         {
             /* Nothing to do */
