@@ -129,11 +129,10 @@ NRF_CLI_DEF(m_cli_uart,
 #define HID_BTN_RIGHT_MASK (1U << 1)
 
 /* HID report layout */
-#define HID_BTN_IDX   0 /**< Button bit mask position */
-#define HID_X_IDX     1 /**< X offset position */
-#define HID_Y_IDX     2 /**< Y offset position */
-#define HID_W_IDX     3 /**< Wheel position  */
-#define HID_REP_SIZE  4 /**< The size of the report */
+#define HID_BTN_IDX   2 /**< Button bit mask position */
+#define HID_X_IDX     0 /**< X offset position */
+#define HID_Y_IDX     1 /**< Y offset position */
+#define HID_REP_SIZE  3 /**< The size of the report */
 
 /**
  * @brief Number of reports defined in report descriptor.
@@ -198,7 +197,34 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
 /**
  * @brief Reuse HID mouse report descriptor for HID generic class
  */
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse_desc,APP_USBD_HID_MOUSE_REPORT_DSC_BUTTON(2));
+
+#define APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt) {                \
+    0x05, 0x01,                    /* USAGE_PAGE (Generic Desktop) */ \
+    0x09, 0x05,                    /* USAGE (Game Pad)*/ \
+    0xa1, 0x01,                    /* COLLECTION (Application)*/ \
+    0x05, 0x01,                    /*   USAGE_PAGE (Generic Desktop)*/ \
+    0xa1, 0x00,                    /*   COLLECTION (Physical)*/ \
+    0x09, 0x30,                    /*   USAGE (X)*/ \
+    0x09, 0x31,                    /*   USAGE (Y)*/ \
+    0x15, 0x81,                    /*   LOGICAL_MINIMUM (-127)*/ \
+    0x25, 0x7f,                    /*   LOGICAL_MAXIMUM (127)*/ \
+    0x75, 0x08,                    /*   REPORT_SIZE (8)*/ \
+    0x95, 0x02,                    /*   REPORT_COUNT (2)*/ \
+    0x81, 0x02,                    /*   INPUT (Data,Var,Abs)*/ \
+    0x05, 0x09,                    /*   USAGE_PAGE (Button)*/ \
+    0x19, 0x01,                    /*   USAGE_MINIMUM (Button 1)*/ \
+    0x29, 0x08,                    /*   USAGE_MAXIMUM (Button 8)*/ \
+    0x15, 0x00,                    /*   LOGICAL_MINIMUM (0)*/ \
+    0x25, 0x01,                    /*   LOGICAL_MAXIMUM (1)*/ \
+    0x75, 0x01,                    /*   REPORT_SIZE (1)*/ \
+    0x95, 0x08,                    /*   REPORT_COUNT (16)*/ \
+    0x81, 0x02,                    /*   INPUT (Data,Var,Abs)*/ \
+    0xc0,                          /* END_COLLECTION*/ \
+    0xc0                           /* END_COLLECTION*/ \
+}
+
+
+APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt));
 
 static const app_usbd_hid_subclass_desc_t * reps[] = {&mouse_desc};
 
@@ -214,8 +240,10 @@ APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid_generic,
                                 reps,
                                 REPORT_IN_QUEUE_SIZE,
                                 REPORT_OUT_MAXSIZE,
-                                APP_USBD_HID_SUBCLASS_BOOT,
-                                APP_USBD_HID_PROTO_MOUSE);
+                                APP_USBD_HID_SUBCLASS_NONE,
+//                                APP_USBD_HID_SUBCLASS_BOOT,
+                                APP_USBD_HID_PROTO_GENERIC);
+                     //           APP_USBD_HID_PROTO_MOUSE);
 
 /*lint -restore*/
 
@@ -234,6 +262,7 @@ static volatile bool left = false;
 static volatile bool right = false;
 static volatile bool up = false;
 static volatile bool down = false;
+static volatile bool fire = false;
 
 #define NONE  0
 #define LEFT  1
@@ -264,6 +293,8 @@ void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
                 else up = false;
                 if((rx_payload.data[1] & DOWN) != 0) down = true;
                 else down = false;
+                if(rx_payload.data[2] >0) fire = true;
+                else fire = false;
                 // Set LEDs identical to the ones on the PTX.
                 nrf_gpio_pin_write(LED_1, !(rx_payload.data[1]%8>0 && rx_payload.data[1]%8<=4));
                 nrf_gpio_pin_write(LED_2, !(rx_payload.data[1]%8>1 && rx_payload.data[1]%8<=5));
@@ -396,16 +427,17 @@ static void hid_generic_mouse_process_state(void)
 {
     if (m_report_pending)
         return;
-    if ((m_mouse_state.acc_x != 0) ||
-        (m_mouse_state.acc_y != 0) ||
-        (m_mouse_state.btn != m_mouse_state.last_btn))
-    {
+//    if ((m_mouse_state.acc_x != 0) ||
+//        (m_mouse_state.acc_y != 0) ||
+//        (m_mouse_state.btn != m_mouse_state.last_btn))
+//    {
         ret_code_t ret;
         static uint8_t report[HID_REP_SIZE];
         /* We have some status changed that we need to transfer */
-        report[HID_BTN_IDX] = m_mouse_state.btn;
-        report[HID_X_IDX]   = (uint8_t)hid_acc_for_report_get(m_mouse_state.acc_x);
-        report[HID_Y_IDX]   = (uint8_t)hid_acc_for_report_get(m_mouse_state.acc_y);
+        report[HID_BTN_IDX] = fire;
+
+        report[HID_X_IDX]   = -left*127 + right*127;
+        report[HID_Y_IDX]   =  -up*127 + down*127;
         /* Start the transfer */
         ret = app_usbd_hid_generic_in_report_set(
             &m_app_hid_generic,
@@ -422,7 +454,7 @@ static void hid_generic_mouse_process_state(void)
             m_mouse_state.acc_y   -= (int8_t)report[HID_Y_IDX];
             CRITICAL_REGION_EXIT();
         }
-    }
+//    }
 }
 
 /**
@@ -583,6 +615,11 @@ static void mouse_move_timer_handler(void * p_context)
     if (down)
     {
         hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
+        used = true;
+    }
+    if (fire)
+    {
+        hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, CONFIG_MOUSE_MOVE_SPEED);
         used = true;
     }
 

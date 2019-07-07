@@ -61,17 +61,17 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="152" useTextEdit="1" useBinaryEdit="0" left="0" path="joyApp.c/joyApp.c" selected="1" top="98" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="35" y="386" useTextEdit="1" useBinaryEdit="0" left="0" path="joyApp.c/joyApp.c" selected="1" top="357" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="114" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/include/nrfx_rtc.h" selected="0" top="96" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="290" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_rtc.h" selected="0" top="277" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="17" y="30" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="30" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="174" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_rtc.c" selected="0" top="164" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="732" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/integration/nrfx/legacy/apply_old_config.h" selected="0" top="722" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="156" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="0" top="128" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="1" y="555" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpio.h" selected="0" top="474" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="555" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpio.h" selected="0" top="527" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="186" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/include/nrfx_gpiote.h" selected="0" top="172" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="50" y="260" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_gpiote.c" selected="0" top="234" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="86" y="433" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpiote.h" selected="0" top="417" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="260" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_gpiote.c" selected="0" top="234" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="433" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpiote.h" selected="0" top="417" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcJoy_Prg/src/nRF5_SDK/modules/nrfx/drivers/src" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcJoy_Prg/src/nRF5_SDK/modules/nrfx/drivers/src" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
