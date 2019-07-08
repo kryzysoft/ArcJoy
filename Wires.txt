@@ -1,0 +1,7 @@
+Joystick - 30 mm, 0.5mm2   x 8
+Fire button - 80mm 0.5mm2 x2
+Battery - 70mm
+
+Remove insul. ok 5mm
+
+
