@@ -68,16 +68,23 @@ void JOYAPP_Run(void)
   uint8_t joyButtonsState = 0;
   uint32_t fails = 0;
 
-  nrf_gpio_cfg_output(DIPSWITCH_1);
+  nrf_gpio_cfg_output(LED_R);
+  nrf_gpio_cfg_output(LED_B);
 
   while(true)
   {
-    nrf_gpio_pin_write(DIPSWITCH_1,1);
-    nrf_gpio_cfg_input(DIPSWITCH_2,GPIO_PIN_CNF_PULL_Pullup);
-    nrf_delay_ms(50);
-    nrf_gpio_cfg_default(DIPSWITCH_2);
-    nrf_gpio_pin_write(DIPSWITCH_1,0);
-    nrf_delay_ms(50);
+    nrf_gpio_pin_write(LED_R,1);
+    nrf_gpio_pin_write(LED_B,0);
+    nrf_delay_ms(100);
+    nrf_gpio_pin_write(LED_R,0);
+    nrf_gpio_pin_write(LED_B,0);
+    nrf_delay_ms(1000);
+    nrf_gpio_pin_write(LED_R,0);
+    nrf_gpio_pin_write(LED_B,1);
+    nrf_delay_ms(100);
+    nrf_gpio_pin_write(LED_R,0);
+    nrf_gpio_pin_write(LED_B,0);
+    nrf_delay_ms(1000);
   }
 }
 
