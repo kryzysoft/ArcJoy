@@ -2,12 +2,14 @@
 #include "stdint.h"
 #include "nrf.h"
 #include "nrf_esb.h"
-#include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "nrf_drv_timer.h"
 #include "nrf_drv_rtc.h"
 #include "nrf_drv_clock.h"
 #include "nrfx_gpiote.h"
+#include "HalGpio.h"
+
+#include "DefFix.h"
 
 static void clockStart(void);
 static void clockStop(void);
@@ -79,8 +81,12 @@ static volatile bool radioDone = false;
 static volatile bool sendHeartbeat = false;
 static volatile bool sendJoyState = false;
 
-
 static void joyEvent(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
+
+HalGpio redLed(LED_R,GpioMode::GPIO_OUTPUT,GpioPullType::GPIO_PULL_NONE);
+HalGpio blueLed(LED_R,GpioMode::GPIO_OUTPUT,GpioPullType::GPIO_PULL_NONE);
+
+void JOYAPP_Run();
 
 void JOYAPP_Run(void)
 {
@@ -89,7 +95,7 @@ void JOYAPP_Run(void)
   uint8_t joyButtonsState = 0;
   uint32_t fails = 0;
 
-  ledInit();
+//  ledInit();
 //  dipSwitchInit();
   joyInit();
   joyButtonsInit();
@@ -123,16 +129,16 @@ void JOYAPP_Run(void)
         if(radioSuccess)
         {
           fails = 0;
-          nrf_gpio_pin_write(LED_B,1);
+          blueLed.Up();
         }
         else
         {
           fails++;
-          nrf_gpio_pin_write(LED_R,1);
+          redLed.Up();
         }
         nrf_delay_ms(20);
-        nrf_gpio_pin_write(LED_B,0);
-        nrf_gpio_pin_write(LED_R,0);
+        blueLed.Down();
+        redLed.Down();
       }
       if(sendJoyState)
       {
@@ -185,14 +191,6 @@ static void clockStop(void)
 {
     // Start HFCLK and wait for it to start.
     NRF_CLOCK->TASKS_HFCLKSTOP = 1;
-}
-
-static void ledInit(void)
-{
-    nrf_gpio_cfg_output(LED_R);
-    nrf_gpio_cfg_output(LED_B);
-    // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
-    nrf_delay_ms(1);
 }
 
 static void dipSwitchInit(void)
