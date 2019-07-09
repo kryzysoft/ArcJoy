@@ -24,8 +24,10 @@
   <ProjectSessionItem path="ArcJoy"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;Application"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;Application;IHal"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;None"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Drivers"/>
+  <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Hal"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Libraries"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Log"/>
   <ProjectSessionItem path="ArcJoy;ArcJoy;nRF_Properitary_RF"/>
@@ -68,19 +70,22 @@
  <Files>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="79" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.c" selected="0" top="30" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="81" y="206" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.h" selected="0" top="206" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="16" y="88" useTextEdit="1" useBinaryEdit="0" left="0" path="src/joyApp.cpp" selected="0" top="78" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1" useTextEdit="1" useBinaryEdit="0" left="0" path="src/joyApp.cpp" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="59" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/include/nrfx_gpiote.h" selected="0" top="55" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="36" y="33" useTextEdit="1" useBinaryEdit="0" left="0" path="src/JoyHal/DefFix.h" selected="1" top="15" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="103" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/drivers/include/nrfx_rtc.h" selected="0" top="96" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="3" useTextEdit="1" useBinaryEdit="0" left="0" path="src/joyApp.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="2" y="37" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.cpp" selected="0" top="30" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="4" useTextEdit="1" useBinaryEdit="0" left="0" path="src/joyApp.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="59" y="66" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.cpp" selected="0" top="51" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="39" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util_platform.c" selected="0" top="36" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util_platform.h" selected="0" top="117" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="39" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/log/src/nrf_log_backend_rtt.c" selected="0" top="33" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="60" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/sdk_common.h" selected="0" top="51" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="214" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util.h" selected="0" top="204" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="5" y="217" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util.h" selected="0" top="162" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="77" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/memobj/nrf_memobj.c" selected="0" top="67" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/assertFix.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="6" y="12" useTextEdit="1" useBinaryEdit="0" left="0" path="src/IHal/IHalGpio.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="21" y="7" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfGpio.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="52" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfGpio.cpp" selected="0" top="7" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="34" y="197" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcJoy.cpp" selected="0" top="190" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="23" y="9" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcJoy.h" selected="1" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="99" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/hal/nrf_gpio.h" selected="0" top="89" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcJoy_Prg/src" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="ArcJoy" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcJoy_Prg/src/JoyHal" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

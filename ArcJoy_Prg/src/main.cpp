@@ -38,9 +38,34 @@
  *
  */
 
-#include "joyApp.h"
+#include "ArcJoy.h"
+#include "nRF_Hal/NrfGpio.h"
+
+
+#define LED_R 15
+#define LED_B 14
+
+#define DIPSWITCH_1 27
+#define DIPSWITCH_2 28
+#define DIPSWITCH_3 29
+#define DIPSWITCH_4 30
+#define DIPSWITCH_5  0
+#define DIPSWITCH_6  1
 
 int main(void)
 {
-    JOYAPP_Run();
+  NrfGpio redLed(LED_R, GPIO_OUTPUT, GPIO_PULL_NONE);
+  NrfGpio blueLed(LED_R, GPIO_OUTPUT, GPIO_PULL_NONE);
+
+  NrfGpio dipSwitch1(DIPSWITCH_1, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio dipSwitch2(DIPSWITCH_2, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio dipSwitch3(DIPSWITCH_3, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio dipSwitch4(DIPSWITCH_4, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio dipSwitch5(DIPSWITCH_5, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio dipSwitch6(DIPSWITCH_6, GPIO_INPUT, GPIO_PULL_UP);
+
+  ArcJoy arcJoy(&redLed, &blueLed, &dipSwitch1, &dipSwitch2, &dipSwitch3, &dipSwitch4, &dipSwitch5, &dipSwitch6);
+
+  arcJoy.Run();
+
 }

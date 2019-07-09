@@ -76,10 +76,13 @@
     <folder Name="Application">
       <file file_name="src/sdk_config.h" />
       <file file_name="src/joyApp.h" />
-      <file file_name="src/JoyHal/HalGpio.cpp" />
       <file file_name="src/joyApp.cpp" />
       <file file_name="src/main.cpp" />
-      <file file_name="src/JoyHal/HalGpio.h" />
+      <folder Name="IHal">
+        <file file_name="src/IHal/IHalGpio.h" />
+      </folder>
+      <file file_name="src/ArcJoy.cpp" />
+      <file file_name="src/ArcJoy.h" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="src/nRF5_SDK/external/segger_rtt/SEGGER_RTT.c" />
@@ -100,6 +103,10 @@
       cpp_only_additional_options=""
       gcc_cplusplus_language_standard="gnu++11" />
     <file file_name="src/nRF5_SDK/assertFix.h" />
+    <folder Name="nRF_Hal">
+      <file file_name="src/nRF_Hal/NrfGpio.h" />
+      <file file_name="src/nRF_Hal/NrfGpio.cpp" />
+    </folder>
   </project>
   <configuration
     Name="Release"
