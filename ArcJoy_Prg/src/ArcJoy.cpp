@@ -23,10 +23,7 @@ static uint8_t joyReadState(void);
 static void joyButtonsInit(void);
 static void joyButtonsDisable(void);
 static uint8_t joyButtonsReadState(void);
-static void radioInit(void);
-static void radioDisable(void);
-static void radioSendState(uint8_t joyButtons, uint8_t joystick);
-//static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event);
+
 static void systemOff(void);
 static void timerHeartbeatEventHandler(nrf_timer_event_t event_type, void* p_context);
 static void timerInit(void);
@@ -63,7 +60,7 @@ static nrf_esb_payload_t rx_payload;
 static const nrf_drv_timer_t heartbeatTimer = NRF_DRV_TIMER_INSTANCE(0);
 
 const nrf_drv_rtc_t rtc = NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance of nrf_drv_rtc for RTC0. */
-#define COMPARE_COUNTERTIME  (4UL)  
+#define COMPARE_COUNTERTIME  (2UL)  
 
 static volatile bool sendHeartbeat = false;
 static volatile bool sendJoyState = false;
@@ -125,7 +122,7 @@ void ArcJoy::Run()
           fails++;
           m_pHwConfig->redLed->Up();
         }
-        nrf_delay_ms(20);
+        nrf_delay_ms(50);
         m_pHwConfig->redLed->Down();
         m_pHwConfig->blueLed->Down();
       }
@@ -329,36 +326,6 @@ static uint8_t joyButtonsReadState(void)
   
   return retVal;
 } 
-
-static void radioInit(void)
-{
-    uint32_t err_code;
-    uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
-    uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
-    uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
-
-//    nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
-//    nrf_esb_config.retransmit_count         = 6;
-//    nrf_esb_config.selective_auto_ack       = false;
-//    nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
-//    nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
-//    nrf_esb_config.event_handler            = nrfEsbEventHandler;
-//    nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
-//
-//    nrf_esb_init(&nrf_esb_config);
-//    nrf_esb_set_base_address_0(base_addr_0);
-//    nrf_esb_set_base_address_1(base_addr_1);
-//    nrf_esb_set_prefixes(addr_prefix, 8);
-
-    tx_payload.length  = 2;
-    tx_payload.pipe    = 0;
-    tx_payload.data[0] = 0x00;
-}
-
-static void radioDisable(void)
-{
-//  nrf_esb_disable();
-}
 
 void ArcJoy::radioSendState(uint8_t joyButtons, uint8_t joystick)
 {
