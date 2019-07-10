@@ -31,7 +31,7 @@ NrfGpio::NrfGpio(uint32_t pinNumber, GpioMode gpioMode, GpioPullType gpioPullTyp
   }
 }
 
-void NrfGpio:: Up()
+void NrfGpio::Up()
 {
   nrf_gpio_pin_write(m_pinNumber, 1);
 }

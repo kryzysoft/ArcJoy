@@ -1,7 +1,6 @@
 #ifndef NRF_GPIO_H
 #define NRF_GPIO_H
 
-
 #include "IHal/IHalGpio.h"
 #include "stdint.h"
 #include "stdbool.h"

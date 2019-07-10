@@ -26,7 +26,7 @@ static uint8_t joyButtonsReadState(void);
 static void radioInit(void);
 static void radioDisable(void);
 static void radioSendState(uint8_t joyButtons, uint8_t joystick);
-static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event);
+//static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event);
 static void systemOff(void);
 static void timerHeartbeatEventHandler(nrf_timer_event_t event_type, void* p_context);
 static void timerInit(void);
@@ -65,26 +65,14 @@ static const nrf_drv_timer_t heartbeatTimer = NRF_DRV_TIMER_INSTANCE(0);
 const nrf_drv_rtc_t rtc = NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance of nrf_drv_rtc for RTC0. */
 #define COMPARE_COUNTERTIME  (4UL)  
 
-static volatile bool radioSuccess = false;
-static volatile bool radioDone = false;
-
 static volatile bool sendHeartbeat = false;
 static volatile bool sendJoyState = false;
 
 static void joyEvent(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
 
-
-
-ArcJoy::ArcJoy(IHalGpio *redLed, IHalGpio *blueLed, IHalGpio *dipSwitch1, IHalGpio *dipSwitch2, IHalGpio *dipSwitch3, IHalGpio *dipSwitch4, IHalGpio *dipSwitch5, IHalGpio *dipSwitch6)
+ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig)
 {
-  m_pRedLed = redLed;
-  m_pBlueLed = blueLed;
-  m_pDipSwitch1 = dipSwitch1;
-  m_pDipSwitch2 = dipSwitch2;
-  m_pDipSwitch3 = dipSwitch3;
-  m_pDipSwitch4 = dipSwitch4;
-  m_pDipSwitch5 = dipSwitch5;
-  m_pDipSwitch5 = dipSwitch6;
+  m_pHwConfig = hwConfig;
 }
 
 void ArcJoy::Run()
@@ -94,13 +82,19 @@ void ArcJoy::Run()
   uint8_t joyButtonsState = 0;
   uint32_t fails = 0;
 
-//  ledInit();
-//  dipSwitchInit();
-  joyInit();
+  uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
+  uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
+  uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
+
   joyButtonsInit();
+  joyInit();
   lfclkConfig();
   rtc_config();
-  radioInit();
+
+  m_pHwConfig->esbPtx->On();
+  m_pHwConfig->esbPtx->SetupAddress0(base_addr_0);
+  m_pHwConfig->esbPtx->SetupAddress1(base_addr_1);
+  m_pHwConfig->esbPtx->SetupAddressPrefixes(addr_prefix,8);
 
   bool led = false;
 
@@ -112,47 +106,42 @@ void ArcJoy::Run()
       {
         sendHeartbeat = false;
         clockStart();
-        radioSuccess = false;
-        radioInit();
+        m_pHwConfig->esbPtx->On();
         joyState = joyReadState();
         joyButtonsState = joyButtonsReadState();
-        radioDone = false;
-        radioSendState(joyButtonsState,joyState);;
-        while(!radioDone)
+        radioSendState(joyButtonsState,joyState);
+        while(m_pHwConfig->esbPtx->IsRadioBusy())
         {
-
         }
-        radioDisable();
+        m_pHwConfig->esbPtx->Off();
         clockStop();
-        if(radioSuccess)
+        if(m_pHwConfig->esbPtx->SendSucceeded())
         {
           fails = 0;
-          m_pBlueLed->Up();
+          m_pHwConfig->blueLed->Up();
         }
         else
         {
           fails++;
-          m_pRedLed->Up();
+          m_pHwConfig->redLed->Up();
         }
         nrf_delay_ms(20);
-        m_pBlueLed->Down();
-        m_pRedLed->Down();
+        m_pHwConfig->redLed->Down();
+        m_pHwConfig->blueLed->Down();
       }
       if(sendJoyState)
       {
         sendJoyState = false;
         clockStart();
-        radioSuccess = false;
-        radioInit();
+        m_pHwConfig->esbPtx->On();
         joyState = joyReadState();
         joyButtonsState = joyButtonsReadState();
-        radioDone = false;
-        radioSendState(joyButtonsState,joyState);;
-        while(!radioDone)
+        radioSendState(joyButtonsState,joyState);
+        while(m_pHwConfig->esbPtx->IsRadioBusy())
         {
 
         }
-        radioDisable();
+        m_pHwConfig->esbPtx->Off();
         clockStop();
       }
     }
@@ -171,7 +160,28 @@ void ArcJoy::Run()
 }
 
 
+static void joyInit(void)
+{
+    nrf_gpio_cfg_input(JOY_LEFT, NRF_GPIO_PIN_NOPULL);
+    nrf_gpio_cfg_input(JOY_RIGHT, NRF_GPIO_PIN_NOPULL);
+    nrf_gpio_cfg_input(JOY_UP, NRF_GPIO_PIN_NOPULL);
+    nrf_gpio_cfg_input(JOY_DOWN, NRF_GPIO_PIN_NOPULL);
+    // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
+    nrfx_gpiote_init();
+    nrfx_gpiote_in_config_t config = NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(true);
+    nrfx_gpiote_in_init(JOY_LEFT,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_RIGHT,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_UP,&config,joyEvent);
+    nrfx_gpiote_in_init(JOY_DOWN,&config,joyEvent);
 
+   nrfx_gpiote_in_event_enable(JOY_LEFT,true);
+   nrfx_gpiote_in_event_enable(JOY_RIGHT,true);
+   nrfx_gpiote_in_event_enable(JOY_UP,true);
+   nrfx_gpiote_in_event_enable(JOY_DOWN,true);
+
+
+    nrf_delay_ms(1);
+}
 
 static void goToSleep(void)
 {
@@ -199,61 +209,38 @@ uint8_t ArcJoy::dipSwitchReadState()
 {
   uint8_t retVal = 0;
 
-  if(m_pDipSwitch1->IsDown())
+  if(m_pHwConfig->dipSwitch6->IsDown())
   {
     retVal |= 1;
     retVal = retVal << 1;
   }
-  if(m_pDipSwitch2->IsDown())
+  if(m_pHwConfig->dipSwitch5->IsDown())
   {
     retVal |= 1;
     retVal = retVal << 1;
   }
-  if(m_pDipSwitch3->IsDown())
+  if(m_pHwConfig->dipSwitch4->IsDown())
   {
     retVal |= 1;
     retVal = retVal << 1;
   }
-  if(m_pDipSwitch4->IsDown())
+  if(m_pHwConfig->dipSwitch3->IsDown())
   {
     retVal |= 1;
     retVal = retVal << 1;
   }
-  if(m_pDipSwitch5->IsDown())
+  if(m_pHwConfig->dipSwitch2->IsDown())
   {
     retVal |= 1;
     retVal = retVal << 1;
   }
-  if(m_pDipSwitch6->IsDown())
+  if(m_pHwConfig->dipSwitch1->IsDown())
   {
     retVal |= 1;
     retVal = retVal << 1;
   }
   
   return retVal;
-}
-
-static void joyInit(void)
-{
-    nrf_gpio_cfg_input(JOY_LEFT, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_RIGHT, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_UP, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_DOWN, NRF_GPIO_PIN_NOPULL);
-    // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
-    nrfx_gpiote_init();
-    nrfx_gpiote_in_config_t config = NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(true);
-    nrfx_gpiote_in_init(JOY_LEFT,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_RIGHT,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_UP,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_DOWN,&config,joyEvent);
-
-   nrfx_gpiote_in_event_enable(JOY_LEFT,true);
-   nrfx_gpiote_in_event_enable(JOY_RIGHT,true);
-   nrfx_gpiote_in_event_enable(JOY_UP,true);
-   nrfx_gpiote_in_event_enable(JOY_DOWN,true);
-
-
-    nrf_delay_ms(1);
 }
 
 static void joyDisable(void)
@@ -350,18 +337,18 @@ static void radioInit(void)
     uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
     uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
 
-    nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
-    nrf_esb_config.retransmit_count         = 6;
-    nrf_esb_config.selective_auto_ack       = false;
-    nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
-    nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
-    nrf_esb_config.event_handler            = nrfEsbEventHandler;
-    nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
-
-    nrf_esb_init(&nrf_esb_config);
-    nrf_esb_set_base_address_0(base_addr_0);
-    nrf_esb_set_base_address_1(base_addr_1);
-    nrf_esb_set_prefixes(addr_prefix, 8);
+//    nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
+//    nrf_esb_config.retransmit_count         = 6;
+//    nrf_esb_config.selective_auto_ack       = false;
+//    nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
+//    nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
+//    nrf_esb_config.event_handler            = nrfEsbEventHandler;
+//    nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
+//
+//    nrf_esb_init(&nrf_esb_config);
+//    nrf_esb_set_base_address_0(base_addr_0);
+//    nrf_esb_set_base_address_1(base_addr_1);
+//    nrf_esb_set_prefixes(addr_prefix, 8);
 
     tx_payload.length  = 2;
     tx_payload.pipe    = 0;
@@ -370,38 +357,18 @@ static void radioInit(void)
 
 static void radioDisable(void)
 {
-  nrf_esb_disable();
+//  nrf_esb_disable();
 }
 
-static void radioSendState(uint8_t joyButtons, uint8_t joystick)
+void ArcJoy::radioSendState(uint8_t joyButtons, uint8_t joystick)
 {
-    tx_payload.length  = 3;
-    tx_payload.pipe    = 0;
-    tx_payload.data[0] = FRAME_JOYSTATE;
-    tx_payload.data[1] = joystick;
-    tx_payload.data[2] = joyButtons;
-    tx_payload.noack = false;
-
-    nrf_esb_write_payload(&tx_payload);
+  const uint8_t dataLength = 3;
+  uint8_t data[dataLength];
+  data[0] = FRAME_JOYSTATE;
+  data[1] = joystick;
+  data[2] = joyButtons;
+  m_pHwConfig->esbPtx->SendFrame(0,data,dataLength);
 }
-
-static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event)
-{
-    radioDone = true;
-    switch (p_event->evt_id)
-    {
-        case NRF_ESB_EVENT_TX_SUCCESS:
-            radioSuccess = true;
-            break;
-        case NRF_ESB_EVENT_TX_FAILED:
-            nrf_esb_flush_tx();
-            break;
-        case NRF_ESB_EVENT_RX_RECEIVED:
-            while (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS);
-            break;
-    }
-}
-
 
 static void systemOff( void )
 {

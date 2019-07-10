@@ -40,6 +40,8 @@
 
 #include "ArcJoy.h"
 #include "nRF_Hal/NrfGpio.h"
+#include "nRF_Hal/NrfEsbRadioPtx.h"
+
 
 
 #define LED_R 15
@@ -52,10 +54,22 @@
 #define DIPSWITCH_5  0
 #define DIPSWITCH_6  1
 
+#define JOY_LEFT     3
+#define JOY_RIGHT   22
+#define JOY_UP       8
+#define JOY_DOWN    26
+
+#define JOY_BUTTON_1 9
+#define JOY_BUTTON_2 6
+#define JOY_BUTTON_3 7
+#define JOY_BUTTON_4 5
+#define JOY_BUTTON_5 2
+#define JOY_BUTTON_6 4
+
 int main(void)
 {
   NrfGpio redLed(LED_R, GPIO_OUTPUT, GPIO_PULL_NONE);
-  NrfGpio blueLed(LED_R, GPIO_OUTPUT, GPIO_PULL_NONE);
+  NrfGpio blueLed(LED_B, GPIO_OUTPUT, GPIO_PULL_NONE);
 
   NrfGpio dipSwitch1(DIPSWITCH_1, GPIO_INPUT, GPIO_PULL_UP);
   NrfGpio dipSwitch2(DIPSWITCH_2, GPIO_INPUT, GPIO_PULL_UP);
@@ -63,8 +77,48 @@ int main(void)
   NrfGpio dipSwitch4(DIPSWITCH_4, GPIO_INPUT, GPIO_PULL_UP);
   NrfGpio dipSwitch5(DIPSWITCH_5, GPIO_INPUT, GPIO_PULL_UP);
   NrfGpio dipSwitch6(DIPSWITCH_6, GPIO_INPUT, GPIO_PULL_UP);
+  
+  NrfGpio joyLeft(JOY_LEFT, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio joyRight(JOY_RIGHT, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio joyUp(JOY_UP, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio joyDown(JOY_DOWN, GPIO_INPUT, GPIO_PULL_UP);
 
-  ArcJoy arcJoy(&redLed, &blueLed, &dipSwitch1, &dipSwitch2, &dipSwitch3, &dipSwitch4, &dipSwitch5, &dipSwitch6);
+  NrfGpio joyButton1(JOY_BUTTON_1, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio joyButton2(JOY_BUTTON_2, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio joyButton3(JOY_BUTTON_3, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio joyButton4(JOY_BUTTON_4, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio joyButton5(JOY_BUTTON_5, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpio joyButton6(JOY_BUTTON_6, GPIO_INPUT, GPIO_PULL_UP);
+
+  NrfEsbRadioPtx ptxRadio;
+
+  ArcJoyHardwareConfig hwConfig;
+
+  hwConfig.dipSwitch1 = &dipSwitch1;
+  hwConfig.dipSwitch2 = &dipSwitch2;
+  hwConfig.dipSwitch3 = &dipSwitch3;
+  hwConfig.dipSwitch4 = &dipSwitch4;
+  hwConfig.dipSwitch5 = &dipSwitch5;
+  hwConfig.dipSwitch6 = &dipSwitch6;
+
+  hwConfig.redLed = &redLed;
+  hwConfig.blueLed = &blueLed;
+
+  hwConfig.joyLeft = &joyLeft;
+  hwConfig.joyRight = &joyRight;
+  hwConfig.joyUp = &joyUp;
+  hwConfig.joyDown = &joyDown;
+
+  hwConfig.joyButton1 = &joyButton1;
+  hwConfig.joyButton2 = &joyButton2;
+  hwConfig.joyButton3 = &joyButton3;
+  hwConfig.joyButton4 = &joyButton4;
+  hwConfig.joyButton5 = &joyButton5;
+  hwConfig.joyButton6 = &joyButton6;
+
+  hwConfig.esbPtx = &ptxRadio;
+
+  ArcJoy arcJoy(&hwConfig);
 
   arcJoy.Run();
 

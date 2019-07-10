@@ -80,6 +80,7 @@
       <file file_name="src/main.cpp" />
       <folder Name="IHal">
         <file file_name="src/IHal/IHalGpio.h" />
+        <file file_name="src/IHal/IHalEsbRadioPtx.h" />
       </folder>
       <file file_name="src/ArcJoy.cpp" />
       <file file_name="src/ArcJoy.h" />
@@ -106,6 +107,8 @@
     <folder Name="nRF_Hal">
       <file file_name="src/nRF_Hal/NrfGpio.h" />
       <file file_name="src/nRF_Hal/NrfGpio.cpp" />
+      <file file_name="src/nRF_Hal/NrfEsbRadioPtx.h" />
+      <file file_name="src/nRF_Hal/NrfEsbRadioPtx.cpp" />
     </folder>
   </project>
   <configuration

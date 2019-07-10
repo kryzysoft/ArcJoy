@@ -2,23 +2,46 @@
 #define ARC_JOY_H
 
 #include "IHal/IHalGpio.h"
+#include "IHal/IHalEsbRadioPtx.h"
 #include "stdint.h"
+
+typedef struct
+{
+  IHalGpio *dipSwitch1;
+  IHalGpio *dipSwitch2;
+  IHalGpio *dipSwitch3;
+  IHalGpio *dipSwitch4;
+  IHalGpio *dipSwitch5;
+  IHalGpio *dipSwitch6;
+
+  IHalGpio *redLed;
+  IHalGpio *blueLed;
+
+  IHalGpio *joyLeft;
+  IHalGpio *joyRight;
+  IHalGpio *joyUp;
+  IHalGpio *joyDown;
+
+  IHalGpio *joyButton1;
+  IHalGpio *joyButton2;
+  IHalGpio *joyButton3;
+  IHalGpio *joyButton4;
+  IHalGpio *joyButton5;
+  IHalGpio *joyButton6;
+
+  IHalEsbRadioPtx *esbPtx;
+
+} ArcJoyHardwareConfig;
 
 class ArcJoy
 {
   private:
-    IHalGpio *m_pRedLed;
-    IHalGpio *m_pBlueLed;
-    IHalGpio *m_pDipSwitch1;
-    IHalGpio *m_pDipSwitch2;
-    IHalGpio *m_pDipSwitch3;
-    IHalGpio *m_pDipSwitch4;
-    IHalGpio *m_pDipSwitch5;
-    IHalGpio *m_pDipSwitch6;
+    ArcJoyHardwareConfig *m_pHwConfig;
 
     uint8_t dipSwitchReadState();
+    void radioSendState(uint8_t joyButtons, uint8_t joystick);
   public:
-    ArcJoy(IHalGpio *redLed, IHalGpio *blueLed, IHalGpio *dipSwitch1, IHalGpio *dipSwitch2, IHalGpio *dipSwitch3, IHalGpio *dipSwitch4, IHalGpio *dipSwitch5, IHalGpio *dipSwitch6);
+    ArcJoy(ArcJoyHardwareConfig *hwConfig);
     void Run();
 };
 
