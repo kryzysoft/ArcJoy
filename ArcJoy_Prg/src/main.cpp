@@ -39,8 +39,11 @@
  */
 
 #include "ArcJoy.h"
-#include "nRF_Hal/NrfGpio.h"
+#include "nRF_Hal/NrfGpioInput.h"
+#include "nRF_Hal/NrfGpioInputIrq.h"
+#include "nRF_Hal/NrfGpioOutput.h"
 #include "nRF_Hal/NrfEsbRadioPtx.h"
+#include "nRF_Hal/NrfRtc.h"
 
 
 
@@ -68,29 +71,31 @@
 
 int main(void)
 {
-  NrfGpio redLed(LED_R, GPIO_OUTPUT, GPIO_PULL_NONE);
-  NrfGpio blueLed(LED_B, GPIO_OUTPUT, GPIO_PULL_NONE);
+  NrfGpioOutput redLed(LED_R);
+  NrfGpioOutput blueLed(LED_B);
 
-  NrfGpio dipSwitch1(DIPSWITCH_1, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio dipSwitch2(DIPSWITCH_2, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio dipSwitch3(DIPSWITCH_3, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio dipSwitch4(DIPSWITCH_4, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio dipSwitch5(DIPSWITCH_5, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio dipSwitch6(DIPSWITCH_6, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpioInput dipSwitch1(DIPSWITCH_1, GPIO_PULL_UP);
+  NrfGpioInput dipSwitch2(DIPSWITCH_2, GPIO_PULL_UP);
+  NrfGpioInput dipSwitch3(DIPSWITCH_3, GPIO_PULL_UP);
+  NrfGpioInput dipSwitch4(DIPSWITCH_4, GPIO_PULL_UP);
+  NrfGpioInput dipSwitch5(DIPSWITCH_5, GPIO_PULL_UP);
+  NrfGpioInput dipSwitch6(DIPSWITCH_6, GPIO_PULL_UP);
   
-  NrfGpio joyLeft(JOY_LEFT, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio joyRight(JOY_RIGHT, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio joyUp(JOY_UP, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio joyDown(JOY_DOWN, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpioInputIrq joyLeft(JOY_LEFT, GPIO_PULL_NONE);
+  NrfGpioInputIrq joyRight(JOY_RIGHT, GPIO_PULL_NONE);
+  NrfGpioInputIrq joyUp(JOY_UP, GPIO_PULL_NONE);
+  NrfGpioInputIrq joyDown(JOY_DOWN, GPIO_PULL_NONE);
 
-  NrfGpio joyButton1(JOY_BUTTON_1, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio joyButton2(JOY_BUTTON_2, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio joyButton3(JOY_BUTTON_3, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio joyButton4(JOY_BUTTON_4, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio joyButton5(JOY_BUTTON_5, GPIO_INPUT, GPIO_PULL_UP);
-  NrfGpio joyButton6(JOY_BUTTON_6, GPIO_INPUT, GPIO_PULL_UP);
+  NrfGpioInputIrq joyButton1(JOY_BUTTON_1, GPIO_PULL_NONE);
+  NrfGpioInputIrq joyButton2(JOY_BUTTON_2, GPIO_PULL_NONE);
+  NrfGpioInputIrq joyButton3(JOY_BUTTON_3, GPIO_PULL_NONE);
+  NrfGpioInputIrq joyButton4(JOY_BUTTON_4, GPIO_PULL_NONE);
+  NrfGpioInputIrq joyButton5(JOY_BUTTON_5, GPIO_PULL_NONE);
+  NrfGpioInputIrq joyButton6(JOY_BUTTON_6, GPIO_PULL_NONE);
 
   NrfEsbRadioPtx ptxRadio;
+
+  NrfRtc rtcClock;
 
   ArcJoyHardwareConfig hwConfig;
 
@@ -117,6 +122,8 @@ int main(void)
   hwConfig.joyButton6 = &joyButton6;
 
   hwConfig.esbPtx = &ptxRadio;
+
+  hwConfig.rtcClock = &rtcClock;
 
   ArcJoy arcJoy(&hwConfig);
 

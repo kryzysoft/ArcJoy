@@ -1,48 +1,62 @@
 #ifndef ARC_JOY_H
 #define ARC_JOY_H
 
-#include "IHal/IHalGpio.h"
+#include "IHal/IHalGpioInput.h"
+#include "IHal/IHalGpioInputIrq.h"
+#include "IHal/IHalGpioOutput.h"
 #include "IHal/IHalEsbRadioPtx.h"
+#include "IHal/IHalRtc.h"
 #include "stdint.h"
 
 typedef struct
 {
-  IHalGpio *dipSwitch1;
-  IHalGpio *dipSwitch2;
-  IHalGpio *dipSwitch3;
-  IHalGpio *dipSwitch4;
-  IHalGpio *dipSwitch5;
-  IHalGpio *dipSwitch6;
+  IHalGpioInput *dipSwitch1;
+  IHalGpioInput *dipSwitch2;
+  IHalGpioInput *dipSwitch3;
+  IHalGpioInput *dipSwitch4;
+  IHalGpioInput *dipSwitch5;
+  IHalGpioInput *dipSwitch6;
 
-  IHalGpio *redLed;
-  IHalGpio *blueLed;
+  IHalGpioOutput *redLed;
+  IHalGpioOutput *blueLed;
 
-  IHalGpio *joyLeft;
-  IHalGpio *joyRight;
-  IHalGpio *joyUp;
-  IHalGpio *joyDown;
+  IHalGpioInputIrq *joyLeft;
+  IHalGpioInputIrq *joyRight;
+  IHalGpioInputIrq *joyUp;
+  IHalGpioInputIrq *joyDown;
 
-  IHalGpio *joyButton1;
-  IHalGpio *joyButton2;
-  IHalGpio *joyButton3;
-  IHalGpio *joyButton4;
-  IHalGpio *joyButton5;
-  IHalGpio *joyButton6;
+  IHalGpioInputIrq *joyButton1;
+  IHalGpioInputIrq *joyButton2;
+  IHalGpioInputIrq *joyButton3;
+  IHalGpioInputIrq *joyButton4;
+  IHalGpioInputIrq *joyButton5;
+  IHalGpioInputIrq *joyButton6;
 
   IHalEsbRadioPtx *esbPtx;
 
+  IHalRtc *rtcClock;
+
 } ArcJoyHardwareConfig;
 
-class ArcJoy
+class ArcJoy: public IHalRtcAlarmHandler, public IHalGpioHandler
 {
   private:
     ArcJoyHardwareConfig *m_pHwConfig;
+    static bool sendHeartbeat;
 
     uint8_t dipSwitchReadState();
     void radioSendState(uint8_t joyButtons, uint8_t joystick);
+    uint8_t joyReadState();
+    uint8_t joyButtonsReadState();
+    void joyInit();
+    void joyButtonsInit();
   public:
+    static bool sendJoyState;
+
     ArcJoy(ArcJoyHardwareConfig *hwConfig);
     void Run();
+    void RtcAlarmHandler();
+    void GpioHandler();
 };
 
 #endif

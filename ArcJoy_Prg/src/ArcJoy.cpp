@@ -13,10 +13,7 @@
 void JOYAPP_Run();
 static void clockStart(void);
 static void clockStop(void);
-static void ledInit(void);
-static void dipSwitchInit(void);
-static void dipSwitchDisable(void);
-static uint8_t dipSwitchReadState(void);
+
 static void joyInit(void);
 static void joyDisable(void);
 static uint8_t joyReadState(void);
@@ -25,11 +22,6 @@ static void joyButtonsDisable(void);
 static uint8_t joyButtonsReadState(void);
 
 static void systemOff(void);
-static void timerHeartbeatEventHandler(nrf_timer_event_t event_type, void* p_context);
-static void timerInit(void);
-static void lfclkConfig(void);
-static void rtc_config(void);
-static void rtc_handler(nrf_drv_rtc_int_type_t int_type);
 static void goToSleep(void);
 
 #define NONE  0
@@ -55,17 +47,16 @@ static void goToSleep(void);
 
 #define MAX_RADIO_FAILS 5
 
-static nrf_esb_payload_t tx_payload = NRF_ESB_CREATE_PAYLOAD(0, 0x01, 0x00);
-static nrf_esb_payload_t rx_payload;
 static const nrf_drv_timer_t heartbeatTimer = NRF_DRV_TIMER_INSTANCE(0);
 
 const nrf_drv_rtc_t rtc = NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance of nrf_drv_rtc for RTC0. */
-#define COMPARE_COUNTERTIME  (2UL)  
+#define COMPARE_COUNTERTIME (2UL)
 
-static volatile bool sendHeartbeat = false;
-static volatile bool sendJoyState = false;
 
 static void joyEvent(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
+
+bool ArcJoy::sendHeartbeat = false;
+bool ArcJoy::sendJoyState = false;
 
 ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig)
 {
@@ -83,10 +74,11 @@ void ArcJoy::Run()
   uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
   uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
 
-  joyButtonsInit();
   joyInit();
-  lfclkConfig();
-  rtc_config();
+  joyButtonsInit();
+  
+  m_pHwConfig->rtcClock->SetupAlarmHandler(this);
+  m_pHwConfig->rtcClock->SetupAlarmInSeconds(COMPARE_COUNTERTIME);
 
   m_pHwConfig->esbPtx->On();
   m_pHwConfig->esbPtx->SetupAddress0(base_addr_0);
@@ -157,27 +149,12 @@ void ArcJoy::Run()
 }
 
 
-static void joyInit(void)
+void ArcJoy::joyInit(void)
 {
-    nrf_gpio_cfg_input(JOY_LEFT, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_RIGHT, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_UP, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_DOWN, NRF_GPIO_PIN_NOPULL);
-    // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
-    nrfx_gpiote_init();
-    nrfx_gpiote_in_config_t config = NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(true);
-    nrfx_gpiote_in_init(JOY_LEFT,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_RIGHT,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_UP,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_DOWN,&config,joyEvent);
-
-   nrfx_gpiote_in_event_enable(JOY_LEFT,true);
-   nrfx_gpiote_in_event_enable(JOY_RIGHT,true);
-   nrfx_gpiote_in_event_enable(JOY_UP,true);
-   nrfx_gpiote_in_event_enable(JOY_DOWN,true);
-
-
-    nrf_delay_ms(1);
+  m_pHwConfig->joyLeft->SetupHandler(this);
+  m_pHwConfig->joyRight->SetupHandler(this);
+  m_pHwConfig->joyUp->SetupHandler(this);
+  m_pHwConfig->joyDown->SetupHandler(this);
 }
 
 static void goToSleep(void)
@@ -250,49 +227,31 @@ static void joyDisable(void)
     nrf_delay_ms(1);
 }
 
-static uint8_t joyReadState(void)
+uint8_t ArcJoy::joyReadState(void)
 {
-  uint8_t joyState = 0x0F;
-
-  if(nrf_gpio_pin_read(JOY_LEFT)) joyState &= (~LEFT);
-  if(nrf_gpio_pin_read(JOY_RIGHT)) joyState &= (~RIGHT);
-  if(nrf_gpio_pin_read(JOY_UP)) joyState &= (~UP);
-  if(nrf_gpio_pin_read(JOY_DOWN)) joyState &= (~DOWN);
+  uint8_t joyState = 0;
+  
+  if(m_pHwConfig->joyLeft->IsDown()) joyState |= LEFT;
+  if(m_pHwConfig->joyRight->IsDown()) joyState |= RIGHT;
+  if(m_pHwConfig->joyUp->IsDown()) joyState |= UP;
+  if(m_pHwConfig->joyDown->IsDown()) joyState |= DOWN;
 
   return joyState;
 } 
 
-static void joyEvent(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
+void ArcJoy::GpioHandler()
 {
-  sendJoyState = true;
+  ArcJoy::sendJoyState = true;
 }
 
-static void joyButtonsInit(void)
+void ArcJoy::joyButtonsInit(void)
 {
-    nrf_gpio_cfg_input(JOY_BUTTON_1, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_BUTTON_2, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_BUTTON_3, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_BUTTON_4, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_BUTTON_5, NRF_GPIO_PIN_NOPULL);
-    nrf_gpio_cfg_input(JOY_BUTTON_6, NRF_GPIO_PIN_NOPULL);
-
-    nrfx_gpiote_in_config_t config = NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(true);
-    nrfx_gpiote_in_init(JOY_BUTTON_1,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_BUTTON_2,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_BUTTON_3,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_BUTTON_4,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_BUTTON_5,&config,joyEvent);
-    nrfx_gpiote_in_init(JOY_BUTTON_6,&config,joyEvent);
-
-   nrfx_gpiote_in_event_enable(JOY_BUTTON_1,true);
-   nrfx_gpiote_in_event_enable(JOY_BUTTON_2,true);
-   nrfx_gpiote_in_event_enable(JOY_BUTTON_3,true);
-   nrfx_gpiote_in_event_enable(JOY_BUTTON_4,true);
-   nrfx_gpiote_in_event_enable(JOY_BUTTON_5,true);
-   nrfx_gpiote_in_event_enable(JOY_BUTTON_6,true);
-
-    // Workaround for PAN_028 rev1.1 anomaly 22 - System: Issues with disable System OFF mechanism
-    nrf_delay_ms(1);
+  m_pHwConfig->joyButton1->SetupHandler(this);
+  m_pHwConfig->joyButton2->SetupHandler(this);
+  m_pHwConfig->joyButton3->SetupHandler(this);
+  m_pHwConfig->joyButton4->SetupHandler(this);
+  m_pHwConfig->joyButton5->SetupHandler(this);
+  m_pHwConfig->joyButton6->SetupHandler(this);
 }
 
 static void joyButtonsDisable(void)
@@ -307,23 +266,21 @@ static void joyButtonsDisable(void)
     nrf_delay_ms(1);
 }
 
-static uint8_t joyButtonsReadState(void)
+uint8_t ArcJoy::joyButtonsReadState(void)
 {
   uint8_t retVal = 0;
-  retVal |= nrf_gpio_pin_read(JOY_BUTTON_1);
-  retVal = retVal << 1;
-  retVal |= nrf_gpio_pin_read(JOY_BUTTON_2);
-  retVal = retVal << 1;
-  retVal |= nrf_gpio_pin_read(JOY_BUTTON_3);
-  retVal = retVal << 1;
-  retVal |= nrf_gpio_pin_read(JOY_BUTTON_4);
-  retVal = retVal << 1;
-  retVal |= nrf_gpio_pin_read(JOY_BUTTON_5);
-  retVal = retVal << 1;
-  retVal |= nrf_gpio_pin_read(JOY_BUTTON_6);
 
-  retVal ^= 0x3F;
-  
+  if(m_pHwConfig->joyButton1->IsDown()) retVal |= 1;
+  retVal = retVal << 1;
+  if(m_pHwConfig->joyButton2->IsDown()) retVal |= 1;
+  retVal = retVal << 1;
+  if(m_pHwConfig->joyButton3->IsDown()) retVal |= 1;
+  retVal = retVal << 1;
+  if(m_pHwConfig->joyButton4->IsDown()) retVal |= 1;
+  retVal = retVal << 1;
+  if(m_pHwConfig->joyButton5->IsDown()) retVal |= 1;
+  retVal = retVal << 1;
+  if(m_pHwConfig->joyButton6->IsDown()) retVal |= 1;
   return retVal;
 } 
 
@@ -344,50 +301,8 @@ static void systemOff( void )
     while (true);
 }
 
-static void lfclkConfig(void)
+void ArcJoy::RtcAlarmHandler()
 {
-    nrf_drv_clock_init();
-    nrf_drv_clock_lfclk_request(NULL);
-}
-
-static void rtc_config(void)
-{
-    uint32_t err_code;
-
-    //Initialize RTC instance
-    nrfx_rtc_config_t rtcConfig = NRFX_RTC_DEFAULT_CONFIG;
-  //  nrf_drv_rtc_config_t config = NRF_DRV_RTC_DEFAULT_CONFIG;
-    rtcConfig.prescaler = 4095;
-    
-    nrfx_rtc_init(&rtc, &rtcConfig, rtc_handler);
-
-//    nrf_drv_rtc_init(&rtc, &config, rtc_handler);
-    
-    //Enable tick event & interrupt
-//    nrf_drv_rtc_tick_enable(&rtc,true);
-
-
-    //Set compare channel to trigger interrupt after COMPARE_COUNTERTIME seconds
-
-  //  err_code = nrf_drv_rtc_cc_set(&rtc,0,COMPARE_COUNTERTIME * 24,true);
-  nrfx_rtc_cc_set(&rtc,0,COMPARE_COUNTERTIME*8, true);
-
-    //Power on RTC instance
-    nrfx_rtc_enable(&rtc);
-//    nrf_drv_rtc_enable(&rtc);
-}
-
-/** @brief: Function for handling the RTC0 interrupts.
- * Triggered on TICK and COMPARE0 match.
- */
-
-volatile bool ledState = false;
-static void rtc_handler(nrf_drv_rtc_int_type_t int_type)
-{
-    if (int_type == NRF_DRV_RTC_INT_COMPARE0)
-    {
-      sendHeartbeat = true;
-      nrfx_rtc_counter_clear(&rtc);
-      nrfx_rtc_cc_set(&rtc,0,COMPARE_COUNTERTIME*8, true);
-    }
+  ArcJoy::sendHeartbeat = true;
+  m_pHwConfig->rtcClock->SetupAlarmInSeconds(COMPARE_COUNTERTIME);
 }

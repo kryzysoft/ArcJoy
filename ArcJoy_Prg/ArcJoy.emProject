@@ -79,8 +79,11 @@
       <file file_name="src/joyApp.cpp" />
       <file file_name="src/main.cpp" />
       <folder Name="IHal">
-        <file file_name="src/IHal/IHalGpio.h" />
         <file file_name="src/IHal/IHalEsbRadioPtx.h" />
+        <file file_name="src/IHal/IHalGpioInput.h" />
+        <file file_name="src/IHal/IHalGpioOutput.h" />
+        <file file_name="src/IHal/IHalRtc.h" />
+        <file file_name="src/IHal/IHalGpioInputIrq.h" />
       </folder>
       <file file_name="src/ArcJoy.cpp" />
       <file file_name="src/ArcJoy.h" />
@@ -105,10 +108,16 @@
       gcc_cplusplus_language_standard="gnu++11" />
     <file file_name="src/nRF5_SDK/assertFix.h" />
     <folder Name="nRF_Hal">
-      <file file_name="src/nRF_Hal/NrfGpio.h" />
-      <file file_name="src/nRF_Hal/NrfGpio.cpp" />
       <file file_name="src/nRF_Hal/NrfEsbRadioPtx.h" />
       <file file_name="src/nRF_Hal/NrfEsbRadioPtx.cpp" />
+      <file file_name="src/nRF_Hal/NrfGpioInput.h" />
+      <file file_name="src/nRF_Hal/NrfGpioOutput.h" />
+      <file file_name="src/nRF_Hal/NrfGpioInput.cpp" />
+      <file file_name="src/nRF_Hal/NrfGpioOutput.cpp" />
+      <file file_name="src/nRF_Hal/NrfRtc.h" />
+      <file file_name="src/nRF_Hal/NrfRtc.cpp" />
+      <file file_name="src/nRF_Hal/NrfGpioInputIrq.h" />
+      <file file_name="src/nRF_Hal/NrfGpioInputIrq.cpp" />
     </folder>
   </project>
   <configuration
