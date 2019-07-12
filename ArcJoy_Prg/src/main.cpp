@@ -45,8 +45,8 @@
 #include "nRF_Hal/NrfEsbRadioPtx.h"
 #include "nRF_Hal/NrfRtc.h"
 #include "nRF_Hal/NrfSystemOffMode.h"
-
-
+#include "nRF_Hal/NrfSleepMode.h"
+#include "nRF_Hal/NrfDelay.h"
 
 #define LED_R 15
 #define LED_B 14
@@ -88,6 +88,7 @@ int main(void)
   NrfGpioInputIrq joyDown(JOY_DOWN, GPIO_PULL_NONE);
 
   NrfGpioInputIrq joyButton1(JOY_BUTTON_1, GPIO_PULL_NONE);
+  joyButton1.EnableSense(SENSE_LOW);
   NrfGpioInputIrq joyButton2(JOY_BUTTON_2, GPIO_PULL_NONE);
   NrfGpioInputIrq joyButton3(JOY_BUTTON_3, GPIO_PULL_NONE);
   NrfGpioInputIrq joyButton4(JOY_BUTTON_4, GPIO_PULL_NONE);
@@ -99,6 +100,8 @@ int main(void)
   NrfRtc rtcClock;
 
   NrfSystemOffMode systemOffMode;
+  NrfSleepMode sleepMode;
+  NrfDelay delay;
 
   ArcJoyHardwareConfig hwConfig;
 
@@ -129,6 +132,8 @@ int main(void)
   hwConfig.rtcClock = &rtcClock;
 
   hwConfig.offMode = &systemOffMode;
+  hwConfig.sleepMode = &sleepMode;
+  hwConfig.delay = &delay;
 
   ArcJoy arcJoy(&hwConfig);
 

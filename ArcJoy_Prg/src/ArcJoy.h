@@ -7,6 +7,7 @@
 #include "IHal/IHalEsbRadioPtx.h"
 #include "IHal/IHalRtc.h"
 #include "IHal/IHalLowPowerMode.h"
+#include "IHal/IHalDelay.h"
 
 #include "stdint.h"
 
@@ -41,6 +42,8 @@ typedef struct
   IHalLowPowerMode *offMode;
   IHalLowPowerMode *sleepMode;
 
+  IHalDelay *delay;
+
 } ArcJoyHardwareConfig;
 
 class ArcJoy: public IHalRtcAlarmHandler, public IHalGpioHandler
@@ -55,6 +58,7 @@ class ArcJoy: public IHalRtcAlarmHandler, public IHalGpioHandler
     uint8_t joyButtonsReadState();
     void joyInit();
     void joyButtonsInit();
+    void joyGpioDisable();
   public:
     static bool sendJoyState;
 

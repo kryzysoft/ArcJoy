@@ -85,6 +85,7 @@
         <file file_name="src/IHal/IHalRtc.h" />
         <file file_name="src/IHal/IHalGpioInputIrq.h" />
         <file file_name="src/IHal/IHalLowPowerMode.h" />
+        <file file_name="src/IHal/IHalDelay.h" />
       </folder>
       <file file_name="src/ArcJoy.cpp" />
       <file file_name="src/ArcJoy.h" />
@@ -123,6 +124,8 @@
       <file file_name="src/nRF_Hal/NrfSystemOffMode.cpp" />
       <file file_name="src/nRF_Hal/NrfSleepMode.cpp" />
       <file file_name="src/nRF_Hal/NrfSleepMode.h" />
+      <file file_name="src/nRF_Hal/NrfDelay.h" />
+      <file file_name="src/nRF_Hal/NrfDelay.cpp" />
     </folder>
   </project>
   <configuration
