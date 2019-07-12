@@ -12,8 +12,9 @@ class NrfEsbRadioPtx: public IHalEsbRadioPtx
     static void nrfEsbEventHandler(nrf_esb_evt_t const * p_event);
     static volatile bool radioBusy;
     static volatile bool radioSuccess;
+    bool m_autoControlHfClock;
   public:
-    NrfEsbRadioPtx();
+    NrfEsbRadioPtx(bool autoControlHfClock);
     void On();
     void SetupAddress0(uint8_t *address);
     void SetupAddress1(uint8_t *address);

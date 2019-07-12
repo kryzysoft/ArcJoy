@@ -45,12 +45,12 @@ static void goToSleep(void);
 #define FRAME_HEARTBEAT 0
 #define FRAME_JOYSTATE  1
 
-#define MAX_RADIO_FAILS 5
+#define MAX_RADIO_FAILS 2
 
 static const nrf_drv_timer_t heartbeatTimer = NRF_DRV_TIMER_INSTANCE(0);
 
 const nrf_drv_rtc_t rtc = NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance of nrf_drv_rtc for RTC0. */
-#define COMPARE_COUNTERTIME (2UL)
+#define COMPARE_COUNTERTIME (10UL)
 
 
 static void joyEvent(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
@@ -94,7 +94,6 @@ void ArcJoy::Run()
       if(sendHeartbeat)
       {
         sendHeartbeat = false;
-        clockStart();
         m_pHwConfig->esbPtx->On();
         joyState = joyReadState();
         joyButtonsState = joyButtonsReadState();
@@ -103,7 +102,6 @@ void ArcJoy::Run()
         {
         }
         m_pHwConfig->esbPtx->Off();
-        clockStop();
         if(m_pHwConfig->esbPtx->SendSucceeded())
         {
           fails = 0;
@@ -121,7 +119,6 @@ void ArcJoy::Run()
       if(sendJoyState)
       {
         sendJoyState = false;
-        clockStart();
         m_pHwConfig->esbPtx->On();
         joyState = joyReadState();
         joyButtonsState = joyButtonsReadState();
@@ -131,7 +128,6 @@ void ArcJoy::Run()
 
         }
         m_pHwConfig->esbPtx->Off();
-        clockStop();
       }
     }
     if(fails < MAX_RADIO_FAILS)
@@ -143,7 +139,7 @@ void ArcJoy::Run()
       joyDisable();
       joyButtonsDisable();
       nrf_gpio_cfg_sense_input(JOY_BUTTON_1, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
-      systemOff();
+      m_pHwConfig->offMode->Enter();
     }
   }
 }
@@ -163,21 +159,6 @@ static void goToSleep(void)
   __WFE();
   __WFE();
 }
-
-static void clockStart(void)
-{
-    // Start HFCLK and wait for it to start.
-    NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
-    NRF_CLOCK->TASKS_HFCLKSTART = 1;
-    while (NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
-}
-
-static void clockStop(void)
-{
-    // Start HFCLK and wait for it to start.
-    NRF_CLOCK->TASKS_HFCLKSTOP = 1;
-}
-
 
 uint8_t ArcJoy::dipSwitchReadState()
 {
@@ -292,13 +273,6 @@ void ArcJoy::radioSendState(uint8_t joyButtons, uint8_t joystick)
   data[1] = joystick;
   data[2] = joyButtons;
   m_pHwConfig->esbPtx->SendFrame(0,data,dataLength);
-}
-
-static void systemOff( void )
-{
-    NRF_POWER->SYSTEMOFF = 0x1;
-    (void) NRF_POWER->SYSTEMOFF;
-    while (true);
 }
 
 void ArcJoy::RtcAlarmHandler()

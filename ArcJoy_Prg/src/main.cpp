@@ -44,6 +44,7 @@
 #include "nRF_Hal/NrfGpioOutput.h"
 #include "nRF_Hal/NrfEsbRadioPtx.h"
 #include "nRF_Hal/NrfRtc.h"
+#include "nRF_Hal/NrfSystemOffMode.h"
 
 
 
@@ -93,9 +94,11 @@ int main(void)
   NrfGpioInputIrq joyButton5(JOY_BUTTON_5, GPIO_PULL_NONE);
   NrfGpioInputIrq joyButton6(JOY_BUTTON_6, GPIO_PULL_NONE);
 
-  NrfEsbRadioPtx ptxRadio;
+  NrfEsbRadioPtx ptxRadio(true);
 
   NrfRtc rtcClock;
+
+  NrfSystemOffMode systemOffMode;
 
   ArcJoyHardwareConfig hwConfig;
 
@@ -124,6 +127,8 @@ int main(void)
   hwConfig.esbPtx = &ptxRadio;
 
   hwConfig.rtcClock = &rtcClock;
+
+  hwConfig.offMode = &systemOffMode;
 
   ArcJoy arcJoy(&hwConfig);
 

@@ -5,14 +5,21 @@
 volatile bool NrfEsbRadioPtx::radioBusy = false;
 volatile bool NrfEsbRadioPtx::radioSuccess = false;
 
-NrfEsbRadioPtx::NrfEsbRadioPtx()
+NrfEsbRadioPtx::NrfEsbRadioPtx(bool autoControlHfClock)
 {
   radioBusy = false;
   radioSuccess = false;
+  m_autoControlHfClock = autoControlHfClock;
 }
 
 void NrfEsbRadioPtx::On()
 {
+  if(m_autoControlHfClock)
+  {
+    NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
+    NRF_CLOCK->TASKS_HFCLKSTART = 1;
+    while (NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
+  }
   nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
   nrf_esb_config.retransmit_count         = 6;
   nrf_esb_config.selective_auto_ack       = false;
@@ -42,6 +49,10 @@ void NrfEsbRadioPtx::SetupAddressPrefixes(uint8_t *prefixes, uint8_t prefixesCou
 void NrfEsbRadioPtx::Off()
 {
   nrf_esb_disable();
+  if(m_autoControlHfClock)
+  {
+    NRF_CLOCK->TASKS_HFCLKSTOP = 1;
+  }
 }
 
 void NrfEsbRadioPtx::SendFrame(uint8_t pipe, uint8_t *data, uint8_t dataLength)

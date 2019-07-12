@@ -6,6 +6,8 @@
 #include "IHal/IHalGpioOutput.h"
 #include "IHal/IHalEsbRadioPtx.h"
 #include "IHal/IHalRtc.h"
+#include "IHal/IHalLowPowerMode.h"
+
 #include "stdint.h"
 
 typedef struct
@@ -35,6 +37,9 @@ typedef struct
   IHalEsbRadioPtx *esbPtx;
 
   IHalRtc *rtcClock;
+
+  IHalLowPowerMode *offMode;
+  IHalLowPowerMode *sleepMode;
 
 } ArcJoyHardwareConfig;
 

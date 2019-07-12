@@ -22,6 +22,7 @@ class NrfGpioInput: public IHalGpioInput
     static nrf_gpio_pin_pull_t pullTypeConvert(GpioPullType gpioPullType);
     bool IsUp();
     bool IsDown();
+    void EnableSense();
 };
 
 #endif
