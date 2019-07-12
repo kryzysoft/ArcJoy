@@ -75,8 +75,6 @@
     </folder>
     <folder Name="Application">
       <file file_name="src/sdk_config.h" />
-      <file file_name="src/joyApp.h" />
-      <file file_name="src/joyApp.cpp" />
       <file file_name="src/main.cpp" />
       <folder Name="IHal">
         <file file_name="src/IHal/IHalEsbRadioPtx.h" />
