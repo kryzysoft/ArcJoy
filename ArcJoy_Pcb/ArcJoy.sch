@@ -622,7 +622,7 @@ F 3 "" H 2250 7100 50  0001 C CNN
 	1    2250 7100
 	1    0    0    -1  
 $EndComp
-Text Label 1400 3350 0    50   ~ 0
+Text Label 1400 7100 0    50   ~ 0
 BUTTON1
 $Comp
 L K_Resistors:10k_1206_1% R2
@@ -768,21 +768,21 @@ F 3 "" H 1600 6350 50  0001 C CNN
 	1    1800 6050
 	1    0    0    -1  
 $EndComp
-Text Label 1400 4100 0    50   ~ 0
-BUTTON2
-Text Label 1400 4850 0    50   ~ 0
-BUTTON3
-Text Label 1400 5600 0    50   ~ 0
-BUTTON4
 Text Label 1400 6350 0    50   ~ 0
-BUTTON5
-Text Label 1400 7100 0    50   ~ 0
-BUTTON6
-Text Label 8450 4800 1    50   ~ 0
-BUTTON1
-Text Label 8550 4800 1    50   ~ 0
 BUTTON2
-Text Label 8650 4800 1    50   ~ 0
+Text Label 1400 5600 0    50   ~ 0
+BUTTON3
+Text Label 1400 4850 0    50   ~ 0
+BUTTON4
+Text Label 1400 4100 0    50   ~ 0
+BUTTON5
+Text Label 1400 3350 0    50   ~ 0
+BUTTON6
+Text Label 8950 4800 1    50   ~ 0
+BUTTON1
+Text Label 8850 4800 1    50   ~ 0
+BUTTON2
+Text Label 8750 4800 1    50   ~ 0
 BUTTON3
 Text Label 8350 4800 1    50   ~ 0
 LEFT
@@ -800,11 +800,11 @@ Wire Wire Line
 	8950 4400 8950 4800
 Wire Wire Line
 	8850 4400 8850 4800
-Text Label 8750 4800 1    50   ~ 0
+Text Label 8650 4800 1    50   ~ 0
 BUTTON4
-Text Label 8850 4800 1    50   ~ 0
+Text Label 8550 4800 1    50   ~ 0
 BUTTON5
-Text Label 8950 4800 1    50   ~ 0
+Text Label 8450 4800 1    50   ~ 0
 BUTTON6
 Wire Wire Line
 	8750 4400 8750 4800

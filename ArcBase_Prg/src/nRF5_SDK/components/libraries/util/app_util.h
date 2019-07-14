@@ -212,8 +212,13 @@ enum
 #ifndef __LINT__
 
 #ifdef __GNUC__
+#ifndef __cplusplus
 #define STATIC_ASSERT_SIMPLE(EXPR)      _Static_assert(EXPR, "unspecified message")
 #define STATIC_ASSERT_MSG(EXPR, MSG)    _Static_assert(EXPR, MSG)
+#else
+#define STATIC_ASSERT_SIMPLE(EXPR)
+#define STATIC_ASSERT_MSG(EXPR, MSG)
+#endif
 #endif
 
 #ifdef __CC_ARM
