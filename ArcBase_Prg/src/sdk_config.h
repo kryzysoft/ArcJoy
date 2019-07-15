@@ -1055,9 +1055,9 @@
 // <q> APP_USBD_DUMMY_ENABLED  - app_usbd_dummy - USBD Dummy class
  
 
-#ifndef APP_USBD_DUMMY_ENABLED
-#define APP_USBD_DUMMY_ENABLED 1
-#endif
+//#ifndef APP_USBD_DUMMY_ENABLED
+//#define APP_USBD_DUMMY_ENABLED 1
+//#endif
 
 // <e> APP_USBD_ENABLED - app_usbd - USB Device library
 //==========================================================
@@ -1069,7 +1069,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> Vendor ID ordered from USB IF: http://www.usb.org/developers/vendor/
 #ifndef APP_USBD_VID
-#define APP_USBD_VID 0x1915
+#define APP_USBD_VID 0x1155
 #endif
 
 // <s> APP_USBD_PID - Product ID.
@@ -1077,7 +1077,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> Selected Product ID
 #ifndef APP_USBD_PID
-#define APP_USBD_PID 0x520B
+#define APP_USBD_PID 22315
 #endif
 
 // <o> APP_USBD_DEVICE_VER_MAJOR - Device version, major part.  <0-99> 
@@ -1344,6 +1344,10 @@
 #endif
 
 // </e>
+
+#ifndef APP_USBD_HID_GENERIC_ENABLED
+#define APP_USBD_HID_GENERIC_ENABLED 1
+#endif
 
 // <q> APP_USBD_HID_KBD_ENABLED  - app_usbd_hid_kbd - USB HID keyboard
  
