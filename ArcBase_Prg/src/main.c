@@ -152,7 +152,6 @@ NRF_CLI_DEF(m_cli_uart,
 /**
  * @brief HID generic class endpoints count.
  * */
-#define HID_GENERIC_EP_COUNT  1
 
 /**
  * @brief List of HID generic class endpoints.
@@ -191,7 +190,10 @@ typedef enum {
 /**
  * @brief User event handler.
  * */
-static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+static void hid_user1_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                app_usbd_hid_user_event_t event);
+
+static void hid_user2_ev_handler(app_usbd_class_inst_t const * p_inst,
                                 app_usbd_hid_user_event_t event);
 
 /**
@@ -224,27 +226,36 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
 }
 
 
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt));
+APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse1_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt));
+APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse2_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt));
 
-static const app_usbd_hid_subclass_desc_t * reps[] = {&mouse_desc};
+static const app_usbd_hid_subclass_desc_t * reps1[] = {&mouse1_desc};
+static const app_usbd_hid_subclass_desc_t * reps2[] = {&mouse2_desc};
 
 /*lint -save -e26 -e64 -e123 -e505 -e651*/
 
 /**
  * @brief Global HID generic instance
  */
-APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid_generic,
+APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid1_generic,
                                 HID_GENERIC_INTERFACE,
-                                hid_user_ev_handler,
-                                ENDPOINT_LIST(),
-                                reps,
+                                hid_user1_ev_handler,
+                                (NRF_DRV_USBD_EPIN1),
+                                reps1,
                                 REPORT_IN_QUEUE_SIZE,
                                 REPORT_OUT_MAXSIZE,
                                 APP_USBD_HID_SUBCLASS_NONE,
-//                                APP_USBD_HID_SUBCLASS_BOOT,
                                 APP_USBD_HID_PROTO_GENERIC);
-                     //           APP_USBD_HID_PROTO_MOUSE);
 
+APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid2_generic,
+                                1,
+                                hid_user2_ev_handler,
+                                (NRF_DRV_USBD_EPIN2),
+                                reps2,
+                                REPORT_IN_QUEUE_SIZE,
+                                REPORT_OUT_MAXSIZE,
+                                APP_USBD_HID_SUBCLASS_NONE,
+                                APP_USBD_HID_PROTO_GENERIC);
 /*lint -restore*/
 
 
@@ -440,9 +451,15 @@ static void hid_generic_mouse_process_state(void)
         report[HID_Y_IDX]   =  -up*127 + down*127;
         /* Start the transfer */
         ret = app_usbd_hid_generic_in_report_set(
-            &m_app_hid_generic,
+            &m_app_hid1_generic,
             report,
             sizeof(report));
+
+        ret = app_usbd_hid_generic_in_report_set(
+            &m_app_hid2_generic,
+            report,
+            sizeof(report));
+
         if (ret == NRF_SUCCESS)
         {
             m_report_pending = true;
@@ -504,7 +521,42 @@ static void hid_generic_mouse_action(hid_generic_mouse_action_t action, int8_t p
  * @param p_inst    Class instance.
  * @param event     Class specific event.
  * */
-static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+static void hid_user1_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                app_usbd_hid_user_event_t event)
+{
+    switch (event)
+    {
+        case APP_USBD_HID_USER_EVT_OUT_REPORT_READY:
+        {
+            /* No output report defined for this example.*/
+            ASSERT(0);
+            break;
+        }
+        case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
+        {
+            m_report_pending = false;
+            hid_generic_mouse_process_state();
+            bsp_board_led_invert(LED_HID_REP_IN);
+            break;
+        }
+        case APP_USBD_HID_USER_EVT_SET_BOOT_PROTO:
+        {
+            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
+            NRF_LOG_INFO("SET_BOOT_PROTO");
+            break;
+        }
+        case APP_USBD_HID_USER_EVT_SET_REPORT_PROTO:
+        {
+            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
+            NRF_LOG_INFO("SET_REPORT_PROTO");
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+static void hid_user2_ev_handler(app_usbd_class_inst_t const * p_inst,
                                 app_usbd_hid_user_event_t event)
 {
     switch (event)
@@ -712,7 +764,7 @@ static ret_code_t idle_handle(app_usbd_class_inst_t const * p_inst, uint8_t repo
         {
             uint8_t report[] = {0xBE, 0xEF};
             return app_usbd_hid_generic_idle_report_set(
-              &m_app_hid_generic,
+              &m_app_hid1_generic,
               report,
               sizeof(report));
         }
@@ -757,14 +809,21 @@ int main(void)
 
     NRF_LOG_INFO("USBD HID generic example started.");
 
-    app_usbd_class_inst_t const * class_inst_generic;
-    class_inst_generic = app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
+    app_usbd_class_inst_t const * class_inst_generic1;
+    app_usbd_class_inst_t const * class_inst_generic2;
 
-    ret = hid_generic_idle_handler_set(class_inst_generic, idle_handle);
+    class_inst_generic1 = app_usbd_hid_generic_class_inst_get(&m_app_hid1_generic);
+ //   ret = hid_generic_idle_handler_set(class_inst_generic1, idle_handle);
+    APP_ERROR_CHECK(ret);
+    ret = app_usbd_class_append(class_inst_generic1);
     APP_ERROR_CHECK(ret);
 
-    ret = app_usbd_class_append(class_inst_generic);
+    class_inst_generic2 = app_usbd_hid_generic_class_inst_get(&m_app_hid2_generic);
+//    ret = hid_generic_idle_handler_set(class_inst_generic2, idle_handle);
+ //   APP_ERROR_CHECK(ret);
+    ret = app_usbd_class_append(class_inst_generic2);
     APP_ERROR_CHECK(ret);
+
 
     if (USBD_POWER_DETECTION)
     {
