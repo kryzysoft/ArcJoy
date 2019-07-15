@@ -229,7 +229,7 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
 
 APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt));
 
-static const app_usbd_hid_subclass_desc_t * reps[] = {&mouse_desc};
+static const app_usbd_hid_subclass_desc_t * reps[] = {&mouse_desc,&mouse_desc};
 
 /*lint -save -e26 -e64 -e123 -e505 -e651*/
 

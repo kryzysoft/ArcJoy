@@ -56,7 +56,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="4" y="80" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.cpp" selected="0" top="66" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="41" y="742" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.cpp" selected="1" top="770" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1128" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="0" top="1113" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1661" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.c" selected="0" top="1632" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="297" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/ses_startup_nrf52840.s" selected="0" top="289" codecName="Default"/>
@@ -78,8 +78,8 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/bsp/bsp_cli.c" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/modules/nrfx/mdk/system_nrf52840.c" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="221" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util.h" selected="0" top="185" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="45" y="696" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd_class_base.h" selected="0" top="677" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="19" y="465" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/cli/nrf_cli.h" selected="1" top="487" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="696" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd_class_base.h" selected="0" top="677" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="465" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/cli/nrf_cli.h" selected="0" top="436" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ArcBase" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcBase_Prg/src" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

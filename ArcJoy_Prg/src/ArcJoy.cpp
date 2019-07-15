@@ -14,18 +14,6 @@ static uint8_t joyButtonsReadState(void);
 #define RIGHT 2
 #define UP    4
 #define DOWN  8
-//
-//#define JOY_LEFT     3
-//#define JOY_RIGHT   22
-//#define JOY_UP       8
-//#define JOY_DOWN    26
-
-//#define JOY_BUTTON_1 9
-//#define JOY_BUTTON_2 6
-//#define JOY_BUTTON_3 7
-//#define JOY_BUTTON_4 5
-//#define JOY_BUTTON_5 2
-//#define JOY_BUTTON_6 4
 
 #define FRAME_HEARTBEAT 0
 #define FRAME_JOYSTATE  1
@@ -52,9 +40,6 @@ void ArcJoy::Run()
   uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
   uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
   uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
-
-       // nrf_gpio_cfg_sense_input(JOY_BUTTON_1, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
-
 
   joyInit();
   joyButtonsInit();
