@@ -37,29 +37,22 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#include "nrf_esb.h"
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include "sdk_common.h"
+
 #include "nrf.h"
-#include "nrf_esb_error_codes.h"
-#include "nrf_delay.h"
-#include "app_util_platform.h"
 #include "nrf_drv_usbd.h"
 #include "nrf_drv_clock.h"
 #include "nrf_gpio.h"
-#include "nrf_error.h"
 #include "nrf_drv_power.h"
-#include "boards.h"
 
 #include "app_timer.h"
 #include "app_usbd.h"
 #include "app_usbd_core.h"
-#include "app_usbd_hid_generic.h"
 #include "app_usbd_hid_mouse.h"
 #include "app_usbd_hid_kbd.h"
+//#include "app_usbd_dummy.h"
 #include "app_error.h"
 #include "bsp.h"
 
@@ -89,77 +82,52 @@ NRF_CLI_DEF(m_cli_uart,
 #endif
 
 /**
- * @brief HID generic class interface number.
- * */
-#define HID_GENERIC_INTERFACE  0
+ * @brief Enable HID mouse class
+ */
+#define CONFIG_HAS_MOUSE    1
 
 /**
- * @brief HID generic class endpoint number.
- * */
-#define HID_GENERIC_EPIN       NRF_DRV_USBD_EPIN1
+ * @brief Enable HID keyboard class
+ */
+#define CONFIG_HAS_KBD      1
+
+/**
+ * @brief Mouse button count
+ */
+#define CONFIG_MOUSE_BUTTON_COUNT 2
 
 /**
  * @brief Mouse speed (value sent via HID when board button is pressed).
- * */
-#define CONFIG_MOUSE_MOVE_SPEED (1)
+ */
+#define CONFIG_MOUSE_MOVE_STEP (3)
 
 /**
  * @brief Mouse move repeat time in milliseconds
  */
 #define CONFIG_MOUSE_MOVE_TIME_MS (5)
 
-
-/* GPIO used as LED & buttons in this example */
-#define LED_USB_START    (BSP_BOARD_LED_0)
-#define LED_HID_REP_IN   (BSP_BOARD_LED_2)
-
-#define BTN_MOUSE_X_POS  0
-#define BTN_MOUSE_Y_POS  1
-#define BTN_MOUSE_LEFT   2
-#define BTN_MOUSE_RIGHT  3
-
 /**
- * @brief Left button mask in buttons report
- */
-#define HID_BTN_LEFT_MASK  (1U << 0)
-
-/**
- * @brief Right button mask in buttons report
- */
-#define HID_BTN_RIGHT_MASK (1U << 1)
-
-/* HID report layout */
-#define HID_BTN_IDX   2 /**< Button bit mask position */
-#define HID_X_IDX     0 /**< X offset position */
-#define HID_Y_IDX     1 /**< Y offset position */
-#define HID_REP_SIZE  3 /**< The size of the report */
-
-/**
- * @brief Number of reports defined in report descriptor.
- */
-#define REPORT_IN_QUEUE_SIZE    1
-
-/**
- * @brief Size of maximum output report. HID generic class will reserve
- *        this buffer size + 1 memory space. 
+ * @brief Letter to be sent on LETTER button
  *
- * Maximum value of this define is 63 bytes. Library automatically adds
- * one byte for report ID. This means that output report size is limited
- * to 64 bytes.
+ * @sa BTN_KBD_LETTER
  */
-#define REPORT_OUT_MAXSIZE  0
+#define CONFIG_KBD_LETTER APP_USBD_HID_KBD_G
 
 /**
- * @brief HID generic class endpoints count.
- * */
+ * @brief Propagate SET_PROTOCOL command to other HID instance
+ */
+#define PROPAGATE_PROTOCOL  0
 
-/**
- * @brief List of HID generic class endpoints.
- * */
-#define ENDPOINT_LIST()                                      \
-(                                                            \
-        HID_GENERIC_EPIN                                     \
-)
+
+#define LED_CAPSLOCK       (BSP_BOARD_LED_0) /**< CAPSLOCK */
+#define LED_NUMLOCK        (BSP_BOARD_LED_1) /**< NUMLOCK */
+#define LED_HID_REP        (BSP_BOARD_LED_2) /**< Changes its state if any HID report was received or transmitted */
+#define LED_USB_START      (BSP_BOARD_LED_3) /**< The USBD library has been started and the bus is not in SUSPEND state */
+
+#define BTN_MOUSE_X_POS    0
+#define BTN_MOUSE_LEFT     1
+#define BTN_KBD_SHIFT      2
+#define BTN_KBD_LETTER     3
 
 /**
  * @brief Additional key release events
@@ -178,341 +146,76 @@ enum {
 };
 
 /**
- * @brief HID generic mouse action types
+ * @brief USB composite interfaces
  */
-typedef enum {
-    HID_GENERIC_MOUSE_X,
-    HID_GENERIC_MOUSE_Y,
-    HID_GENERIC_MOUSE_BTN_LEFT,
-    HID_GENERIC_MOUSE_BTN_RIGHT,
-} hid_generic_mouse_action_t;
+#define APP_USBD_INTERFACE_MOUSE 0
+#define APP_USBD_INTERFACE_KBD   1
 
 /**
- * @brief User event handler.
- * */
-static void hid_user1_ev_handler(app_usbd_class_inst_t const * p_inst,
-                                app_usbd_hid_user_event_t event);
-
-static void hid_user2_ev_handler(app_usbd_class_inst_t const * p_inst,
-                                app_usbd_hid_user_event_t event);
+ * @brief User event handler, HID mouse
+ */
+static void hid_mouse_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                      app_usbd_hid_user_event_t event);
 
 /**
- * @brief Reuse HID mouse report descriptor for HID generic class
+ * @brief User event handler, HID keyboard
  */
-
-#define APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt) {                \
-    0x05, 0x01,                    /* USAGE_PAGE (Generic Desktop) */ \
-    0x09, 0x05,                    /* USAGE (Game Pad)*/ \
-    0xa1, 0x01,                    /* COLLECTION (Application)*/ \
-    0x05, 0x01,                    /*   USAGE_PAGE (Generic Desktop)*/ \
-    0xa1, 0x00,                    /*   COLLECTION (Physical)*/ \
-    0x09, 0x30,                    /*   USAGE (X)*/ \
-    0x09, 0x31,                    /*   USAGE (Y)*/ \
-    0x15, 0x81,                    /*   LOGICAL_MINIMUM (-127)*/ \
-    0x25, 0x7f,                    /*   LOGICAL_MAXIMUM (127)*/ \
-    0x75, 0x08,                    /*   REPORT_SIZE (8)*/ \
-    0x95, 0x02,                    /*   REPORT_COUNT (2)*/ \
-    0x81, 0x02,                    /*   INPUT (Data,Var,Abs)*/ \
-    0x05, 0x09,                    /*   USAGE_PAGE (Button)*/ \
-    0x19, 0x01,                    /*   USAGE_MINIMUM (Button 1)*/ \
-    0x29, 0x08,                    /*   USAGE_MAXIMUM (Button 8)*/ \
-    0x15, 0x00,                    /*   LOGICAL_MINIMUM (0)*/ \
-    0x25, 0x01,                    /*   LOGICAL_MAXIMUM (1)*/ \
-    0x75, 0x01,                    /*   REPORT_SIZE (1)*/ \
-    0x95, 0x08,                    /*   REPORT_COUNT (16)*/ \
-    0x81, 0x02,                    /*   INPUT (Data,Var,Abs)*/ \
-    0xc0,                          /* END_COLLECTION*/ \
-    0xc0                           /* END_COLLECTION*/ \
-}
-
-
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse1_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt));
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse2_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON(bcnt));
-
-static const app_usbd_hid_subclass_desc_t * reps1[] = {&mouse1_desc};
-static const app_usbd_hid_subclass_desc_t * reps2[] = {&mouse2_desc};
+static void hid_kbd_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                    app_usbd_hid_user_event_t event);
 
 /*lint -save -e26 -e64 -e123 -e505 -e651*/
 
 /**
- * @brief Global HID generic instance
+ * @brief Global HID mouse instance
  */
-APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid1_generic,
-                                HID_GENERIC_INTERFACE,
-                                hid_user1_ev_handler,
-                                (NRF_DRV_USBD_EPIN1),
-                                reps1,
-                                REPORT_IN_QUEUE_SIZE,
-                                REPORT_OUT_MAXSIZE,
-                                APP_USBD_HID_SUBCLASS_NONE,
-                                APP_USBD_HID_PROTO_GENERIC);
+APP_USBD_HID_MOUSE_GLOBAL_DEF(m_app_hid_mouse,
+                              APP_USBD_INTERFACE_MOUSE,
+                              NRF_DRV_USBD_EPIN1,
+                              CONFIG_MOUSE_BUTTON_COUNT,
+                              hid_mouse_user_ev_handler,
+                              APP_USBD_HID_SUBCLASS_BOOT
+);
 
-APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid2_generic,
-                                1,
-                                hid_user2_ev_handler,
-                                (NRF_DRV_USBD_EPIN2),
-                                reps2,
-                                REPORT_IN_QUEUE_SIZE,
-                                REPORT_OUT_MAXSIZE,
-                                APP_USBD_HID_SUBCLASS_NONE,
-                                APP_USBD_HID_PROTO_GENERIC);
+//APP_USBD_DUMMY_GLOBAL_DEF(m_app_mouse_dummy, APP_USBD_INTERFACE_MOUSE);
+
+/**
+ * @brief Global HID keyboard instance
+ */
+APP_USBD_HID_KBD_GLOBAL_DEF(m_app_hid_kbd,
+                            APP_USBD_INTERFACE_KBD,
+                            NRF_DRV_USBD_EPIN2,
+                            hid_kbd_user_ev_handler,
+                            APP_USBD_HID_SUBCLASS_BOOT
+);
+//APP_USBD_DUMMY_GLOBAL_DEF(m_app_kbd_dummy, APP_USBD_INTERFACE_KBD);
+
 /*lint -restore*/
-
-
-
-
-
-
-
-uint8_t led_nr;
-
-nrf_esb_payload_t rx_payload;
-
-/*lint -save -esym(40, BUTTON_1) -esym(40, BUTTON_2) -esym(40, BUTTON_3) -esym(40, BUTTON_4) -esym(40, LED_1) -esym(40, LED_2) -esym(40, LED_3) -esym(40, LED_4) */
-static volatile bool left = false;
-static volatile bool right = false;
-static volatile bool up = false;
-static volatile bool down = false;
-static volatile bool fire = false;
-
-#define NONE  0
-#define LEFT  1
-#define RIGHT 2
-#define UP    4
-#define DOWN  8
-
-
-void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
-{
-    switch (p_event->evt_id)
-    {
-        case NRF_ESB_EVENT_TX_SUCCESS:
-            NRF_LOG_DEBUG("TX SUCCESS EVENT");
-            break;
-        case NRF_ESB_EVENT_TX_FAILED:
-            NRF_LOG_DEBUG("TX FAILED EVENT");
-            break;
-        case NRF_ESB_EVENT_RX_RECEIVED:
-            NRF_LOG_DEBUG("RX RECEIVED EVENT");
-            if (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS)
-            {
-                if((rx_payload.data[1] & LEFT) != 0) left = true;
-                else left = false;
-                if((rx_payload.data[1] & RIGHT) != 0) right = true;
-                else right = false;
-                if((rx_payload.data[1] & UP) != 0) up = true;
-                else up = false;
-                if((rx_payload.data[1] & DOWN) != 0) down = true;
-                else down = false;
-                if(rx_payload.data[2] >0) fire = true;
-                else fire = false;
-                // Set LEDs identical to the ones on the PTX.
-                nrf_gpio_pin_write(LED_1, !(rx_payload.data[1]%8>0 && rx_payload.data[1]%8<=4));
-                nrf_gpio_pin_write(LED_2, !(rx_payload.data[1]%8>1 && rx_payload.data[1]%8<=5));
-                nrf_gpio_pin_write(LED_3, !(rx_payload.data[1]%8>2 && rx_payload.data[1]%8<=6));
-                nrf_gpio_pin_write(LED_4, !(rx_payload.data[1]%8>3));
-
-                NRF_LOG_DEBUG("Receiving packet: %02x", rx_payload.data[1]);
-            }
-            break;
-    }
-}
-
-void clocks_start( void )
-{
-    NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
-    NRF_CLOCK->TASKS_HFCLKSTART = 1;
-
-    while (NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
-}
-
-
-void gpio_init( void )
-{
-    bsp_board_init(BSP_INIT_LEDS);
-}
-
-
-uint32_t esb_init( void )
-{
-    uint32_t err_code;
-    uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
-    uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
-    uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
-    nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
-    nrf_esb_config.payload_length           = 8;
-    nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
-    nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
-    nrf_esb_config.mode                     = NRF_ESB_MODE_PRX;
-    nrf_esb_config.event_handler            = nrf_esb_event_handler;
-    nrf_esb_config.selective_auto_ack       = false;
-
-    err_code = nrf_esb_init(&nrf_esb_config);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_base_address_0(base_addr_0);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_base_address_1(base_addr_1);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_prefixes(addr_prefix, 8);
-    VERIFY_SUCCESS(err_code);
-
-    return err_code;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * @brief Mouse state
- *
- * Current mouse status
- */
-struct
-{
-    int16_t acc_x;    /**< Accumulated x state */
-    int16_t acc_y;    /**< Accumulated y state */
-    uint8_t btn;      /**< Current btn state */
-    uint8_t last_btn; /**< Last transfered button state */
-}m_mouse_state;
-
-/**
- * @brief Mark the ongoing transmission
- *
- * Marks that the report buffer is busy and cannot be used until transmission finishes
- * or invalidates (by USB reset or suspend event).
- */
-static bool m_report_pending;
 
 /**
  * @brief Timer to repeat mouse move
  */
 APP_TIMER_DEF(m_mouse_move_timer);
 
-/**
- * @brief Get maximal allowed accumulated value
- *
- * Function gets maximal value from the accumulated input.
- * @sa m_mouse_state::acc_x, m_mouse_state::acc_y
- */
-static int8_t hid_acc_for_report_get(int16_t acc)
+
+static void kbd_status(void)
 {
-    if(acc > INT8_MAX)
+    if(app_usbd_hid_kbd_led_state_get(&m_app_hid_kbd, APP_USBD_HID_KBD_LED_NUM_LOCK))
     {
-        return INT8_MAX;
-    }
-    else if(acc < INT8_MIN)
-    {
-        return INT8_MIN;
+        bsp_board_led_on(LED_NUMLOCK);
     }
     else
     {
-        return (int8_t)(acc);
+        bsp_board_led_off(LED_NUMLOCK);
     }
-}
 
-/**
- * @brief Internal function that process mouse state
- *
- * This function checks current mouse state and tries to send
- * new report if required.
- * If report sending was successful it clears accumulated positions
- * and mark last button state that was transfered.
- */
-static void hid_generic_mouse_process_state(void)
-{
-    if (m_report_pending)
-        return;
-//    if ((m_mouse_state.acc_x != 0) ||
-//        (m_mouse_state.acc_y != 0) ||
-//        (m_mouse_state.btn != m_mouse_state.last_btn))
-//    {
-        ret_code_t ret;
-        static uint8_t report[HID_REP_SIZE];
-        /* We have some status changed that we need to transfer */
-        report[HID_BTN_IDX] = fire;
-
-        report[HID_X_IDX]   = -left*127 + right*127;
-        report[HID_Y_IDX]   =  -up*127 + down*127;
-        /* Start the transfer */
-        ret = app_usbd_hid_generic_in_report_set(
-            &m_app_hid1_generic,
-            report,
-            sizeof(report));
-
-        ret = app_usbd_hid_generic_in_report_set(
-            &m_app_hid2_generic,
-            report,
-            sizeof(report));
-
-        if (ret == NRF_SUCCESS)
-        {
-            m_report_pending = true;
-            m_mouse_state.last_btn = report[HID_BTN_IDX];
-            CRITICAL_REGION_ENTER();
-            /* This part of the code can fail if interrupted by BSP keys processing.
-             * Lock interrupts to be safe */
-            m_mouse_state.acc_x   -= (int8_t)report[HID_X_IDX];
-            m_mouse_state.acc_y   -= (int8_t)report[HID_Y_IDX];
-            CRITICAL_REGION_EXIT();
-        }
-//    }
-}
-
-/**
- * @brief HID generic IN report send handling
- * */
-static void hid_generic_mouse_action(hid_generic_mouse_action_t action, int8_t param)
-{
-    CRITICAL_REGION_ENTER();
-    /*
-     * Update mouse state
-     */
-    switch (action)
+    if(app_usbd_hid_kbd_led_state_get(&m_app_hid_kbd, APP_USBD_HID_KBD_LED_CAPS_LOCK))
     {
-        case HID_GENERIC_MOUSE_X:
-            m_mouse_state.acc_x += param;
-            break;
-        case HID_GENERIC_MOUSE_Y:
-            m_mouse_state.acc_y += param;
-            break;
-        case HID_GENERIC_MOUSE_BTN_RIGHT:
-            if(param == 1)
-            {
-                m_mouse_state.btn |= HID_BTN_RIGHT_MASK;
-            }
-            else
-            {
-                m_mouse_state.btn &= ~HID_BTN_RIGHT_MASK;
-            }
-            break;
-        case HID_GENERIC_MOUSE_BTN_LEFT:
-            if(param == 1)
-            {
-                m_mouse_state.btn |= HID_BTN_LEFT_MASK;
-            }
-            else
-            {
-                m_mouse_state.btn &= ~HID_BTN_LEFT_MASK;
-            }
-            break;
+        bsp_board_led_on(LED_CAPSLOCK);
     }
-    CRITICAL_REGION_EXIT();
+    else
+    {
+        bsp_board_led_off(LED_CAPSLOCK);
+    }
 }
 
 /**
@@ -521,75 +224,71 @@ static void hid_generic_mouse_action(hid_generic_mouse_action_t action, int8_t p
  * @param p_inst    Class instance.
  * @param event     Class specific event.
  * */
-static void hid_user1_ev_handler(app_usbd_class_inst_t const * p_inst,
-                                app_usbd_hid_user_event_t event)
+static void hid_mouse_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                      app_usbd_hid_user_event_t event)
 {
-    switch (event)
-    {
+    UNUSED_PARAMETER(p_inst);
+    switch (event) {
         case APP_USBD_HID_USER_EVT_OUT_REPORT_READY:
-        {
-            /* No output report defined for this example.*/
+            /* No output report defined for HID mouse.*/
             ASSERT(0);
             break;
-        }
         case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
-        {
-            m_report_pending = false;
-            hid_generic_mouse_process_state();
-            bsp_board_led_invert(LED_HID_REP_IN);
+            bsp_board_led_invert(LED_HID_REP);
             break;
-        }
         case APP_USBD_HID_USER_EVT_SET_BOOT_PROTO:
-        {
-            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
-            NRF_LOG_INFO("SET_BOOT_PROTO");
+            UNUSED_RETURN_VALUE(hid_mouse_clear_buffer(p_inst));
+#if PROPAGATE_PROTOCOL
+            hid_kbd_on_set_protocol(&m_app_hid_kbd, APP_USBD_HID_USER_EVT_SET_BOOT_PROTO);
+#endif
             break;
-        }
         case APP_USBD_HID_USER_EVT_SET_REPORT_PROTO:
-        {
-            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
-            NRF_LOG_INFO("SET_REPORT_PROTO");
+            UNUSED_RETURN_VALUE(hid_mouse_clear_buffer(p_inst));
+#if PROPAGATE_PROTOCOL
+            hid_kbd_on_set_protocol(&m_app_hid_kbd, APP_USBD_HID_USER_EVT_SET_REPORT_PROTO);
+#endif
             break;
-        }
         default:
             break;
     }
 }
 
-static void hid_user2_ev_handler(app_usbd_class_inst_t const * p_inst,
-                                app_usbd_hid_user_event_t event)
+/**
+ * @brief Class specific event handler.
+ *
+ * @param p_inst    Class instance.
+ * @param event     Class specific event.
+ * */
+static void hid_kbd_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                    app_usbd_hid_user_event_t event)
 {
-    switch (event)
-    {
+    UNUSED_PARAMETER(p_inst);
+    switch (event) {
         case APP_USBD_HID_USER_EVT_OUT_REPORT_READY:
-        {
-            /* No output report defined for this example.*/
-            ASSERT(0);
+            /* Only one output report IS defined for HID keyboard class. Update LEDs state. */
+            bsp_board_led_invert(LED_HID_REP);
+            kbd_status();
             break;
-        }
         case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
-        {
-            m_report_pending = false;
-            hid_generic_mouse_process_state();
-            bsp_board_led_invert(LED_HID_REP_IN);
+            bsp_board_led_invert(LED_HID_REP);
             break;
-        }
         case APP_USBD_HID_USER_EVT_SET_BOOT_PROTO:
-        {
-            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
-            NRF_LOG_INFO("SET_BOOT_PROTO");
+            UNUSED_RETURN_VALUE(hid_kbd_clear_buffer(p_inst));
+#if PROPAGATE_PROTOCOL
+            hid_mouse_on_set_protocol(&m_app_hid_mouse, APP_USBD_HID_USER_EVT_SET_BOOT_PROTO);
+#endif
             break;
-        }
         case APP_USBD_HID_USER_EVT_SET_REPORT_PROTO:
-        {
-            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
-            NRF_LOG_INFO("SET_REPORT_PROTO");
+            UNUSED_RETURN_VALUE(hid_kbd_clear_buffer(p_inst));
+#if PROPAGATE_PROTOCOL
+            hid_mouse_on_set_protocol(&m_app_hid_mouse, APP_USBD_HID_USER_EVT_SET_REPORT_PROTO);
+#endif
             break;
-        }
         default:
             break;
     }
 }
+
 
 /**
  * @brief USBD library specific event handler.
@@ -602,20 +301,15 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
     {
         case APP_USBD_EVT_DRV_SOF:
             break;
-        case APP_USBD_EVT_DRV_RESET:
-            m_report_pending = false;
-            break;
         case APP_USBD_EVT_DRV_SUSPEND:
-            m_report_pending = false;
             app_usbd_suspend_req(); // Allow the library to put the peripheral into sleep mode
             bsp_board_leds_off();
             break;
         case APP_USBD_EVT_DRV_RESUME:
-            m_report_pending = false;
             bsp_board_led_on(LED_USB_START);
+            kbd_status(); /* Restore LED state - during SUSPEND all LEDS are turned off */
             break;
         case APP_USBD_EVT_STARTED:
-            m_report_pending = false;
             bsp_board_led_on(LED_USB_START);
             break;
         case APP_USBD_EVT_STOPPED:
@@ -624,6 +318,7 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
             break;
         case APP_USBD_EVT_POWER_DETECTED:
             NRF_LOG_INFO("USB power detected");
+
             if (!nrf_drv_usbd_is_enabled())
             {
                 app_usbd_enable();
@@ -642,43 +337,11 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
     }
 }
 
+
 static void mouse_move_timer_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
-    bool used = false;
-
-    if (left)
-    {
-
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, -CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-    if (right)
-    {
-
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-    if (up)
-    {
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, -CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-    if (down)
-    {
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-    if (fire)
-    {
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-
-    if(!used)
-    {
-        UNUSED_RETURN_VALUE(app_timer_stop(m_mouse_move_timer));
-    }
+    UNUSED_RETURN_VALUE(app_usbd_hid_mouse_x_move(&m_app_hid_mouse, CONFIG_MOUSE_MOVE_STEP));
 }
 
 static void bsp_event_callback(bsp_event_t ev)
@@ -686,34 +349,38 @@ static void bsp_event_callback(bsp_event_t ev)
     switch ((unsigned int)ev)
     {
         case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_X_POS):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_X, CONFIG_MOUSE_MOVE_SPEED);
+            UNUSED_RETURN_VALUE(app_usbd_hid_mouse_x_move(&m_app_hid_mouse, CONFIG_MOUSE_MOVE_STEP));
             UNUSED_RETURN_VALUE(app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL));
             break;
-
-        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_Y_POS):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
-            UNUSED_RETURN_VALUE(app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL));
-            break;
-
-        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_RIGHT):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_RIGHT, 1);
-            break;
-        case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_MOUSE_RIGHT):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_RIGHT, -1);
+        case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_MOUSE_X_POS):
+            UNUSED_RETURN_VALUE(app_timer_stop(m_mouse_move_timer));
             break;
 
         case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_LEFT):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, 1);
+            UNUSED_RETURN_VALUE(app_usbd_hid_mouse_button_state(&m_app_hid_mouse, 0, true));
             break;
         case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_MOUSE_LEFT):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, -1);
+            UNUSED_RETURN_VALUE(app_usbd_hid_mouse_button_state(&m_app_hid_mouse, 0, false));
+            break;
+
+        case CONCAT_2(BSP_EVENT_KEY_, BTN_KBD_SHIFT):
+            UNUSED_RETURN_VALUE(app_usbd_hid_kbd_modifier_state_set(&m_app_hid_kbd, APP_USBD_HID_KBD_MODIFIER_LEFT_SHIFT, true));
+            break;
+        case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_KBD_SHIFT):
+            UNUSED_RETURN_VALUE(app_usbd_hid_kbd_modifier_state_set(&m_app_hid_kbd, APP_USBD_HID_KBD_MODIFIER_LEFT_SHIFT, false));
+            break;
+
+        case CONCAT_2(BSP_EVENT_KEY_, BTN_KBD_LETTER):
+            UNUSED_RETURN_VALUE(app_usbd_hid_kbd_key_control(&m_app_hid_kbd, CONFIG_KBD_LETTER, true));
+            break;
+        case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_KBD_LETTER):
+            UNUSED_RETURN_VALUE(app_usbd_hid_kbd_key_control(&m_app_hid_kbd, CONFIG_KBD_LETTER, false));
             break;
 
         default:
             return; // no implementation needed
     }
 }
-
 
 /**
  * @brief Auxiliary internal macro
@@ -734,8 +401,10 @@ static void init_bsp(void)
     ret = bsp_init(BSP_INIT_BUTTONS, bsp_event_callback);
     APP_ERROR_CHECK(ret);
 
+    INIT_BSP_ASSIGN_RELEASE_ACTION(BTN_MOUSE_X_POS);
     INIT_BSP_ASSIGN_RELEASE_ACTION(BTN_MOUSE_LEFT );
-    INIT_BSP_ASSIGN_RELEASE_ACTION(BTN_MOUSE_RIGHT);
+    INIT_BSP_ASSIGN_RELEASE_ACTION(BTN_KBD_SHIFT  );
+    INIT_BSP_ASSIGN_RELEASE_ACTION(BTN_KBD_LETTER );
 
     /* Configure LEDs */
     bsp_board_init(BSP_INIT_LEDS);
@@ -756,29 +425,11 @@ static void init_cli(void)
     APP_ERROR_CHECK(ret);
 }
 
-static ret_code_t idle_handle(app_usbd_class_inst_t const * p_inst, uint8_t report_id)
-{
-    switch (report_id)
-    {
-        case 0:
-        {
-            uint8_t report[] = {0xBE, 0xEF};
-            return app_usbd_hid_generic_idle_report_set(
-              &m_app_hid1_generic,
-              report,
-              sizeof(report));
-        }
-        default:
-            return NRF_ERROR_NOT_SUPPORTED;
-    }
-    
-}
-
 int main(void)
 {
     ret_code_t ret;
     static const app_usbd_config_t usbd_config = {
-        .ev_state_proc = usbd_user_ev_handler
+        .ev_state_proc = usbd_user_ev_handler,
     };
 
     ret = NRF_LOG_INIT(NULL);
@@ -788,7 +439,6 @@ int main(void)
     APP_ERROR_CHECK(ret);
 
     nrf_drv_clock_lfclk_request(NULL);
-
     while(!nrf_drv_clock_lfclk_is_running())
     {
         /* Just waiting */
@@ -802,29 +452,30 @@ int main(void)
 
     init_bsp();
     init_cli();
-    NRF_LOG_INFO("Hello USB!");
 
     ret = app_usbd_init(&usbd_config);
     APP_ERROR_CHECK(ret);
 
-    NRF_LOG_INFO("USBD HID generic example started.");
-
-    app_usbd_class_inst_t const * class_inst_generic1;
-    app_usbd_class_inst_t const * class_inst_generic2;
-
-    class_inst_generic1 = app_usbd_hid_generic_class_inst_get(&m_app_hid1_generic);
- //   ret = hid_generic_idle_handler_set(class_inst_generic1, idle_handle);
-    APP_ERROR_CHECK(ret);
-    ret = app_usbd_class_append(class_inst_generic1);
+    app_usbd_class_inst_t const * class_inst_mouse;
+#if CONFIG_HAS_MOUSE
+    class_inst_mouse = app_usbd_hid_mouse_class_inst_get(&m_app_hid_mouse);
+#else
+    class_inst_mouse = app_usbd_dummy_class_inst_get(&m_app_mouse_dummy);
+#endif
+    ret = app_usbd_class_append(class_inst_mouse);
     APP_ERROR_CHECK(ret);
 
-    class_inst_generic2 = app_usbd_hid_generic_class_inst_get(&m_app_hid2_generic);
-//    ret = hid_generic_idle_handler_set(class_inst_generic2, idle_handle);
- //   APP_ERROR_CHECK(ret);
-    ret = app_usbd_class_append(class_inst_generic2);
+    app_usbd_class_inst_t const * class_inst_kbd;
+#if CONFIG_HAS_KBD
+    class_inst_kbd = app_usbd_hid_kbd_class_inst_get(&m_app_hid_kbd);
+#else
+    class_inst_kbd = app_usbd_dummy_class_inst_get(&m_app_kbd_dummy);
+#endif
+    ret = app_usbd_class_append(class_inst_kbd);
     APP_ERROR_CHECK(ret);
 
-
+    NRF_LOG_INFO("USBD HID composite example started.");
+    
     if (USBD_POWER_DETECTION)
     {
         ret = app_usbd_power_events_enable();
@@ -838,19 +489,12 @@ int main(void)
         app_usbd_start();
     }
 
-    app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL);
-    clocks_start();
-    esb_init();
-    nrf_esb_start_rx();
-
     while (true)
     {
-    mouse_move_timer_handler(NULL);
         while (app_usbd_event_queue_process())
         {
             /* Nothing to do */
         }
-        hid_generic_mouse_process_state();
         nrf_cli_process(&m_cli_uart);
 
         UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());

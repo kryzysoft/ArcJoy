@@ -936,13 +936,6 @@
 // <h> nRF_Libraries 
 
 //==========================================================
-// <q> APP_FIFO_ENABLED  - app_fifo - Software FIFO implementation
- 
-
-#ifndef APP_FIFO_ENABLED
-#define APP_FIFO_ENABLED 1
-#endif
-
 // <e> APP_SCHEDULER_ENABLED - app_scheduler - Events scheduler
 //==========================================================
 #ifndef APP_SCHEDULER_ENABLED
@@ -1059,20 +1052,12 @@
 
 // </e>
 
-// <e> APP_UART_ENABLED - app_uart - UART driver
-//==========================================================
-#ifndef APP_UART_ENABLED
-#define APP_UART_ENABLED 1
-#endif
-// <o> APP_UART_DRIVER_INSTANCE  - UART instance used
+// <q> APP_USBD_DUMMY_ENABLED  - app_usbd_dummy - USBD Dummy class
  
-// <0=> 0 
 
-#ifndef APP_UART_DRIVER_INSTANCE
-#define APP_UART_DRIVER_INSTANCE 0
+#ifndef APP_USBD_DUMMY_ENABLED
+#define APP_USBD_DUMMY_ENABLED 1
 #endif
-
-// </e>
 
 // <e> APP_USBD_ENABLED - app_usbd - USB Device library
 //==========================================================
@@ -1084,8 +1069,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> Vendor ID ordered from USB IF: http://www.usb.org/developers/vendor/
 #ifndef APP_USBD_VID
-//#define APP_USBD_VID 0x1915
-#define APP_USBD_VID 0x1155
+#define APP_USBD_VID 0x1915
 #endif
 
 // <s> APP_USBD_PID - Product ID.
@@ -1093,8 +1077,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> Selected Product ID
 #ifndef APP_USBD_PID
-//#define APP_USBD_PID 0x520C
-#define APP_USBD_PID 22315
+#define APP_USBD_PID 0x520B
 #endif
 
 // <o> APP_USBD_DEVICE_VER_MAJOR - Device version, major part.  <0-99> 
@@ -1263,7 +1246,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> List of product names that is defined the same way like in @ref APP_USBD_STRINGS_MANUFACTURER.
 #ifndef APP_USBD_STRINGS_PRODUCT
-#define APP_USBD_STRINGS_PRODUCT APP_USBD_STRING_DESC("nRF52 USB HID generic Demo")
+#define APP_USBD_STRINGS_PRODUCT APP_USBD_STRING_DESC("nRF52 USB HID composite Demo")
 #endif
 
 // </e>
@@ -1361,13 +1344,6 @@
 #endif
 
 // </e>
-
-// <q> APP_USBD_HID_GENERIC_ENABLED  - app_usbd_hid_generic - USB HID generic
- 
-
-#ifndef APP_USBD_HID_GENERIC_ENABLED
-#define APP_USBD_HID_GENERIC_ENABLED 1
-#endif
 
 // <q> APP_USBD_HID_KBD_ENABLED  - app_usbd_hid_kbd - USB HID keyboard
  

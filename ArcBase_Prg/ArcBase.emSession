@@ -44,7 +44,7 @@
  </TraceWindow>
  <Watch1>
   <Watches active="1" update="Twice a Second">
-   <Watchpoint expression="rx_payload" name="rx_payload" radix="-1" linenumber="297" filename="src/main.c"/>
+   <Watchpoint expression="rx_payload" name="rx_payload" radix="-1" linenumber="803" filename="src/main.c"/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -57,9 +57,13 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="1" y="786" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="769" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="130" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.h" selected="0" top="119" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="42" y="183" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="0" top="170" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="3" y="247" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.h" selected="0" top="233" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="579" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util.h" selected="0" top="561" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="43" y="171" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic_internal.h" selected="0" top="154" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="968" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd.c" selected="0" top="940" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="97" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_usbd.h" selected="0" top="90" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="4749" useTextEdit="1" useBinaryEdit="0" left="0" path="src/sdk_config.h" selected="1" top="4725" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ArcBase" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcBase_Prg/src" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>
