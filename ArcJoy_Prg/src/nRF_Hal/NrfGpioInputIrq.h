@@ -19,6 +19,7 @@ class NrfGpioInputIrq: public IHalGpioInputIrq
     bool m_senseOn;
     SenseLevel m_senseLevel;
     uint32_t m_pinNumber;
+    GpioPullType m_gpioPullType;
     static bool gpioTeEnabled;
     static void gpioEvent(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
     static IHalGpioHandler *gpioHandler;

@@ -9,6 +9,7 @@ NrfEsbRadioPtx::NrfEsbRadioPtx(bool autoControlHfClock)
 {
   radioBusy = false;
   radioSuccess = false;
+  m_enabled = false;
   m_autoControlHfClock = autoControlHfClock;
 }
 
@@ -28,27 +29,48 @@ void NrfEsbRadioPtx::On()
   nrf_esb_config.event_handler            = NrfEsbRadioPtx::nrfEsbEventHandler;
   nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
 
-  nrf_esb_init(&nrf_esb_config);  
+  nrf_esb_init(&nrf_esb_config);
+  m_enabled = true;
+
+  nrf_esb_set_base_address_0(m_baseAddress0);
+  nrf_esb_set_base_address_1(m_baseAddress1);
+  nrf_esb_set_prefixes(m_prefixes,8);
 }
 
 void NrfEsbRadioPtx::SetupAddress0(uint8_t *address)
 {
-  nrf_esb_set_base_address_0(address);
+  memcpy(m_baseAddress0,address,ESB_ADDRESS_LENGTH);
+
+  if(m_enabled)
+  {
+    nrf_esb_set_base_address_0(m_baseAddress0);
+  }
 }
 
 void NrfEsbRadioPtx::SetupAddress1(uint8_t *address)
 {
-  nrf_esb_set_base_address_1(address);
+  memcpy(m_baseAddress1,address,ESB_ADDRESS_LENGTH);
+
+  if(m_enabled)
+  {
+    nrf_esb_set_base_address_1(m_baseAddress1);
+  }
 }
 
 void NrfEsbRadioPtx::SetupAddressPrefixes(uint8_t *prefixes, uint8_t prefixesCount)
 {
-  nrf_esb_set_prefixes(prefixes, prefixesCount);
+  memcpy(m_prefixes,prefixes,ESB_PREFIXES_COUNT);
+
+  if(m_enabled)
+  {
+    nrf_esb_set_prefixes(prefixes, prefixesCount);
+  }
 }
 
 void NrfEsbRadioPtx::Off()
 {
   nrf_esb_disable();
+  m_enabled = false;
   if(m_autoControlHfClock)
   {
     NRF_CLOCK->TASKS_HFCLKSTOP = 1;

@@ -50,6 +50,7 @@ class ArcJoy: public IHalRtcAlarmHandler, public IHalGpioHandler
 {
   private:
     ArcJoyHardwareConfig *m_pHwConfig;
+    uint8_t m_joyNumber;
     static bool sendHeartbeat;
 
     uint8_t dipSwitchReadState();

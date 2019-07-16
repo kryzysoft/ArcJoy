@@ -296,11 +296,17 @@ uint8_t led_nr;
 nrf_esb_payload_t rx_payload;
 
 /*lint -save -esym(40, BUTTON_1) -esym(40, BUTTON_2) -esym(40, BUTTON_3) -esym(40, BUTTON_4) -esym(40, LED_1) -esym(40, LED_2) -esym(40, LED_3) -esym(40, LED_4) */
-static volatile bool left = false;
-static volatile bool right = false;
-static volatile bool up = false;
-static volatile bool down = false;
-static volatile bool fire = false;
+
+typedef struct
+{
+  bool left;
+  bool right;
+  bool up;
+  bool down;
+  bool fire;
+} JoyState;
+
+static volatile JoyState joyState[2] = {{false,false,false,false,false},{false,false,false,false,false}};
 
 #define NONE  0
 #define LEFT  1
@@ -323,23 +329,18 @@ void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
             NRF_LOG_DEBUG("RX RECEIVED EVENT");
             if (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS)
             {
-                if((rx_payload.data[1] & LEFT) != 0) left = true;
-                else left = false;
-                if((rx_payload.data[1] & RIGHT) != 0) right = true;
-                else right = false;
-                if((rx_payload.data[1] & UP) != 0) up = true;
-                else up = false;
-                if((rx_payload.data[1] & DOWN) != 0) down = true;
-                else down = false;
-                if(rx_payload.data[2] >0) fire = true;
-                else fire = false;
-                // Set LEDs identical to the ones on the PTX.
-                nrf_gpio_pin_write(LED_1, !(rx_payload.data[1]%8>0 && rx_payload.data[1]%8<=4));
-                nrf_gpio_pin_write(LED_2, !(rx_payload.data[1]%8>1 && rx_payload.data[1]%8<=5));
-                nrf_gpio_pin_write(LED_3, !(rx_payload.data[1]%8>2 && rx_payload.data[1]%8<=6));
-                nrf_gpio_pin_write(LED_4, !(rx_payload.data[1]%8>3));
-
-                NRF_LOG_DEBUG("Receiving packet: %02x", rx_payload.data[1]);
+              uint8_t joyIndex = rx_payload.pipe;
+              if(joyIndex>1) joyIndex = 1;
+              if((rx_payload.data[1] & LEFT) != 0) joyState[joyIndex].left = true;
+              else joyState[joyIndex].left = false;
+              if((rx_payload.data[1] & RIGHT) != 0) joyState[joyIndex].right = true;
+              else joyState[joyIndex].right = false;
+              if((rx_payload.data[1] & UP) != 0) joyState[joyIndex].up = true;
+              else joyState[joyIndex].up = false;
+              if((rx_payload.data[1] & DOWN) != 0) joyState[joyIndex].down = true;
+              else joyState[joyIndex].down = false;
+              if(rx_payload.data[2] >0) joyState[joyIndex].fire = true;
+              else joyState[joyIndex].fire = false;
             }
             break;
     }
@@ -363,9 +364,10 @@ void gpio_init( void )
 uint32_t esb_init( void )
 {
     uint32_t err_code;
-    uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
-    uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
-    uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
+
+    uint8_t base_addr_0[4] = {'A', 'r', 'c', '1'};
+    uint8_t base_addr_1[4] = {'J', 'o', 'y', '2'};
+    uint8_t addr_prefix[8] = {'O', 'T', 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 };
     nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
     nrf_esb_config.payload_length           = 8;
     nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
@@ -473,22 +475,15 @@ static void hid_generic_mouse1_process_state(void)
         static uint8_t report[HID_REP_SIZE];
         /* We have some status changed that we need to transfer */
         report[0] = 1;
-        report[3] = fire;
+        report[3] = joyState[0].fire;
 
-        report[1]   = -left*127 + right*127;
-        report[2]   =  -up*127 + down*127;
+        report[1]   = -joyState[0].left*127 + joyState[0].right*127;
+        report[2]   =  -joyState[0].up*127 + joyState[0].down*127;
         /* Start the transfer */
         ret = app_usbd_hid_generic_in_report_set(
             &m_app_hid1_generic,
             report,
             sizeof(report));
-           
-        report[1] = -report[1];
-
-//        ret = app_usbd_hid_generic_in_report_set(
-//            &m_app_hid2_generic,
-//            report,
-//            sizeof(report));
 
         if (ret == NRF_SUCCESS)
         {
@@ -506,27 +501,15 @@ static void hid_generic_mouse1_process_state(void)
 
 static void hid_generic_mouse2_process_state(void)
 {
-  //  if (m_report_pending)
-  //      return;
-//    if ((m_mouse_state.acc_x != 0) ||
-//        (m_mouse_state.acc_y != 0) ||
-//        (m_mouse_state.btn != m_mouse_state.last_btn))
-//    {
         ret_code_t ret;
         static uint8_t report[HID_REP_SIZE];
         /* We have some status changed that we need to transfer */
         report[0] = 2;
-        report[3] = fire;
+        report[3] = joyState[1].fire;
 
-        report[1]   = -left*127 + right*127;
-        report[2]   =  -up*127 + down*127;
+        report[1]   = -joyState[1].left*127 + joyState[1].right*127;
+        report[2]   =  -joyState[1].up*127 + joyState[1].down*127;
         /* Start the transfer */
-//        ret = app_usbd_hid_generic_in_report_set(
-//            &m_app_hid1_generic,
-//            report,
-//            sizeof(report));
-           
-   //     report[1] = -report[1];
 
         ret = app_usbd_hid_generic_in_report_set(
             &m_app_hid2_generic,
@@ -718,40 +701,40 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
 static void mouse_move_timer_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
-    bool used = false;
-
-    if (left)
-    {
-
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, -CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-    if (right)
-    {
-
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-    if (up)
-    {
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, -CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-    if (down)
-    {
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-    if (fire)
-    {
-        hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, CONFIG_MOUSE_MOVE_SPEED);
-        used = true;
-    }
-
-    if(!used)
-    {
-        UNUSED_RETURN_VALUE(app_timer_stop(m_mouse_move_timer));
-    }
+//    bool used = false;
+//
+//    if (left)
+//    {
+//
+//        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, -CONFIG_MOUSE_MOVE_SPEED);
+//        used = true;
+//    }
+//    if (right)
+//    {
+//
+//        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, CONFIG_MOUSE_MOVE_SPEED);
+//        used = true;
+//    }
+//    if (up)
+//    {
+//        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, -CONFIG_MOUSE_MOVE_SPEED);
+//        used = true;
+//    }
+//    if (down)
+//    {
+//        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
+//        used = true;
+//    }
+//    if (fire)
+//    {
+//        hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, CONFIG_MOUSE_MOVE_SPEED);
+//        used = true;
+//    }
+//
+//    if(!used)
+//    {
+//        UNUSED_RETURN_VALUE(app_timer_stop(m_mouse_move_timer));
+//    }
 }
 
 static void bsp_event_callback(bsp_event_t ev)

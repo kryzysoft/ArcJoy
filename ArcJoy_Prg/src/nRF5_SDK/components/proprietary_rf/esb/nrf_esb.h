@@ -147,8 +147,8 @@ STATIC_ASSERT(NRF_ESB_PIPE_COUNT <= 8);
  *  @details Roughly equal to the nRF24Lxx default (except for the number of pipes, because more pipes are supported). */
 #define NRF_ESB_ADDR_DEFAULT                                                    \
 {                                                                               \
-    .base_addr_p0       = { 0xE7, 0xE7, 0xE7, 0xE7 },                           \
-    .base_addr_p1       = { 0xC2, 0xC2, 0xC2, 0xC2 },                           \
+    .base_addr_p0       = { 0xE6, 0xE6, 0xE7, 0xE7 },                           \
+    .base_addr_p1       = { 0xC1, 0xC1, 0xC2, 0xC2 },                           \
     .pipe_prefixes      = { 0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 },   \
     .addr_length        = 5,                                                    \
     .num_pipes          = NRF_ESB_PIPE_COUNT,                                   \

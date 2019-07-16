@@ -11,6 +11,7 @@ bool NrfGpioInputIrq::gpioTeEnabled = false;
 NrfGpioInputIrq::NrfGpioInputIrq(uint32_t pinNumber, GpioPullType gpioPullType)
 {
   m_pinNumber = pinNumber;
+  m_gpioPullType = gpioPullType;
   m_senseOn = false;
   nrf_gpio_cfg_input(m_pinNumber, NrfGpioInput::pullTypeConvert(gpioPullType));
 }

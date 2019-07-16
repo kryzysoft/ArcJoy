@@ -21,7 +21,8 @@ nrf_gpio_pin_pull_t NrfGpioInput::pullTypeConvert(GpioPullType gpioPullType)
 NrfGpioInput::NrfGpioInput(uint32_t pinNumber, GpioPullType gpioPullType)
 {
   m_pinNumber = pinNumber;
-  nrf_gpio_cfg_input(m_pinNumber, pullTypeConvert(gpioPullType));
+  m_gpioPullType = gpioPullType;
+  Enable();
 }
 
 bool NrfGpioInput::IsUp()
@@ -32,4 +33,14 @@ bool NrfGpioInput::IsUp()
 bool NrfGpioInput::IsDown()
 {
   return (nrf_gpio_pin_read(m_pinNumber) == 0);
+}
+
+void NrfGpioInput::Disable()
+{
+  nrf_gpio_cfg_default(m_pinNumber);
+}
+
+void NrfGpioInput::Enable()
+{
+  nrf_gpio_cfg_input(m_pinNumber, pullTypeConvert(m_gpioPullType));
 }

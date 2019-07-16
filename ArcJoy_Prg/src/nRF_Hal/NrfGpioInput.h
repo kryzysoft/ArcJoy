@@ -17,12 +17,16 @@ class NrfGpioInput: public IHalGpioInput
 {
   private:
     uint32_t m_pinNumber;
+    GpioPullType m_gpioPullType;
   public:
     NrfGpioInput(uint32_t pinNumber, GpioPullType gpioPullType);
     static nrf_gpio_pin_pull_t pullTypeConvert(GpioPullType gpioPullType);
     bool IsUp();
     bool IsDown();
     void EnableSense();
+    void Enable();
+    void Disable();
+
 };
 
 #endif

@@ -6,6 +6,9 @@
 #include "nrf.h"
 #include "IHal/IHalEsbRadioPtx.h"
 
+const uint8_t ESB_ADDRESS_LENGTH = 4;
+const uint8_t ESB_PREFIXES_COUNT = 8;
+
 class NrfEsbRadioPtx: public IHalEsbRadioPtx
 {
   private:
@@ -13,6 +16,11 @@ class NrfEsbRadioPtx: public IHalEsbRadioPtx
     static volatile bool radioBusy;
     static volatile bool radioSuccess;
     bool m_autoControlHfClock;
+    bool m_enabled;
+    uint8_t m_baseAddress0[ESB_ADDRESS_LENGTH];
+    uint8_t m_baseAddress1[ESB_ADDRESS_LENGTH];
+    uint8_t m_prefixes[ESB_PREFIXES_COUNT];
+
   public:
     NrfEsbRadioPtx(bool autoControlHfClock);
     void On();
