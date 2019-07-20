@@ -1,7 +1,9 @@
 <!DOCTYPE CrossStudio_Session_File>
 <session>
  <Bookmarks/>
- <Breakpoints groups="Breakpoints" active_group="Breakpoints"/>
+ <Breakpoints groups="Breakpoints" active_group="Breakpoints">
+  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
+ </Breakpoints>
  <ExecutionProfileWindow/>
  <FrameBufferWindow>
   <FrameBufferWindow bufferHeight="-1" addressSpace="" addressText="" bufferWidth="-1"/>
@@ -23,7 +25,9 @@
   <ProjectSessionItem path="ArcBase;ArcBase"/>
   <ProjectSessionItem path="ArcBase;ArcBase;Application"/>
   <ProjectSessionItem path="ArcBase;ArcBase;IHal"/>
+  <ProjectSessionItem path="ArcBase;ArcBase;nRF_Drivers"/>
   <ProjectSessionItem path="ArcBase;ArcBase;nRF_Hal"/>
+  <ProjectSessionItem path="ArcBase;ArcBase;nRF_Libraries"/>
   <ProjectSessionItem path="ArcBase;ArcBase;nRF_Properitary_RF"/>
  </Project>
  <Register1>
@@ -49,6 +53,7 @@
    <Watchpoint expression="rx_payload" name="rx_payload" radix="-1" linenumber="859" filename="src/main.c"/>
    <Watchpoint numelements="2" expression="joyState" evalMode="2" name="joyState" radix="-1" linenumber="0" filename="../ArcBase_Prg" list=""/>
    <Watchpoint expression="joyIndex" name="joyIndex" radix="16" linenumber="333" filename="src/main.c"/>
+   <Watchpoint expression="pipe" name="pipe" radix="16" linenumber="83" filename="src/ArcBase.cpp"/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -61,12 +66,16 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="34" y="10" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfUsbJoysticks.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="11" useTextEdit="1" useBinaryEdit="0" left="0" path="src/IHal/IHalUsbJoysticks.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="33" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfUsbJoysticks.cpp" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="13" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.cpp" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="50" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase.h" selected="0" top="30" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="36" y="49" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase.cpp" selected="1" top="12" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="21" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.cpp" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="23" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase.h" selected="1" top="3" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="47" y="73" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase.cpp" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="617" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase_c.c" selected="0" top="599" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="8" useTextEdit="1" useBinaryEdit="0" left="0" path="src/IHal/IHalRtc.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="26" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfEsbRadioPrx.cpp" selected="0" top="11" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="87" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/util/app_util_platform.c" selected="0" top="70" codecName=""/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1063" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.c" selected="0" top="947" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="28" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfEsbRadioPtx.cpp" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="152" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/queue/nrf_queue.c" selected="0" top="122" codecName=""/>
  </Files>
- <ARMCrossStudioWindow activeProject="ArcBase" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcBase_Prg/src/nRF_Hal" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="ArcBase" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcBase_Prg/src/nRF5_SDK/modules/nrfx/drivers/src" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

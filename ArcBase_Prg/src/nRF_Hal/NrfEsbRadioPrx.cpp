@@ -80,6 +80,7 @@ void NrfEsbRadioPrx::Off()
 bool NrfEsbRadioPrx::GetNextFrame(uint8_t *pipe, uint8_t *data, uint8_t *dataLength)
 {
   nrf_esb_payload_t rx_payload;
+  if(!frameReceived) return false;
   frameReceived = false;
 
   if (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS)

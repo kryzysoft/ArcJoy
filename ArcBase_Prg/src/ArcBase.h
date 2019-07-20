@@ -9,52 +9,30 @@
 #include "IHal/IHalLowPowerMode.h"
 #include "IHal/IHalDelay.h"
 #include "IHal/IHalUsbJoysticks.h"
+#include "IHal/IHalRtc.h"
 
 #include "stdint.h"
 
 typedef struct
 {
-//  IHalGpioInput *dipSwitch1;
-//  IHalGpioInput *dipSwitch2;
-//  IHalGpioInput *dipSwitch3;
-//  IHalGpioInput *dipSwitch4;
-//  IHalGpioInput *dipSwitch5;
-//  IHalGpioInput *dipSwitch6;
-//
-//  IHalGpioOutput *redLed;
-//  IHalGpioOutput *blueLed;
-//
-//  IHalGpioInputIrq *joyLeft;
-//  IHalGpioInputIrq *joyRight;
-//  IHalGpioInputIrq *joyUp;
-//  IHalGpioInputIrq *joyDown;
-//
-//  IHalGpioInputIrq *joyButton1;
-//  IHalGpioInputIrq *joyButton2;
-//  IHalGpioInputIrq *joyButton3;
-//  IHalGpioInputIrq *joyButton4;
-//  IHalGpioInputIrq *joyButton5;
-//  IHalGpioInputIrq *joyButton6;
-//
   IHalEsbRadioPrx *esbPrx;
   IHalUsbJoysticks *joysticks;
-//
-//  IHalRtc *rtcClock;
-//
-//  IHalLowPowerMode *offMode;
-//  IHalLowPowerMode *sleepMode;
-//
-//  IHalDelay *delay;
-
+  IHalGpioOutput *ledJoy1;
+  IHalGpioOutput *ledJoy2;
+  IHalGpioOutput *ledNoJoys;
+  IHalRtc *rtcClock;
 } ArcBaseHardwareConfig;
 
-class ArcBase
+class ArcBase: public IHalRtcAlarmHandler
 {
   private:
     ArcBaseHardwareConfig *m_pHwConfig;
+    volatile uint8_t m_joy1TimeOut;
+    volatile uint8_t m_joy2TimeOut;
   public:
     ArcBase(ArcBaseHardwareConfig *hwConfig);
     void Run();
+    void RtcAlarmHandler();
 };
 
 #endif

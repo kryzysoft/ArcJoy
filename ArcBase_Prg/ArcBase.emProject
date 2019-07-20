@@ -136,7 +136,7 @@
       <file file_name="src/nRF_Hal/NrfGpioOutput.cpp" />
       <file file_name="src/nRF_Hal/NrfGpioOutput.h" />
       <file file_name="src/nRF_Hal/NrfRtc.cpp">
-        <configuration Name="Release" build_exclude_from_build="Yes" />
+        <configuration Name="Release" build_exclude_from_build="No" />
       </file>
       <file file_name="src/nRF_Hal/NrfRtc.h" />
       <file file_name="src/nRF_Hal/NrfSleepMode.cpp" />
@@ -151,6 +151,8 @@
       <file file_name="src/nRF_Hal/NrfUsbJoysticks.h" />
       <file file_name="src/nRF_Hal/NrfUsbJoysticksRaw.c" />
       <file file_name="src/nRF_Hal/NrfUsbJoysticksRaw.h" />
+      <file file_name="src/nRF_Hal/NrfHighVoltageMode.h" />
+      <file file_name="src/nRF_Hal/NrfHighVoltageMode.cpp" />
     </folder>
     <configuration Name="Release" gcc_cplusplus_language_standard="gnu++11" />
     <folder Name="nRF_Drivers">
@@ -168,6 +170,7 @@
       <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_uart.c" />
       <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_uarte.c" />
       <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_usbd.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_rtc.c" />
     </folder>
   </project>
   <configuration

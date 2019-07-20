@@ -14,19 +14,28 @@ ArcBase::ArcBase(ArcBaseHardwareConfig *hwConfig)
 #define UP    4
 #define DOWN  8
 
+#define HEARTBEAT_PERIOD 1
 
 void ArcBase::Run()
 {
-  arcBase_init();
   uint8_t base_addr_0[4] = {'A', 'r', 'c', '1'};
   uint8_t base_addr_1[4] = {'J', 'o', 'y', '2'};
   uint8_t addr_prefix[8] = {'O', 'T', 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 };
+
+  m_pHwConfig->rtcClock->SetupAlarmHandler(this);
+  m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
 
   m_pHwConfig->esbPrx->SetupAddress0(base_addr_0);
   m_pHwConfig->esbPrx->SetupAddress1(base_addr_1);
   m_pHwConfig->esbPrx->SetupAddressPrefixes(addr_prefix,8);
 
   m_pHwConfig->esbPrx->On();
+  m_pHwConfig->ledJoy1->Up();
+  m_pHwConfig->ledJoy2->Up();
+  m_pHwConfig->ledNoJoys->Down();
+
+  m_joy1TimeOut = 0;
+  m_joy2TimeOut = 0;
 
   while(true)
   {
@@ -40,6 +49,20 @@ void ArcBase::Run()
       uint8_t x, y, buttons;
       
       if(joyIndex>1) joyIndex = 1;
+
+      if(joyIndex == 0)
+      {
+        m_joy1TimeOut = 5;
+        m_pHwConfig->ledJoy1->Down();
+        m_pHwConfig->ledNoJoys->Up();
+      }
+      if(joyIndex == 1)
+      {
+        m_joy2TimeOut = 5;
+        m_pHwConfig->ledJoy2->Down();
+        m_pHwConfig->ledNoJoys->Up();
+      }
+
       if((data[1] & LEFT) != 0) x = -1;
       else if((data[1] & RIGHT) != 0) x = 1;
       else x = 0;
@@ -55,4 +78,22 @@ void ArcBase::Run()
   }
 }
 
+void ArcBase::RtcAlarmHandler()
+{
+  if(m_joy1TimeOut>0) m_joy1TimeOut--;
+  if(m_joy2TimeOut>0) m_joy2TimeOut--;
 
+  if(m_joy1TimeOut == 0)
+  {
+    m_pHwConfig->ledJoy1->Up();
+  }
+  if(m_joy2TimeOut == 0)
+  {
+    m_pHwConfig->ledJoy2->Up();
+  }
+  if((m_joy1TimeOut == 0)&&(m_joy2TimeOut == 0))
+  {
+    m_pHwConfig->ledNoJoys->Down();
+  }
+  m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
+}

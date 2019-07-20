@@ -15,9 +15,6 @@ static uint8_t joyButtonsReadState(void);
 #define UP    4
 #define DOWN  8
 
-#define FRAME_HEARTBEAT 0
-#define FRAME_JOYSTATE  1
-
 #define MAX_RADIO_FAILS 5
 
 #define HEARTBEAT_PERIOD 1
@@ -230,7 +227,15 @@ void ArcJoy::radioSendState(uint8_t joyButtons, uint8_t joystick)
 {
   const uint8_t dataLength = 3;
   uint8_t data[dataLength];
-  data[0] = FRAME_JOYSTATE;
+  data[0] = m_frameCounter;
+  if(m_frameCounter<255)
+  {
+    m_frameCounter++;
+  }
+  else
+  {
+    m_frameCounter = 0;
+  }
   data[1] = joystick;
   data[2] = joyButtons;
   m_pHwConfig->esbPtx->SendFrame(m_joyNumber,data,dataLength);
