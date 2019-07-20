@@ -27,7 +27,7 @@ void NrfEsbRadioPtx::On()
   nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
   nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
   nrf_esb_config.event_handler            = NrfEsbRadioPtx::nrfEsbEventHandler;
-  nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
+  nrf_esb_config.mode                     = NRF_ESB_MODE_PRX;
 
   nrf_esb_init(&nrf_esb_config);
   m_enabled = true;
@@ -35,6 +35,8 @@ void NrfEsbRadioPtx::On()
   nrf_esb_set_base_address_0(m_baseAddress0);
   nrf_esb_set_base_address_1(m_baseAddress1);
   nrf_esb_set_prefixes(m_prefixes,8);
+
+  nrf_esb_start_rx();
 }
 
 void NrfEsbRadioPtx::SetupAddress0(uint8_t *address)

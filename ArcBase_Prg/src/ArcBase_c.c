@@ -53,6 +53,7 @@
 #include "nrf_error.h"
 #include "nrf_drv_power.h"
 #include "boards.h"
+#include "ArcBase_c.h"
 
 #include "app_timer.h"
 #include "app_usbd.h"
@@ -253,36 +254,36 @@ static void hid_user2_ev_handler(app_usbd_class_inst_t const * p_inst,
 }
 
 
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse1_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON1(bcnt));
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse2_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON2(bcnt));
+//APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse1_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON1(bcnt));
+//APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse2_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON2(bcnt));
 
-static const app_usbd_hid_subclass_desc_t * reps1[] = {&mouse1_desc};
-static const app_usbd_hid_subclass_desc_t * reps2[] = {&mouse2_desc};
+//static const app_usbd_hid_subclass_desc_t * reps1[] = {&mouse1_desc};
+//static const app_usbd_hid_subclass_desc_t * reps2[] = {&mouse2_desc};
 
 /*lint -save -e26 -e64 -e123 -e505 -e651*/
 
 /**
  * @brief Global HID generic instance
  */
-APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid1_generic,
-                                HID_GENERIC_INTERFACE,
-                                hid_user1_ev_handler,
-                                (NRF_DRV_USBD_EPIN1),
-                                reps1,
-                                REPORT_IN_QUEUE_SIZE,
-                                REPORT_OUT_MAXSIZE,
-                                APP_USBD_HID_SUBCLASS_NONE,
-                                APP_USBD_HID_PROTO_GENERIC);
-
-APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid2_generic,
-                                1,
-                                hid_user2_ev_handler,
-                                (NRF_DRV_USBD_EPIN2),
-                                reps2,
-                                REPORT_IN_QUEUE_SIZE,
-                                REPORT_OUT_MAXSIZE,
-                                APP_USBD_HID_SUBCLASS_NONE,
-                                APP_USBD_HID_PROTO_GENERIC);
+//APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid1_generic,
+//                                HID_GENERIC_INTERFACE,
+//                                hid_user1_ev_handler,
+//                                (NRF_DRV_USBD_EPIN1),
+//                                reps1,
+//                                REPORT_IN_QUEUE_SIZE,
+//                                REPORT_OUT_MAXSIZE,
+//                                APP_USBD_HID_SUBCLASS_NONE,
+//                                APP_USBD_HID_PROTO_GENERIC);
+//
+//APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid2_generic,
+//                                1,
+//                                hid_user2_ev_handler,
+//                                (NRF_DRV_USBD_EPIN2),
+//                                reps2,
+//                                REPORT_IN_QUEUE_SIZE,
+//                                REPORT_OUT_MAXSIZE,
+//                                APP_USBD_HID_SUBCLASS_NONE,
+//                                APP_USBD_HID_PROTO_GENERIC);
 /*lint -restore*/
 
 
@@ -297,55 +298,6 @@ nrf_esb_payload_t rx_payload;
 
 /*lint -save -esym(40, BUTTON_1) -esym(40, BUTTON_2) -esym(40, BUTTON_3) -esym(40, BUTTON_4) -esym(40, LED_1) -esym(40, LED_2) -esym(40, LED_3) -esym(40, LED_4) */
 
-typedef struct
-{
-  bool left;
-  bool right;
-  bool up;
-  bool down;
-  bool fire;
-} JoyState;
-
-static volatile JoyState joyState[2] = {{false,false,false,false,false},{false,false,false,false,false}};
-
-#define NONE  0
-#define LEFT  1
-#define RIGHT 2
-#define UP    4
-#define DOWN  8
-
-
-void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
-{
-    switch (p_event->evt_id)
-    {
-        case NRF_ESB_EVENT_TX_SUCCESS:
-            NRF_LOG_DEBUG("TX SUCCESS EVENT");
-            break;
-        case NRF_ESB_EVENT_TX_FAILED:
-            NRF_LOG_DEBUG("TX FAILED EVENT");
-            break;
-        case NRF_ESB_EVENT_RX_RECEIVED:
-            NRF_LOG_DEBUG("RX RECEIVED EVENT");
-            if (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS)
-            {
-              uint8_t joyIndex = rx_payload.pipe;
-              if(joyIndex>1) joyIndex = 1;
-              if((rx_payload.data[1] & LEFT) != 0) joyState[joyIndex].left = true;
-              else joyState[joyIndex].left = false;
-              if((rx_payload.data[1] & RIGHT) != 0) joyState[joyIndex].right = true;
-              else joyState[joyIndex].right = false;
-              if((rx_payload.data[1] & UP) != 0) joyState[joyIndex].up = true;
-              else joyState[joyIndex].up = false;
-              if((rx_payload.data[1] & DOWN) != 0) joyState[joyIndex].down = true;
-              else joyState[joyIndex].down = false;
-              if(rx_payload.data[2] >0) joyState[joyIndex].fire = true;
-              else joyState[joyIndex].fire = false;
-            }
-            break;
-    }
-}
-
 void clocks_start( void )
 {
     NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
@@ -359,51 +311,6 @@ void gpio_init( void )
 {
     bsp_board_init(BSP_INIT_LEDS);
 }
-
-
-uint32_t esb_init( void )
-{
-    uint32_t err_code;
-
-    uint8_t base_addr_0[4] = {'A', 'r', 'c', '1'};
-    uint8_t base_addr_1[4] = {'J', 'o', 'y', '2'};
-    uint8_t addr_prefix[8] = {'O', 'T', 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 };
-    nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
-    nrf_esb_config.payload_length           = 8;
-    nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
-    nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
-    nrf_esb_config.mode                     = NRF_ESB_MODE_PRX;
-    nrf_esb_config.event_handler            = nrf_esb_event_handler;
-    nrf_esb_config.selective_auto_ack       = false;
-
-    err_code = nrf_esb_init(&nrf_esb_config);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_base_address_0(base_addr_0);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_base_address_1(base_addr_1);
-    VERIFY_SUCCESS(err_code);
-
-    err_code = nrf_esb_set_prefixes(addr_prefix, 8);
-    VERIFY_SUCCESS(err_code);
-
-    return err_code;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -463,113 +370,29 @@ static int8_t hid_acc_for_report_get(int16_t acc)
  * If report sending was successful it clears accumulated positions
  * and mark last button state that was transfered.
  */
-static void hid_generic_mouse1_process_state(void)
+static void hid_generic_mouse1_process_state(JoyState joyState)
 {
- //   if (m_report_pending)
-  //      return;
-//    if ((m_mouse_state.acc_x != 0) ||
-//        (m_mouse_state.acc_y != 0) ||
-//        (m_mouse_state.btn != m_mouse_state.last_btn))
-//    {
-        ret_code_t ret;
-        static uint8_t report[HID_REP_SIZE];
-        /* We have some status changed that we need to transfer */
-        report[0] = 1;
-        report[3] = joyState[0].fire;
-
-        report[1]   = -joyState[0].left*127 + joyState[0].right*127;
-        report[2]   =  -joyState[0].up*127 + joyState[0].down*127;
-        /* Start the transfer */
-        ret = app_usbd_hid_generic_in_report_set(
-            &m_app_hid1_generic,
-            report,
-            sizeof(report));
-
-        if (ret == NRF_SUCCESS)
-        {
-            m_report_pending = true;
-            m_mouse_state.last_btn = report[HID_BTN_IDX];
-            CRITICAL_REGION_ENTER();
-            /* This part of the code can fail if interrupted by BSP keys processing.
-             * Lock interrupts to be safe */
-            m_mouse_state.acc_x   -= (int8_t)report[HID_X_IDX];
-            m_mouse_state.acc_y   -= (int8_t)report[HID_Y_IDX];
-            CRITICAL_REGION_EXIT();
-        }
-//    }
+//  static uint8_t report[HID_REP_SIZE];
+//
+//  report[0] = 1;
+//  report[3] = joyState.fire;
+//
+//  report[1]   = -joyState.left*127 + joyState.right*127;
+//  report[2]   =  -joyState.up*127 + joyState.down*127;
+//
+//  app_usbd_hid_generic_in_report_set(&m_app_hid1_generic,report,sizeof(report));
 }
 
-static void hid_generic_mouse2_process_state(void)
+static void hid_generic_mouse2_process_state(JoyState joyState)
 {
-        ret_code_t ret;
-        static uint8_t report[HID_REP_SIZE];
-        /* We have some status changed that we need to transfer */
-        report[0] = 2;
-        report[3] = joyState[1].fire;
-
-        report[1]   = -joyState[1].left*127 + joyState[1].right*127;
-        report[2]   =  -joyState[1].up*127 + joyState[1].down*127;
-        /* Start the transfer */
-
-        ret = app_usbd_hid_generic_in_report_set(
-            &m_app_hid2_generic,
-            report,
-            sizeof(report));
-
-        if (ret == NRF_SUCCESS)
-        {
-            m_report_pending = true;
-            m_mouse_state.last_btn = report[HID_BTN_IDX];
-            CRITICAL_REGION_ENTER();
-            /* This part of the code can fail if interrupted by BSP keys processing.
-             * Lock interrupts to be safe */
-            m_mouse_state.acc_x   -= (int8_t)report[HID_X_IDX];
-            m_mouse_state.acc_y   -= (int8_t)report[HID_Y_IDX];
-            CRITICAL_REGION_EXIT();
-        }
-//    }
+//  static uint8_t report[HID_REP_SIZE];
+//  report[0] = 2;
+//  report[3] = joyState.fire;
+//  report[1]   = -joyState.left*127 + joyState.right*127;
+//  report[2]   =  -joyState.up*127 + joyState.down*127;
+//  app_usbd_hid_generic_in_report_set(&m_app_hid2_generic,report,sizeof(report));
 }
 
-/**
- * @brief HID generic IN report send handling
- * */
-static void hid_generic_mouse_action(hid_generic_mouse_action_t action, int8_t param)
-{
-    CRITICAL_REGION_ENTER();
-    /*
-     * Update mouse state
-     */
-    switch (action)
-    {
-        case HID_GENERIC_MOUSE_X:
-            m_mouse_state.acc_x += param;
-            break;
-        case HID_GENERIC_MOUSE_Y:
-            m_mouse_state.acc_y += param;
-            break;
-        case HID_GENERIC_MOUSE_BTN_RIGHT:
-            if(param == 1)
-            {
-                m_mouse_state.btn |= HID_BTN_RIGHT_MASK;
-            }
-            else
-            {
-                m_mouse_state.btn &= ~HID_BTN_RIGHT_MASK;
-            }
-            break;
-        case HID_GENERIC_MOUSE_BTN_LEFT:
-            if(param == 1)
-            {
-                m_mouse_state.btn |= HID_BTN_LEFT_MASK;
-            }
-            else
-            {
-                m_mouse_state.btn &= ~HID_BTN_LEFT_MASK;
-            }
-            break;
-    }
-    CRITICAL_REGION_EXIT();
-}
 
 /**
  * @brief Class specific event handler.
@@ -590,21 +413,21 @@ static void hid_user1_ev_handler(app_usbd_class_inst_t const * p_inst,
         }
         case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
         {
-            m_report_pending = false;
-            hid_generic_mouse1_process_state();
-            bsp_board_led_invert(LED_HID_REP_IN);
+//            m_report_pending = false;
+//            hid_generic_mouse1_process_state();
+//            bsp_board_led_invert(LED_HID_REP_IN);
             break;
         }
         case APP_USBD_HID_USER_EVT_SET_BOOT_PROTO:
         {
-            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
-            NRF_LOG_INFO("SET_BOOT_PROTO");
+//            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
+//            NRF_LOG_INFO("SET_BOOT_PROTO");
             break;
         }
         case APP_USBD_HID_USER_EVT_SET_REPORT_PROTO:
         {
-            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
-            NRF_LOG_INFO("SET_REPORT_PROTO");
+//            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
+//            NRF_LOG_INFO("SET_REPORT_PROTO");
             break;
         }
         default:
@@ -625,21 +448,21 @@ static void hid_user2_ev_handler(app_usbd_class_inst_t const * p_inst,
         }
         case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
         {
-            m_report_pending = false;
-            hid_generic_mouse2_process_state();
-            bsp_board_led_invert(LED_HID_REP_IN);
+//            m_report_pending = false;
+//            hid_generic_mouse2_process_state();
+//            bsp_board_led_invert(LED_HID_REP_IN);
             break;
         }
         case APP_USBD_HID_USER_EVT_SET_BOOT_PROTO:
         {
-            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
-            NRF_LOG_INFO("SET_BOOT_PROTO");
+//            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
+//            NRF_LOG_INFO("SET_BOOT_PROTO");
             break;
         }
         case APP_USBD_HID_USER_EVT_SET_REPORT_PROTO:
         {
-            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
-            NRF_LOG_INFO("SET_REPORT_PROTO");
+//            UNUSED_RETURN_VALUE(hid_generic_clear_buffer(p_inst));
+//            NRF_LOG_INFO("SET_REPORT_PROTO");
             break;
         }
         default:
@@ -698,76 +521,38 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
     }
 }
 
-static void mouse_move_timer_handler(void * p_context)
-{
-    UNUSED_PARAMETER(p_context);
-//    bool used = false;
-//
-//    if (left)
-//    {
-//
-//        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, -CONFIG_MOUSE_MOVE_SPEED);
-//        used = true;
-//    }
-//    if (right)
-//    {
-//
-//        hid_generic_mouse_action(HID_GENERIC_MOUSE_X, CONFIG_MOUSE_MOVE_SPEED);
-//        used = true;
-//    }
-//    if (up)
-//    {
-//        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, -CONFIG_MOUSE_MOVE_SPEED);
-//        used = true;
-//    }
-//    if (down)
-//    {
-//        hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
-//        used = true;
-//    }
-//    if (fire)
-//    {
-//        hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, CONFIG_MOUSE_MOVE_SPEED);
-//        used = true;
-//    }
-//
-//    if(!used)
-//    {
-//        UNUSED_RETURN_VALUE(app_timer_stop(m_mouse_move_timer));
-//    }
-}
 
 static void bsp_event_callback(bsp_event_t ev)
 {
-    switch ((unsigned int)ev)
-    {
-        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_X_POS):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_X, CONFIG_MOUSE_MOVE_SPEED);
-            UNUSED_RETURN_VALUE(app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL));
-            break;
-
-        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_Y_POS):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
-            UNUSED_RETURN_VALUE(app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL));
-            break;
-
-        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_RIGHT):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_RIGHT, 1);
-            break;
-        case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_MOUSE_RIGHT):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_RIGHT, -1);
-            break;
-
-        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_LEFT):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, 1);
-            break;
-        case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_MOUSE_LEFT):
-            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, -1);
-            break;
-
-        default:
-            return; // no implementation needed
-    }
+//    switch ((unsigned int)ev)
+//    {
+//        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_X_POS):
+//            hid_generic_mouse_action(HID_GENERIC_MOUSE_X, CONFIG_MOUSE_MOVE_SPEED);
+//            UNUSED_RETURN_VALUE(app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL));
+//            break;
+//
+//        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_Y_POS):
+//            hid_generic_mouse_action(HID_GENERIC_MOUSE_Y, CONFIG_MOUSE_MOVE_SPEED);
+//            UNUSED_RETURN_VALUE(app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL));
+//            break;
+//
+//        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_RIGHT):
+//            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_RIGHT, 1);
+//            break;
+//        case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_MOUSE_RIGHT):
+//            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_RIGHT, -1);
+//            break;
+//
+//        case CONCAT_2(BSP_EVENT_KEY_, BTN_MOUSE_LEFT):
+//            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, 1);
+//            break;
+//        case CONCAT_2(BSP_USER_EVENT_RELEASE_, BTN_MOUSE_LEFT):
+//            hid_generic_mouse_action(HID_GENERIC_MOUSE_BTN_LEFT, -1);
+//            break;
+//
+//        default:
+//            return; // no implementation needed
+//    }
 }
 
 
@@ -814,104 +599,58 @@ static void init_cli(void)
 
 static ret_code_t idle_handle(app_usbd_class_inst_t const * p_inst, uint8_t report_id)
 {
-    switch (report_id)
-    {
-        case 0:
-        {
-            uint8_t report[] = {0xBE, 0xEF};
-            return app_usbd_hid_generic_idle_report_set(
-              &m_app_hid1_generic,
-              report,
-              sizeof(report));
-        }
-        default:
-            return NRF_ERROR_NOT_SUPPORTED;
-    }
-    
+//    switch (report_id)
+//    {
+//        case 0:
+//        {
+//            uint8_t report[] = {0xBE, 0xEF};
+//            return app_usbd_hid_generic_idle_report_set(
+//              &m_app_hid1_generic,
+//              report,
+//              sizeof(report));
+//        }
+//        default:
+//            return NRF_ERROR_NOT_SUPPORTED;
+//    }
+//    
 }
 
-int main(void)
+void arcBase_init(void)
 {
-    ret_code_t ret;
-    static const app_usbd_config_t usbd_config = {
-        .ev_state_proc = usbd_user_ev_handler
-    };
+//    ret_code_t ret;
+//    static const app_usbd_config_t usbd_config = {
+//        .ev_state_proc = usbd_user_ev_handler
+//    };
+//
+//    nrf_drv_clock_init();
+//
+//    ret = app_usbd_init(&usbd_config);
+//
+//    app_usbd_class_inst_t const * class_inst_generic1;
+//    app_usbd_class_inst_t const * class_inst_generic2;
+//
+//    class_inst_generic1 = app_usbd_hid_generic_class_inst_get(&m_app_hid1_generic);
+//    app_usbd_class_append(class_inst_generic1);
+//
+//    class_inst_generic2 = app_usbd_hid_generic_class_inst_get(&m_app_hid2_generic);
+//    app_usbd_class_append(class_inst_generic2);
+//
+//
+//    app_usbd_power_events_enable();
+//    app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL);
+}
 
-    ret = NRF_LOG_INIT(NULL);
-    APP_ERROR_CHECK(ret);
+void arcBase_whileLoop(JoyState joy1, JoyState joy2)
+{
+  while (app_usbd_event_queue_process())
+  {
+      /* Nothing to do */
+  }
+  hid_generic_mouse1_process_state(joy1);
+  hid_generic_mouse2_process_state(joy2);
+  nrf_cli_process(&m_cli_uart);
 
-    ret = nrf_drv_clock_init();
-    APP_ERROR_CHECK(ret);
-
-    nrf_drv_clock_lfclk_request(NULL);
-
-    while(!nrf_drv_clock_lfclk_is_running())
-    {
-        /* Just waiting */
-    }
-
-    ret = app_timer_init();
-    APP_ERROR_CHECK(ret);
-
-    ret = app_timer_create(&m_mouse_move_timer, APP_TIMER_MODE_REPEATED, mouse_move_timer_handler);
-    APP_ERROR_CHECK(ret);
-
-    init_bsp();
-    init_cli();
-    NRF_LOG_INFO("Hello USB!");
-
-    ret = app_usbd_init(&usbd_config);
-    APP_ERROR_CHECK(ret);
-
-    NRF_LOG_INFO("USBD HID generic example started.");
-
-    app_usbd_class_inst_t const * class_inst_generic1;
-    app_usbd_class_inst_t const * class_inst_generic2;
-
-    class_inst_generic1 = app_usbd_hid_generic_class_inst_get(&m_app_hid1_generic);
- //   ret = hid_generic_idle_handler_set(class_inst_generic1, idle_handle);
-    APP_ERROR_CHECK(ret);
-    ret = app_usbd_class_append(class_inst_generic1);
-    APP_ERROR_CHECK(ret);
-
-    class_inst_generic2 = app_usbd_hid_generic_class_inst_get(&m_app_hid2_generic);
-//    ret = hid_generic_idle_handler_set(class_inst_generic2, idle_handle);
- //   APP_ERROR_CHECK(ret);
-    ret = app_usbd_class_append(class_inst_generic2);
-    APP_ERROR_CHECK(ret);
-
-
-    if (USBD_POWER_DETECTION)
-    {
-        ret = app_usbd_power_events_enable();
-        APP_ERROR_CHECK(ret);
-    }
-    else
-    {
-        NRF_LOG_INFO("No USB power detection enabled\r\nStarting USB now");
-
-        app_usbd_enable();
-        app_usbd_start();
-    }
-
-    app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL);
-    clocks_start();
-    esb_init();
-    nrf_esb_start_rx();
-
-    while (true)
-    {
-    mouse_move_timer_handler(NULL);
-        while (app_usbd_event_queue_process())
-        {
-            /* Nothing to do */
-        }
-        hid_generic_mouse1_process_state();
-        hid_generic_mouse2_process_state();
-        nrf_cli_process(&m_cli_uart);
-
-        UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
-        /* Sleep CPU only if there was no interrupt since last loop processing */
-        __WFE();
-    }
+  UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
+  /* Sleep CPU only if there was no interrupt since last loop processing */
+  __WFE();
 }

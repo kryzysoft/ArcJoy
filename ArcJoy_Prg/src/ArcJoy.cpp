@@ -14,21 +14,6 @@ static uint8_t joyButtonsReadState(void);
 #define RIGHT 2
 #define UP    4
 #define DOWN  8
-//
-//#define JOY_LEFT     3
-//#define JOY_RIGHT   22
-//#define JOY_UP       8
-//#define JOY_DOWN    26
-
-//#define JOY_BUTTON_1 9
-//#define JOY_BUTTON_2 6
-//#define JOY_BUTTON_3 7
-//#define JOY_BUTTON_4 5
-//#define JOY_BUTTON_5 2
-//#define JOY_BUTTON_6 4
-
-#define FRAME_HEARTBEAT 0
-#define FRAME_JOYSTATE  1
 
 #define MAX_RADIO_FAILS 5
 
@@ -49,12 +34,9 @@ void ArcJoy::Run()
   uint8_t joyButtonsState = 0;
   uint32_t fails = 0;
 
-  uint8_t base_addr_0[4] = {0xE7, 0xE7, 0xE7, 0xE7};
-  uint8_t base_addr_1[4] = {0xC2, 0xC2, 0xC2, 0xC2};
-  uint8_t addr_prefix[8] = {0xE7, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8 };
-
-       // nrf_gpio_cfg_sense_input(JOY_BUTTON_1, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
-
+  uint8_t base_addr_0[4] = {'A', 'r', 'c', '1'};
+  uint8_t base_addr_1[4] = {'J', 'o', 'y', '2'};
+  uint8_t addr_prefix[8] = {'O', 'T', 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 };
 
   joyInit();
   joyButtonsInit();
@@ -63,7 +45,6 @@ void ArcJoy::Run()
   m_pHwConfig->rtcClock->SetupAlarmHandler(this);
   m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
 
-  m_pHwConfig->esbPtx->On();
   m_pHwConfig->esbPtx->SetupAddress0(base_addr_0);
   m_pHwConfig->esbPtx->SetupAddress1(base_addr_1);
   m_pHwConfig->esbPtx->SetupAddressPrefixes(addr_prefix,8);
@@ -72,6 +53,17 @@ void ArcJoy::Run()
 
   while(true)
   {
+    m_pHwConfig->dipSwitch1->Enable();
+    if(m_pHwConfig->dipSwitch1->IsUp())
+    {
+      m_joyNumber = 0;
+    }
+    else
+    {
+      m_joyNumber = 1;
+    }
+    m_pHwConfig->dipSwitch1->Disable();
+
     while(sendHeartbeat || sendJoyState)
     {
       if(sendHeartbeat)
@@ -235,10 +227,18 @@ void ArcJoy::radioSendState(uint8_t joyButtons, uint8_t joystick)
 {
   const uint8_t dataLength = 3;
   uint8_t data[dataLength];
-  data[0] = FRAME_JOYSTATE;
+  data[0] = m_frameCounter;
+  if(m_frameCounter<255)
+  {
+    m_frameCounter++;
+  }
+  else
+  {
+    m_frameCounter = 0;
+  }
   data[1] = joystick;
   data[2] = joyButtons;
-  m_pHwConfig->esbPtx->SendFrame(0,data,dataLength);
+  m_pHwConfig->esbPtx->SendFrame(m_joyNumber,data,dataLength);
 }
 
 void ArcJoy::RtcAlarmHandler()

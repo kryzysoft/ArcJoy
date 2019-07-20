@@ -78,6 +78,120 @@
 
 // </e>
 
+// <e> NRFX_RTC_ENABLED - nrfx_rtc - RTC peripheral driver
+//==========================================================
+#ifndef NRFX_RTC_ENABLED
+#define NRFX_RTC_ENABLED 1
+#endif
+// <q> NRFX_RTC0_ENABLED  - Enable RTC0 instance
+ 
+
+#ifndef NRFX_RTC0_ENABLED
+#define NRFX_RTC0_ENABLED 1
+#endif
+
+// <q> NRFX_RTC1_ENABLED  - Enable RTC1 instance
+ 
+
+#ifndef NRFX_RTC1_ENABLED
+#define NRFX_RTC1_ENABLED 0
+#endif
+
+// <q> NRFX_RTC2_ENABLED  - Enable RTC2 instance
+ 
+
+#ifndef NRFX_RTC2_ENABLED
+#define NRFX_RTC2_ENABLED 0
+#endif
+
+// <o> NRFX_RTC_MAXIMUM_LATENCY_US - Maximum possible time[us] in highest priority interrupt 
+#ifndef NRFX_RTC_MAXIMUM_LATENCY_US
+#define NRFX_RTC_MAXIMUM_LATENCY_US 2000
+#endif
+
+// <o> NRFX_RTC_DEFAULT_CONFIG_FREQUENCY - Frequency  <16-32768> 
+
+
+#ifndef NRFX_RTC_DEFAULT_CONFIG_FREQUENCY
+#define NRFX_RTC_DEFAULT_CONFIG_FREQUENCY 32768
+#endif
+
+// <q> NRFX_RTC_DEFAULT_CONFIG_RELIABLE  - Ensures safe compare event triggering
+ 
+
+#ifndef NRFX_RTC_DEFAULT_CONFIG_RELIABLE
+#define NRFX_RTC_DEFAULT_CONFIG_RELIABLE 0
+#endif
+
+// <o> NRFX_RTC_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
+ 
+// <0=> 0 (highest) 
+// <1=> 1 
+// <2=> 2 
+// <3=> 3 
+// <4=> 4 
+// <5=> 5 
+// <6=> 6 
+// <7=> 7 
+
+#ifndef NRFX_RTC_DEFAULT_CONFIG_IRQ_PRIORITY
+#define NRFX_RTC_DEFAULT_CONFIG_IRQ_PRIORITY 6
+#endif
+
+// <e> NRFX_RTC_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRFX_RTC_CONFIG_LOG_ENABLED
+#define NRFX_RTC_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRFX_RTC_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRFX_RTC_CONFIG_LOG_LEVEL
+#define NRFX_RTC_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRFX_RTC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRFX_RTC_CONFIG_INFO_COLOR
+#define NRFX_RTC_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRFX_RTC_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRFX_RTC_CONFIG_DEBUG_COLOR
+#define NRFX_RTC_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// </e>
+
+
 // <e> NRFX_CLOCK_ENABLED - nrfx_clock - CLOCK peripheral driver
 //==========================================================
 #ifndef NRFX_CLOCK_ENABLED
@@ -936,13 +1050,6 @@
 // <h> nRF_Libraries 
 
 //==========================================================
-// <q> APP_FIFO_ENABLED  - app_fifo - Software FIFO implementation
- 
-
-#ifndef APP_FIFO_ENABLED
-#define APP_FIFO_ENABLED 1
-#endif
-
 // <e> APP_SCHEDULER_ENABLED - app_scheduler - Events scheduler
 //==========================================================
 #ifndef APP_SCHEDULER_ENABLED
@@ -1059,20 +1166,12 @@
 
 // </e>
 
-// <e> APP_UART_ENABLED - app_uart - UART driver
-//==========================================================
-#ifndef APP_UART_ENABLED
-#define APP_UART_ENABLED 1
-#endif
-// <o> APP_UART_DRIVER_INSTANCE  - UART instance used
+// <q> APP_USBD_DUMMY_ENABLED  - app_usbd_dummy - USBD Dummy class
  
-// <0=> 0 
 
-#ifndef APP_UART_DRIVER_INSTANCE
-#define APP_UART_DRIVER_INSTANCE 0
-#endif
-
-// </e>
+//#ifndef APP_USBD_DUMMY_ENABLED
+//#define APP_USBD_DUMMY_ENABLED 1
+//#endif
 
 // <e> APP_USBD_ENABLED - app_usbd - USB Device library
 //==========================================================
@@ -1084,7 +1183,6 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> Vendor ID ordered from USB IF: http://www.usb.org/developers/vendor/
 #ifndef APP_USBD_VID
-//#define APP_USBD_VID 0x1915
 #define APP_USBD_VID 0x1155
 #endif
 
@@ -1093,7 +1191,6 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> Selected Product ID
 #ifndef APP_USBD_PID
-//#define APP_USBD_PID 0x520C
 #define APP_USBD_PID 22315
 #endif
 
@@ -1263,7 +1360,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> List of product names that is defined the same way like in @ref APP_USBD_STRINGS_MANUFACTURER.
 #ifndef APP_USBD_STRINGS_PRODUCT
-#define APP_USBD_STRINGS_PRODUCT APP_USBD_STRING_DESC("nRF52 USB HID generic Demo")
+#define APP_USBD_STRINGS_PRODUCT APP_USBD_STRING_DESC("nRF52 USB HID composite Demo")
 #endif
 
 // </e>
@@ -1361,9 +1458,6 @@
 #endif
 
 // </e>
-
-// <q> APP_USBD_HID_GENERIC_ENABLED  - app_usbd_hid_generic - USB HID generic
- 
 
 #ifndef APP_USBD_HID_GENERIC_ENABLED
 #define APP_USBD_HID_GENERIC_ENABLED 1
