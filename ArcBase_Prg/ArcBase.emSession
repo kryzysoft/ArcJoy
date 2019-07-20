@@ -24,7 +24,6 @@
   <ProjectSessionItem path="ArcBase;ArcBase;Application"/>
   <ProjectSessionItem path="ArcBase;ArcBase;IHal"/>
   <ProjectSessionItem path="ArcBase;ArcBase;nRF_Hal"/>
-  <ProjectSessionItem path="ArcBase;ArcBase;nRF_Libraries"/>
   <ProjectSessionItem path="ArcBase;ArcBase;nRF_Properitary_RF"/>
  </Project>
  <Register1>
@@ -62,19 +61,12 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="80" y="14" useTextEdit="1" useBinaryEdit="0" left="0" path="src/IHal/IHalEsbRadioPrx.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="4" y="30" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfEsbRadioPrx.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="24" y="80" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfEsbRadioPrx.cpp" selected="0" top="30" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="5" y="675" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase_c.c" selected="0" top="663" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1122" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.c" selected="0" top="1104" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfEsbRadioPtx.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="401" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.h" selected="0" top="378" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="2" y="11" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.cpp" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="7" y="8" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase.cpp" selected="1" top="6" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="5" y="17" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase_c.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="29" y="6" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase.h" selected="0" top="9" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="30" y="1355" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/app_usbd.c" selected="0" top="1330" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="207" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF5_SDK/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c" selected="0" top="189" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="34" y="10" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfUsbJoysticks.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="11" useTextEdit="1" useBinaryEdit="0" left="0" path="src/IHal/IHalUsbJoysticks.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="33" useTextEdit="1" useBinaryEdit="0" left="0" path="src/nRF_Hal/NrfUsbJoysticks.cpp" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="13" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.cpp" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="50" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase.h" selected="0" top="30" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="36" y="49" useTextEdit="1" useBinaryEdit="0" left="0" path="src/ArcBase.cpp" selected="1" top="12" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ArcBase" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcBase_Prg/src/nRF_Hal" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="ArcBase" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="G:/Projekty/ArcJoy/ArcBase_Prg/src/nRF_Hal" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

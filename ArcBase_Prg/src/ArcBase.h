@@ -8,6 +8,7 @@
 #include "IHal/IHalRtc.h"
 #include "IHal/IHalLowPowerMode.h"
 #include "IHal/IHalDelay.h"
+#include "IHal/IHalUsbJoysticks.h"
 
 #include "stdint.h"
 
@@ -36,6 +37,7 @@ typedef struct
 //  IHalGpioInputIrq *joyButton6;
 //
   IHalEsbRadioPrx *esbPrx;
+  IHalUsbJoysticks *joysticks;
 //
 //  IHalRtc *rtcClock;
 //

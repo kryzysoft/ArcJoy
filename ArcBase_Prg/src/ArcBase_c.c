@@ -254,36 +254,36 @@ static void hid_user2_ev_handler(app_usbd_class_inst_t const * p_inst,
 }
 
 
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse1_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON1(bcnt));
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse2_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON2(bcnt));
+//APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse1_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON1(bcnt));
+//APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(mouse2_desc,APP_USBD_HID_JOY_REPORT_DSC_BUTTON2(bcnt));
 
-static const app_usbd_hid_subclass_desc_t * reps1[] = {&mouse1_desc};
-static const app_usbd_hid_subclass_desc_t * reps2[] = {&mouse2_desc};
+//static const app_usbd_hid_subclass_desc_t * reps1[] = {&mouse1_desc};
+//static const app_usbd_hid_subclass_desc_t * reps2[] = {&mouse2_desc};
 
 /*lint -save -e26 -e64 -e123 -e505 -e651*/
 
 /**
  * @brief Global HID generic instance
  */
-APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid1_generic,
-                                HID_GENERIC_INTERFACE,
-                                hid_user1_ev_handler,
-                                (NRF_DRV_USBD_EPIN1),
-                                reps1,
-                                REPORT_IN_QUEUE_SIZE,
-                                REPORT_OUT_MAXSIZE,
-                                APP_USBD_HID_SUBCLASS_NONE,
-                                APP_USBD_HID_PROTO_GENERIC);
-
-APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid2_generic,
-                                1,
-                                hid_user2_ev_handler,
-                                (NRF_DRV_USBD_EPIN2),
-                                reps2,
-                                REPORT_IN_QUEUE_SIZE,
-                                REPORT_OUT_MAXSIZE,
-                                APP_USBD_HID_SUBCLASS_NONE,
-                                APP_USBD_HID_PROTO_GENERIC);
+//APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid1_generic,
+//                                HID_GENERIC_INTERFACE,
+//                                hid_user1_ev_handler,
+//                                (NRF_DRV_USBD_EPIN1),
+//                                reps1,
+//                                REPORT_IN_QUEUE_SIZE,
+//                                REPORT_OUT_MAXSIZE,
+//                                APP_USBD_HID_SUBCLASS_NONE,
+//                                APP_USBD_HID_PROTO_GENERIC);
+//
+//APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid2_generic,
+//                                1,
+//                                hid_user2_ev_handler,
+//                                (NRF_DRV_USBD_EPIN2),
+//                                reps2,
+//                                REPORT_IN_QUEUE_SIZE,
+//                                REPORT_OUT_MAXSIZE,
+//                                APP_USBD_HID_SUBCLASS_NONE,
+//                                APP_USBD_HID_PROTO_GENERIC);
 /*lint -restore*/
 
 
@@ -372,25 +372,25 @@ static int8_t hid_acc_for_report_get(int16_t acc)
  */
 static void hid_generic_mouse1_process_state(JoyState joyState)
 {
-  static uint8_t report[HID_REP_SIZE];
-
-  report[0] = 1;
-  report[3] = joyState.fire;
-
-  report[1]   = -joyState.left*127 + joyState.right*127;
-  report[2]   =  -joyState.up*127 + joyState.down*127;
-
-  app_usbd_hid_generic_in_report_set(&m_app_hid1_generic,report,sizeof(report));
+//  static uint8_t report[HID_REP_SIZE];
+//
+//  report[0] = 1;
+//  report[3] = joyState.fire;
+//
+//  report[1]   = -joyState.left*127 + joyState.right*127;
+//  report[2]   =  -joyState.up*127 + joyState.down*127;
+//
+//  app_usbd_hid_generic_in_report_set(&m_app_hid1_generic,report,sizeof(report));
 }
 
 static void hid_generic_mouse2_process_state(JoyState joyState)
 {
-  static uint8_t report[HID_REP_SIZE];
-  report[0] = 2;
-  report[3] = joyState.fire;
-  report[1]   = -joyState.left*127 + joyState.right*127;
-  report[2]   =  -joyState.up*127 + joyState.down*127;
-  app_usbd_hid_generic_in_report_set(&m_app_hid2_generic,report,sizeof(report));
+//  static uint8_t report[HID_REP_SIZE];
+//  report[0] = 2;
+//  report[3] = joyState.fire;
+//  report[1]   = -joyState.left*127 + joyState.right*127;
+//  report[2]   =  -joyState.up*127 + joyState.down*127;
+//  app_usbd_hid_generic_in_report_set(&m_app_hid2_generic,report,sizeof(report));
 }
 
 
@@ -599,78 +599,45 @@ static void init_cli(void)
 
 static ret_code_t idle_handle(app_usbd_class_inst_t const * p_inst, uint8_t report_id)
 {
-    switch (report_id)
-    {
-        case 0:
-        {
-            uint8_t report[] = {0xBE, 0xEF};
-            return app_usbd_hid_generic_idle_report_set(
-              &m_app_hid1_generic,
-              report,
-              sizeof(report));
-        }
-        default:
-            return NRF_ERROR_NOT_SUPPORTED;
-    }
-    
+//    switch (report_id)
+//    {
+//        case 0:
+//        {
+//            uint8_t report[] = {0xBE, 0xEF};
+//            return app_usbd_hid_generic_idle_report_set(
+//              &m_app_hid1_generic,
+//              report,
+//              sizeof(report));
+//        }
+//        default:
+//            return NRF_ERROR_NOT_SUPPORTED;
+//    }
+//    
 }
 
 void arcBase_init(void)
 {
-    ret_code_t ret;
-    static const app_usbd_config_t usbd_config = {
-        .ev_state_proc = usbd_user_ev_handler
-    };
-
-    ret = nrf_drv_clock_init();
-    APP_ERROR_CHECK(ret);
-
-    nrf_drv_clock_lfclk_request(NULL);
-
-    while(!nrf_drv_clock_lfclk_is_running())
-    {
-        /* Just waiting */
-    }
-
-    ret = app_timer_init();
-
-
-    ret = app_usbd_init(&usbd_config);
-
-
-    NRF_LOG_INFO("USBD HID generic example started.");
-
-    app_usbd_class_inst_t const * class_inst_generic1;
-    app_usbd_class_inst_t const * class_inst_generic2;
-
-    class_inst_generic1 = app_usbd_hid_generic_class_inst_get(&m_app_hid1_generic);
-
-
-    ret = app_usbd_class_append(class_inst_generic1);
-    APP_ERROR_CHECK(ret);
-    class_inst_generic2 = app_usbd_hid_generic_class_inst_get(&m_app_hid2_generic);
-
-    ret = app_usbd_class_append(class_inst_generic2);
-    APP_ERROR_CHECK(ret);
-
-
-    if (USBD_POWER_DETECTION)
-    {
-        ret = app_usbd_power_events_enable();
-        APP_ERROR_CHECK(ret);
-    }
-    else
-    {
-        NRF_LOG_INFO("No USB power detection enabled\r\nStarting USB now");
-
-        app_usbd_enable();
-        app_usbd_start();
-    }
-
-    app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL);
-    clocks_start();
-//    esb_init();
-//    nrf_esb_start_rx();
+//    ret_code_t ret;
+//    static const app_usbd_config_t usbd_config = {
+//        .ev_state_proc = usbd_user_ev_handler
+//    };
+//
+//    nrf_drv_clock_init();
+//
+//    ret = app_usbd_init(&usbd_config);
+//
+//    app_usbd_class_inst_t const * class_inst_generic1;
+//    app_usbd_class_inst_t const * class_inst_generic2;
+//
+//    class_inst_generic1 = app_usbd_hid_generic_class_inst_get(&m_app_hid1_generic);
+//    app_usbd_class_append(class_inst_generic1);
+//
+//    class_inst_generic2 = app_usbd_hid_generic_class_inst_get(&m_app_hid2_generic);
+//    app_usbd_class_append(class_inst_generic2);
+//
+//
+//    app_usbd_power_events_enable();
+//    app_timer_start(m_mouse_move_timer, APP_TIMER_TICKS(CONFIG_MOUSE_MOVE_TIME_MS), NULL);
 }
 
 void arcBase_whileLoop(JoyState joy1, JoyState joy2)

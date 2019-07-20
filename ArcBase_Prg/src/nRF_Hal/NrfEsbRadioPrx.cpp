@@ -33,6 +33,8 @@ void NrfEsbRadioPrx::On()
   nrf_esb_set_base_address_0(m_baseAddress0);
   nrf_esb_set_base_address_1(m_baseAddress1);
   nrf_esb_set_prefixes(m_prefixes,8);
+
+  nrf_esb_start_rx();
 }
 
 void NrfEsbRadioPrx::SetupAddress0(uint8_t *address)

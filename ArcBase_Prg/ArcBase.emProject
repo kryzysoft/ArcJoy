@@ -83,22 +83,6 @@
       <file file_name="src/nRF5_SDK/components/libraries/experimental_section_vars/nrf_section_iter.c" />
       <file file_name="src/nRF5_SDK/components/libraries/strerror/nrf_strerror.c" />
     </folder>
-    <folder Name="nRF_Drivers">
-      <file file_name="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_clock.c" />
-      <file file_name="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_power.c" />
-      <file file_name="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_uart.c" />
-      <file file_name="src/nRF5_SDK/components/drivers_nrf/nrf_soc_nosd/nrf_nvic.c" />
-      <file file_name="src/nRF5_SDK/components/drivers_nrf/nrf_soc_nosd/nrf_soc.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/soc/nrfx_atomic.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_clock.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_gpiote.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_power.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/prs/nrfx_prs.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_systick.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_uart.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_uarte.c" />
-      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_usbd.c" />
-    </folder>
     <folder Name="Board Support">
       <file file_name="src/nRF5_SDK/components/libraries/bsp/bsp.c" />
       <file file_name="src/nRF5_SDK/components/libraries/bsp/bsp_cli.c" />
@@ -137,6 +121,7 @@
       <file file_name="src/IHal/IHalRtc.h" />
       <file file_name="src/IHal/IHalEsbRadioPrx.h" />
       <file file_name="src/IHal/IHalClock.h" />
+      <file file_name="src/IHal/IHalUsbJoysticks.h" />
     </folder>
     <folder Name="nRF_Hal">
       <file file_name="src/nRF_Hal/DefFix.h" />
@@ -160,8 +145,30 @@
       <file file_name="src/nRF_Hal/NrfSystemOffMode.h" />
       <file file_name="src/nRF_Hal/NrfEsbRadioPrx.cpp" />
       <file file_name="src/nRF_Hal/NrfEsbRadioPrx.h" />
+      <file file_name="src/nRF_Hal/NrfUsbJoysticks.cpp">
+        <configuration Name="Release" build_exclude_from_build="No" />
+      </file>
+      <file file_name="src/nRF_Hal/NrfUsbJoysticks.h" />
+      <file file_name="src/nRF_Hal/NrfUsbJoysticksRaw.c" />
+      <file file_name="src/nRF_Hal/NrfUsbJoysticksRaw.h" />
     </folder>
     <configuration Name="Release" gcc_cplusplus_language_standard="gnu++11" />
+    <folder Name="nRF_Drivers">
+      <file file_name="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_clock.c" />
+      <file file_name="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_power.c" />
+      <file file_name="src/nRF5_SDK/integration/nrfx/legacy/nrf_drv_uart.c" />
+      <file file_name="src/nRF5_SDK/components/drivers_nrf/nrf_soc_nosd/nrf_nvic.c" />
+      <file file_name="src/nRF5_SDK/components/drivers_nrf/nrf_soc_nosd/nrf_soc.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/soc/nrfx_atomic.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_clock.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_gpiote.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_power.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/prs/nrfx_prs.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_systick.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_uart.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_uarte.c" />
+      <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_usbd.c" />
+    </folder>
   </project>
   <configuration
     Name="Release"
