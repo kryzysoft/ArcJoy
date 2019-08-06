@@ -6,6 +6,9 @@
 #include "NrfHighVoltageMode.h"
 #include "NrfRtc.h"
 #include "NrfDelay.h"
+#include "SEGGER_RTT.h"
+
+#define ERROR SEGGER_RTT_printf(0,"Error %s: %d",__FILE__,__LINE__)
 
 int main()
 {
@@ -18,7 +21,8 @@ int main()
   NrfGpioOutput ledJoy2(12);
   NrfGpioOutput ledNoJoys(8);
   NrfRtc rtcClock;
-
+  SEGGER_RTT_Write(0,"dup",3);
+  ERROR;
   ArcBaseHardwareConfig hwConfig;
 
   hwConfig.esbPrx = &esbPrx;
