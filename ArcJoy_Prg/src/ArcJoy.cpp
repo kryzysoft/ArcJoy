@@ -86,6 +86,10 @@ void ArcJoy::Run()
         {
           fails++;
           m_pHwConfig->redLed->Up();
+          if(fails < MAX_RADIO_FAILS)
+          {
+            sendJoyState = true;
+          }
         }
         m_pHwConfig->delay->DelayMs(50);
         m_pHwConfig->redLed->Down();
@@ -103,6 +107,13 @@ void ArcJoy::Run()
 
         }
         m_pHwConfig->esbPtx->Off();
+        if(!m_pHwConfig->esbPtx->SendSucceeded())
+        {
+          if(fails < MAX_RADIO_FAILS)
+          {
+            sendJoyState = true;
+          }
+        }
       }
     }
     if(fails < MAX_RADIO_FAILS)
