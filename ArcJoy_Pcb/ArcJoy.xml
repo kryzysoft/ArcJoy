@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>G:\Projekty\ArcJoy\ArcJoy_Pcb\ArcJoy.sch</source>
-    <date>09/05/2019 20:11:41</date>
+    <date>10/08/2019 20:52:23</date>
     <tool>Eeschema (5.1.0)-1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -27,10 +27,10 @@
       <tstamp>5CC09D59</tstamp>
     </comp>
     <comp ref="U2">
-      <value>MCP1711T-22I_OT</value>
+      <value>MCP1711T-25I_OT</value>
       <footprint>Package_TO_SOT_SMD:SOT-23-5</footprint>
       <datasheet>ww1.microchip.com/downloads/en/devicedoc/20005415d.pdf</datasheet>
-      <libsource lib="K_Regulators" part="MCP1711T-22I_OT" description=""/>
+      <libsource lib="K_Regulators" part="MCP1711T-25I_OT" description=""/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5CC244C8</tstamp>
     </comp>
@@ -278,26 +278,28 @@
       <tstamp>5CC7110C</tstamp>
     </comp>
     <comp ref="R11">
-      <value>10k</value>
+      <value>5k1_1206_1%</value>
       <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
       <datasheet>~</datasheet>
       <fields>
+        <field name="ElementValue">5k1</field>
         <field name="Supplier 1">TME</field>
-        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+        <field name="Supplier Part Number 1">SMD1206-5K1-1%</field>
       </fields>
-      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <libsource lib="K_Resistors" part="5k1_1206_1%" description="Resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5CC86B26</tstamp>
     </comp>
     <comp ref="R12">
-      <value>10k</value>
+      <value>330R_1206_1%</value>
       <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
       <datasheet>~</datasheet>
       <fields>
+        <field name="ElementValue">330R</field>
         <field name="Supplier 1">TME</field>
-        <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+        <field name="Supplier Part Number 1">SMD1206-330R-1%</field>
       </fields>
-      <libsource lib="K_Resistors" part="10k_1206_1%" description="Resistor"/>
+      <libsource lib="K_Resistors" part="330R_1206_1%" description="Resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5CC87CC7</tstamp>
     </comp>
@@ -484,7 +486,7 @@
         <field name="Reference">C</field>
         <field name="Value">100n_100V_10%</field>
         <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
-        <field name="Value">100n</field>
+        <field name="ElementValue">100n</field>
         <field name="Supplier 1">TME</field>
         <field name="Supplier Part Number 1">CL31B104KCFNNNE</field>
       </fields>
@@ -503,7 +505,7 @@
         <field name="Reference">C</field>
         <field name="Value">10n_50V_10%</field>
         <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
-        <field name="Value">10n</field>
+        <field name="ElementValue">10n</field>
         <field name="Supplier 1">TME</field>
         <field name="Supplier Part Number 1">12065C103KAT2A</field>
       </fields>
@@ -524,7 +526,7 @@
         <field name="Footprint">Capacitor_Tantalum_SMD:CP_EIA-6032-28_Kemet-C</field>
         <field name="Supplier 1">TME</field>
         <field name="Supplier Part Number 1">T491C106K016AT</field>
-        <field name="Value">10u</field>
+        <field name="ElementValue">10u</field>
       </fields>
       <pins>
         <pin num="1" name="~" type="passive"/>
@@ -541,7 +543,7 @@
         <field name="Reference">C</field>
         <field name="Value">1u_25V_10%</field>
         <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
-        <field name="Value">1u</field>
+        <field name="ElementValue">1u</field>
         <field name="Supplier 1">TME</field>
         <field name="Supplier Part Number 1">CL31B105KAHNNNE</field>
       </fields>
@@ -585,11 +587,11 @@
         <pin num="3" name="BA" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="K_Regulators" part="MCP1711T-22I_OT">
+    <libpart lib="K_Regulators" part="MCP1711T-25I_OT">
       <docs>ww1.microchip.com/downloads/en/devicedoc/20005415d.pdf</docs>
       <fields>
         <field name="Reference">U</field>
-        <field name="Value">MCP1711T-22I_OT</field>
+        <field name="Value">MCP1711T-25I_OT</field>
         <field name="Footprint">Package_TO_SOT_SMD:SOT-23-5</field>
       </fields>
       <pins>
@@ -610,9 +612,47 @@
         <field name="Reference">R</field>
         <field name="Value">10k_1206_1%</field>
         <field name="Footprint">Resistor_SMD:R_1206_3216Metric</field>
-        <field name="Value">10k</field>
+        <field name="ElementValue">10k</field>
         <field name="Supplier 1">TME</field>
         <field name="Supplier Part Number 1">1206S4F1002T5E</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Resistors" part="330R_1206_1%">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">330R_1206_1%</field>
+        <field name="Footprint">Resistor_SMD:R_1206_3216Metric</field>
+        <field name="ElementValue">330R</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">SMD1206-330R-1%</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="K_Resistors" part="5k1_1206_1%">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">5k1_1206_1%</field>
+        <field name="Footprint">Resistor_SMD:R_1206_3216Metric</field>
+        <field name="ElementValue">5k1</field>
+        <field name="Supplier 1">TME</field>
+        <field name="Supplier Part Number 1">SMD1206-5K1-1%</field>
       </fields>
       <pins>
         <pin num="1" name="~" type="passive"/>

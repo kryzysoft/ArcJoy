@@ -28,11 +28,11 @@ $EndComp
 Text Notes 550  950  0    50   ~ 0
 Napięcie - zmienić na 3V?rewrwe\n
 $Comp
-L K_Regulators:MCP1711T-22I_OT U2
+L K_Regulators:MCP1711T-25I_OT U2
 U 1 1 5CC244C8
 P 5350 4550
 F 0 "U2" H 5350 4892 50  0000 C CNN
-F 1 "MCP1711T-22I_OT" H 5350 4801 50  0000 C CNN
+F 1 "MCP1711T-25I_OT" H 5350 4801 50  0000 C CNN
 F 2 "Package_TO_SOT_SMD:SOT-23-5" H 5350 4900 50  0001 C CNN
 F 3 "ww1.microchip.com/downloads/en/devicedoc/20005415d.pdf" H 5350 4800 50  0001 C CNN
 	1    5350 4550
