@@ -1506,11 +1506,6 @@
       (net 16 GND))
     (pad 1 thru_hole circle (at -1.75 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
       (net 28 /BUTTON3))
-    (model G:/KiCad_Stuff/K_Library/3d/37875.stp
-      (offset (xyz -3.75 -3.5 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz -90 0 90))
-    )
   )
 
   (module Resistor_SMD:R_1206_3216Metric (layer F.Cu) (tedit 5B301BBD) (tstamp 5CC47591)
@@ -1906,11 +1901,6 @@
       (net 16 GND))
     (pad 1 thru_hole rect (at 0 0 90) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
       (net 24 /DOWN))
-    (model ${KISYS3DMOD}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.wrl
-      (at (xyz 0 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
-    )
   )
 
   (module Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical (layer F.Cu) (tedit 59FED5CC) (tstamp 5CC7847C)
@@ -1946,11 +1936,6 @@
       (net 16 GND))
     (pad 1 thru_hole rect (at 0 0 90) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
       (net 25 /RIGHT))
-    (model ${KISYS3DMOD}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.wrl
-      (at (xyz 0 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
-    )
   )
 
   (module K_Connectors:NINIGI_TB-3.5-P-2P_BL (layer F.Cu) (tedit 5CC34620) (tstamp 5CC39B51)
@@ -2006,11 +1991,6 @@
       (net 16 GND))
     (pad 1 thru_hole circle (at -1.75 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
       (net 31 /BUTTON5))
-    (model G:/KiCad_Stuff/K_Library/3d/37875.stp
-      (offset (xyz -3.75 -3.5 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz -90 0 90))
-    )
   )
 
   (module K_Connectors:NINIGI_TB-3.5-P-2P_BL (layer F.Cu) (tedit 5CC34620) (tstamp 5CC39B31)
@@ -2036,11 +2016,6 @@
       (net 16 GND))
     (pad 1 thru_hole circle (at -1.75 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
       (net 29 /BUTTON4))
-    (model G:/KiCad_Stuff/K_Library/3d/37875.stp
-      (offset (xyz -3.75 -3.5 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz -90 0 90))
-    )
   )
 
   (module K_Connectors:NINIGI_TB-3.5-P-2P_BL (layer F.Cu) (tedit 5CC34620) (tstamp 5CC47DC9)
@@ -2066,11 +2041,6 @@
       (net 16 GND))
     (pad 1 thru_hole circle (at -1.75 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
       (net 27 /BUTTON2))
-    (model G:/KiCad_Stuff/K_Library/3d/37875.stp
-      (offset (xyz -3.75 -3.5 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz -90 0 90))
-    )
   )
 
   (module K_Connectors:NINIGI_TB-3.5-P-2P_BL (layer F.Cu) (tedit 5CC34620) (tstamp 5CC39B01)
@@ -2096,11 +2066,6 @@
       (net 16 GND))
     (pad 1 thru_hole circle (at -1.75 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
       (net 26 /BUTTON1))
-    (model G:/KiCad_Stuff/K_Library/3d/37875.stp
-      (offset (xyz -3.75 -3.5 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz -90 0 90))
-    )
   )
 
   (module Capacitor_SMD:C_1206_3216Metric (layer F.Cu) (tedit 5B301BBE) (tstamp 5CC71D94)
@@ -2208,11 +2173,6 @@
       (net 16 GND))
     (pad 1 thru_hole rect (at 0 0 90) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
       (net 22 /LEFT))
-    (model ${KISYS3DMOD}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.wrl
-      (at (xyz 0 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
-    )
   )
 
   (module Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical (layer F.Cu) (tedit 59FED5CC) (tstamp 5CC3AF33)
@@ -2248,11 +2208,6 @@
       (net 16 GND))
     (pad 1 thru_hole rect (at 0 0 90) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
       (net 23 /UP))
-    (model ${KISYS3DMOD}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.wrl
-      (at (xyz 0 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
-    )
   )
 
   (module MountingHole:MountingHole_5.5mm locked (layer F.Cu) (tedit 56D1B4CB) (tstamp 5CBFCAA4)
