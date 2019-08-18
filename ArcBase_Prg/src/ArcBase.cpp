@@ -28,7 +28,7 @@ void ArcBase::Run()
   m_pHwConfig->esbPrx->SetupAddress0(base_addr_0);
   m_pHwConfig->esbPrx->SetupAddress1(base_addr_1);
   m_pHwConfig->esbPrx->SetupAddressPrefixes(addr_prefix,8);
-
+  m_pHwConfig->esbPrx->SetRfChannel(27);
   m_pHwConfig->esbPrx->On();
   m_pHwConfig->ledJoy1->Up();
   m_pHwConfig->ledJoy2->Up();

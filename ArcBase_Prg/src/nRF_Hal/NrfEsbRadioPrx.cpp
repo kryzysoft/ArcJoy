@@ -22,7 +22,7 @@ void NrfEsbRadioPrx::On()
   nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
   nrf_esb_config.payload_length           = 8;
   nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
-  nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
+  nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_1MBPS;
   nrf_esb_config.mode                     = NRF_ESB_MODE_PRX;
   nrf_esb_config.event_handler            = NrfEsbRadioPrx::nrfEsbEventHandler;
   nrf_esb_config.selective_auto_ack       = false;
@@ -113,4 +113,9 @@ void NrfEsbRadioPrx::nrfEsbEventHandler(nrf_esb_evt_t const * p_event)
       frameReceived = true;
       break;
   }
+}
+
+void NrfEsbRadioPrx::SetRfChannel(uint8_t rfChannel)
+{
+  nrf_esb_set_rf_channel(rfChannel);
 }

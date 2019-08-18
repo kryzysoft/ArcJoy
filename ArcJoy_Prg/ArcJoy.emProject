@@ -76,15 +76,6 @@
     <folder Name="Application">
       <file file_name="src/sdk_config.h" />
       <file file_name="src/main.cpp" />
-      <folder Name="IHal">
-        <file file_name="src/IHal/IHalEsbRadioPtx.h" />
-        <file file_name="src/IHal/IHalGpioInput.h" />
-        <file file_name="src/IHal/IHalGpioOutput.h" />
-        <file file_name="src/IHal/IHalRtc.h" />
-        <file file_name="src/IHal/IHalGpioInputIrq.h" />
-        <file file_name="src/IHal/IHalLowPowerMode.h" />
-        <file file_name="src/IHal/IHalDelay.h" />
-      </folder>
       <file file_name="src/ArcJoy.cpp" />
       <file file_name="src/ArcJoy.h" />
     </folder>
@@ -124,6 +115,15 @@
       <file file_name="src/nRF_Hal/NrfSleepMode.h" />
       <file file_name="src/nRF_Hal/NrfDelay.h" />
       <file file_name="src/nRF_Hal/NrfDelay.cpp" />
+    </folder>
+    <folder Name="IHal">
+      <file file_name="src/IHal/IHalEsbRadioPtx.h" />
+      <file file_name="src/IHal/IHalGpioInput.h" />
+      <file file_name="src/IHal/IHalGpioOutput.h" />
+      <file file_name="src/IHal/IHalRtc.h" />
+      <file file_name="src/IHal/IHalGpioInputIrq.h" />
+      <file file_name="src/IHal/IHalLowPowerMode.h" />
+      <file file_name="src/IHal/IHalDelay.h" />
     </folder>
   </project>
   <configuration

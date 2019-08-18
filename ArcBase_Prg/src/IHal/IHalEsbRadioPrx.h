@@ -13,6 +13,7 @@ class IHalEsbRadioPrx
     virtual void Off() = 0;
     virtual bool FrameReceived() = 0;
     virtual bool GetNextFrame(uint8_t *pipe, uint8_t *data, uint8_t *dataLength) = 0;
+    virtual void SetRfChannel(uint8_t rfChannel) = 0;
 };
 
 #endif

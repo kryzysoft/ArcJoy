@@ -29,7 +29,7 @@ class NrfEsbRadioPrx: public IHalEsbRadioPrx
     void Off();
     bool FrameReceived();
     bool GetNextFrame(uint8_t *pipe, uint8_t *data, uint8_t *dataLength);
-
+    void SetRfChannel(uint8_t rfChannel);
 };
 
 #endif

@@ -14,6 +14,7 @@ class IHalEsbRadioPtx
     virtual void SendFrame(uint8_t pipe, uint8_t *data, uint8_t dataLength) = 0;
     virtual bool IsRadioBusy() = 0;
     virtual bool SendSucceeded() = 0;
+    virtual void SetRfChannel(uint8_t rfChannel) = 0;
 };
 
 #endif

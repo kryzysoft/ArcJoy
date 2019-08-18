@@ -27,6 +27,7 @@ class NrfEsbRadioPtx: public IHalEsbRadioPtx
     void SetupAddress0(uint8_t *address);
     void SetupAddress1(uint8_t *address);
     void SetupAddressPrefixes(uint8_t *prefixes, uint8_t prefixesCount);
+    void SetRfChannel(uint8_t rfChannel);
     void Off();
     void SendFrame(uint8_t pipe, uint8_t *data, uint8_t dataLength);
     bool IsRadioBusy();

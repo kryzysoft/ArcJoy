@@ -25,7 +25,7 @@ void NrfEsbRadioPtx::On()
   nrf_esb_config.retransmit_count         = 6;
   nrf_esb_config.selective_auto_ack       = false;
   nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
-  nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
+  nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_1MBPS;
   nrf_esb_config.event_handler            = NrfEsbRadioPtx::nrfEsbEventHandler;
   nrf_esb_config.mode                     = NRF_ESB_MODE_PRX;
 

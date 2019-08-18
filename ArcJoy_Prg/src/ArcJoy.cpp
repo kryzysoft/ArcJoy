@@ -15,7 +15,7 @@ static uint8_t joyButtonsReadState(void);
 #define UP    4
 #define DOWN  8
 
-#define MAX_RADIO_FAILS 5
+#define MAX_RADIO_FAILS 30
 
 #define HEARTBEAT_PERIOD 1
 
@@ -48,6 +48,7 @@ void ArcJoy::Run()
   m_pHwConfig->esbPtx->SetupAddress0(base_addr_0);
   m_pHwConfig->esbPtx->SetupAddress1(base_addr_1);
   m_pHwConfig->esbPtx->SetupAddressPrefixes(addr_prefix,8);
+  m_pHwConfig->esbPtx->SetRfChannel(27);
 
   bool led = false;
 
