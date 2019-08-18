@@ -22,7 +22,7 @@ void NrfEsbRadioPtx::On()
     while (NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
   }
   nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
-  nrf_esb_config.retransmit_count         = 6;
+  nrf_esb_config.retransmit_count         = 40;
   nrf_esb_config.selective_auto_ack       = false;
   nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
   nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_2MBPS;
