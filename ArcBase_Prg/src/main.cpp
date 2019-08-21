@@ -6,6 +6,7 @@
 #include "NrfHighVoltageMode.h"
 #include "NrfRtc.h"
 #include "NrfDelay.h"
+#include "RttDebugLog.h"
 
 int main()
 {

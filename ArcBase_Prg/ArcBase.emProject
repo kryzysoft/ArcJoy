@@ -90,10 +90,12 @@
     <folder Name="Application">
       <file file_name="src/sdk_config.h" />
       <file file_name="src/main.cpp" />
-      <file file_name="src/ArcBase_c.h" />
-      <file file_name="src/ArcBase_c.c" />
       <file file_name="src/ArcBase.cpp" />
       <file file_name="src/ArcBase.h" />
+      <file file_name="src/IDebugLog.h" />
+      <file file_name="AssertsMacros.h" />
+      <file file_name="src/RttDebugLog.h" />
+      <file file_name="src/RttDebugLog.cpp" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="src/nRF5_SDK/external/segger_rtt/SEGGER_RTT.c" />
