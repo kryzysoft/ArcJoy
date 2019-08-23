@@ -20,6 +20,7 @@
       debug_register_definition_file="src/nRF5_SDK/modules/nrfx/mdk/nrf52840.svd"
       debug_start_from_entry_point_symbol="No"
       debug_target_connection="J-Link"
+      gcc_cplusplus_language_standard="gnu++11"
       gcc_debugging_level="Level 3"
       gcc_entry_point="Reset_Handler"
       linker_output_format="hex"
@@ -95,7 +96,6 @@
       <file file_name="src/IDebugLog.h" />
       <file file_name="AssertsMacros.h" />
       <file file_name="src/RttDebugLog.h" />
-      <file file_name="src/RttDebugLog.cpp" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="src/nRF5_SDK/external/segger_rtt/SEGGER_RTT.c" />
@@ -174,6 +174,7 @@
       <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_usbd.c" />
       <file file_name="src/nRF5_SDK/modules/nrfx/drivers/src/nrfx_rtc.c" />
     </folder>
+    <configuration Name="Debug" c_preprocessor_definitions="DEBUG_RTT" />
   </project>
   <configuration
     Name="Release"

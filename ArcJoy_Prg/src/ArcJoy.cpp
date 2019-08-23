@@ -1,5 +1,6 @@
 #include "ArcJoy.h"
 #include "stdint.h"
+#include "RttDebugLog.h"
 
 
 void JOYAPP_Run();
@@ -24,6 +25,7 @@ bool ArcJoy::sendJoyState = false;
 
 ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig)
 {
+//  DebugInit();
   m_pHwConfig = hwConfig;
 }
 
@@ -145,32 +147,31 @@ uint8_t ArcJoy::dipSwitchReadState()
   if(m_pHwConfig->dipSwitch6->IsDown())
   {
     retVal |= 1;
-    retVal = retVal << 1;
   }
+  retVal = retVal << 1;
   if(m_pHwConfig->dipSwitch5->IsDown())
   {
     retVal |= 1;
-    retVal = retVal << 1;
   }
+  retVal = retVal << 1;
   if(m_pHwConfig->dipSwitch4->IsDown())
   {
     retVal |= 1;
-    retVal = retVal << 1;
   }
+  retVal = retVal << 1;
   if(m_pHwConfig->dipSwitch3->IsDown())
   {
     retVal |= 1;
-    retVal = retVal << 1;
   }
+  retVal = retVal << 1;
   if(m_pHwConfig->dipSwitch2->IsDown())
   {
     retVal |= 1;
-    retVal = retVal << 1;
   }
+  retVal = retVal << 1;
   if(m_pHwConfig->dipSwitch1->IsDown())
   {
     retVal |= 1;
-    retVal = retVal << 1;
   }
   
   return retVal;
@@ -180,10 +181,26 @@ uint8_t ArcJoy::joyReadState(void)
 {
   uint8_t joyState = 0;
   
-  if(m_pHwConfig->joyLeft->IsDown()) joyState |= LEFT;
-  if(m_pHwConfig->joyRight->IsDown()) joyState |= RIGHT;
-  if(m_pHwConfig->joyUp->IsDown()) joyState |= UP;
-  if(m_pHwConfig->joyDown->IsDown()) joyState |= DOWN;
+  if(m_pHwConfig->joyLeft->IsDown()) 
+  {
+    joyState |= LEFT;
+    DebugInfo("LEFT");
+  }
+  if(m_pHwConfig->joyRight->IsDown())
+  {
+    joyState |= RIGHT;
+    DebugInfo("RIGHT");
+  }
+  if(m_pHwConfig->joyUp->IsDown())
+  {
+    joyState |= UP;
+    DebugInfo("UP");
+  }
+  if(m_pHwConfig->joyDown->IsDown())
+  {
+    joyState |= DOWN;
+    DebugInfo("DOWN");
+  }
 
   return joyState;
 } 
@@ -200,7 +217,7 @@ void ArcJoy::joyButtonsInit(void)
   m_pHwConfig->joyButton3->SetupHandler(this);
   m_pHwConfig->joyButton4->SetupHandler(this);
   m_pHwConfig->joyButton5->SetupHandler(this);
-  m_pHwConfig->joyButton6->SetupHandler(this);
+//  m_pHwConfig->joyButton6->SetupHandler(this);
 }
 
 void ArcJoy::joyGpioDisable(void)

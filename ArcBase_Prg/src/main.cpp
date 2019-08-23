@@ -10,6 +10,7 @@
 
 int main()
 {
+  DebugInit();
   NrfHighVoltageMode highVoltageMode;
   highVoltageMode.SetupOutputVoltage3V();
 

@@ -47,6 +47,7 @@
 #include "nRF_Hal/NrfSystemOffMode.h"
 #include "nRF_Hal/NrfSleepMode.h"
 #include "nRF_Hal/NrfDelay.h"
+#include "RttDebugLog.h"
 
 #define LED_R 15
 #define LED_B 14
@@ -72,6 +73,8 @@
 
 int main(void)
 {
+  DebugInit();
+  DebugInfo("Application initialization");
   NrfGpioOutput redLed(LED_R);
   NrfGpioOutput blueLed(LED_B);
 
@@ -139,4 +142,9 @@ int main(void)
 
   arcJoy.Run();
 
+}
+
+void assert_nrf_callback(uint16_t line_num, const uint8_t * file_name)
+{
+  DebugErr("Assert failed in file\r\n%s\r\nat line %d\r\n", file_name, line_num);
 }

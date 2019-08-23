@@ -56,20 +56,42 @@ void ArcBase::Run()
 
       if(joyIndex == 0)
       {
+        DebugInfo("Joy 1 moved");
+        if(m_joy1TimeOut == 0)
+        {
+          DebugInfo("Joy 1 connected");
+        }
         m_joy1TimeOut = 5;
         m_pHwConfig->ledJoy1->Down();
         m_pHwConfig->ledNoJoys->Up();
       }
       if(joyIndex == 1)
       {
+        DebugInfo("Joy 2 moved");
+        if(m_joy2TimeOut == 0)
+        {
+          DebugInfo("Joy 1 connected");
+        }
         m_joy2TimeOut = 5;
         m_pHwConfig->ledJoy2->Down();
         m_pHwConfig->ledNoJoys->Up();
       }
 
-      if((data[1] & LEFT) != 0) x = -1;
-      else if((data[1] & RIGHT) != 0) x = 1;
-      else x = 0;
+      if((data[1] & LEFT) != 0) 
+      {
+        x = -1;
+        DebugInfo("Joy 1 x = -1");
+      }
+      else if((data[1] & RIGHT) != 0)
+      {
+        x = 1;
+        DebugInfo("Joy 1 x = 1");
+      }
+      else
+      {
+        x = 0;
+        DebugInfo("Joy 1 x = 0");
+      }
       if((data[1] & UP) != 0) y = -1;
       else if((data[1] & DOWN) != 0) y = 1;
       else y = 0;
@@ -89,10 +111,12 @@ void ArcBase::RtcAlarmHandler()
 
   if(m_joy1TimeOut == 0)
   {
+    DebugWarn("Lost connection with joy 1");
     m_pHwConfig->ledJoy1->Up();
   }
   if(m_joy2TimeOut == 0)
   {
+    DebugWarn("Lost connection with joy 2");
     m_pHwConfig->ledJoy2->Up();
   }
   if((m_joy1TimeOut == 0)&&(m_joy2TimeOut == 0))
