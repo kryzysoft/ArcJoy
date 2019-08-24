@@ -20,9 +20,9 @@
 #else
 
 #define DebugInit()
-#define DebugInfo(message)
-#define DebugWarn(message)
-#define DebugError(message)
+#define DebugInfo(...)
+#define DebugWarn(...)
+#define DebugErr(...)
 
 #endif
 

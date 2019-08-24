@@ -16,7 +16,7 @@ static uint8_t joyButtonsReadState(void);
 #define UP    4
 #define DOWN  8
 
-#define MAX_RADIO_FAILS 30
+#define MAX_RADIO_FAILS 5
 
 #define HEARTBEAT_PERIOD 1
 
@@ -126,6 +126,7 @@ void ArcJoy::Run()
     else
     {
       joyGpioDisable();
+      m_pHwConfig->joyButtonWakeUp->EnableWakeUp();
       m_pHwConfig->offMode->Enter();
     }
   }
@@ -134,10 +135,10 @@ void ArcJoy::Run()
 
 void ArcJoy::joyInit(void)
 {
-  m_pHwConfig->joyLeft->SetupHandler(this);
-  m_pHwConfig->joyRight->SetupHandler(this);
-  m_pHwConfig->joyUp->SetupHandler(this);
-  m_pHwConfig->joyDown->SetupHandler(this);
+  m_pHwConfig->joyLeftIrq->SetupHandler(this);
+  m_pHwConfig->joyRightIrq->SetupHandler(this);
+  m_pHwConfig->joyUpIrq->SetupHandler(this);
+  m_pHwConfig->joyDownIrq->SetupHandler(this);
 }
 
 uint8_t ArcJoy::dipSwitchReadState()
@@ -205,29 +206,18 @@ uint8_t ArcJoy::joyReadState(void)
   return joyState;
 } 
 
-void ArcJoy::GpioHandler()
+void ArcJoy::IrqGpioHandler()
 {
   ArcJoy::sendJoyState = true;
 }
 
 void ArcJoy::joyButtonsInit(void)
 {
-  m_pHwConfig->joyButton1->SetupHandler(this);
-  m_pHwConfig->joyButton2->SetupHandler(this);
-  m_pHwConfig->joyButton3->SetupHandler(this);
-  m_pHwConfig->joyButton4->SetupHandler(this);
-  m_pHwConfig->joyButton5->SetupHandler(this);
-//  m_pHwConfig->joyButton6->SetupHandler(this);
+  m_pHwConfig->joyButtonIrq->SetupHandler(this);
 }
 
 void ArcJoy::joyGpioDisable(void)
 {
-  m_pHwConfig->joyButton2->Disable();
-  m_pHwConfig->joyButton3->Disable();
-  m_pHwConfig->joyButton4->Disable();
-  m_pHwConfig->joyButton5->Disable();
-  m_pHwConfig->joyButton6->Disable();
-
   m_pHwConfig->joyLeft->Disable();
   m_pHwConfig->joyRight->Disable();
   m_pHwConfig->joyUp->Disable();
@@ -238,17 +228,7 @@ uint8_t ArcJoy::joyButtonsReadState(void)
 {
   uint8_t retVal = 0;
 
-  if(m_pHwConfig->joyButton1->IsDown()) retVal |= 1;
-  retVal = retVal << 1;
-  if(m_pHwConfig->joyButton2->IsDown()) retVal |= 1;
-  retVal = retVal << 1;
-  if(m_pHwConfig->joyButton3->IsDown()) retVal |= 1;
-  retVal = retVal << 1;
-  if(m_pHwConfig->joyButton4->IsDown()) retVal |= 1;
-  retVal = retVal << 1;
-  if(m_pHwConfig->joyButton5->IsDown()) retVal |= 1;
-  retVal = retVal << 1;
-  if(m_pHwConfig->joyButton6->IsDown()) retVal |= 1;
+  if(m_pHwConfig->joyButton->IsDown()) retVal = 1;
   return retVal;
 } 
 

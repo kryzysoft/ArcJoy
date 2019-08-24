@@ -2,12 +2,14 @@
 #define ARC_JOY_H
 
 #include "IHal/IHalGpioInput.h"
-#include "IHal/IHalGpioInputIrq.h"
+#include "IHal/IHalGpioIrq.h"
 #include "IHal/IHalGpioOutput.h"
 #include "IHal/IHalEsbRadioPtx.h"
 #include "IHal/IHalRtc.h"
 #include "IHal/IHalLowPowerMode.h"
 #include "IHal/IHalDelay.h"
+#include "IHal/IHalGpioIrq.h"
+#include "IHal/IHalGpioWakeUp.h"
 
 #include "stdint.h"
 
@@ -23,18 +25,21 @@ typedef struct
   IHalGpioOutput *redLed;
   IHalGpioOutput *blueLed;
 
-  IHalGpioInputIrq *joyLeft;
-  IHalGpioInputIrq *joyRight;
-  IHalGpioInputIrq *joyUp;
-  IHalGpioInputIrq *joyDown;
+  IHalGpioInput *joyLeft;
+  IHalGpioInput *joyRight;
+  IHalGpioInput *joyUp;
+  IHalGpioInput *joyDown;
 
-  IHalGpioInputIrq *joyButton1;
-  IHalGpioInputIrq *joyButton2;
-  IHalGpioInputIrq *joyButton3;
-  IHalGpioInputIrq *joyButton4;
-  IHalGpioInputIrq *joyButton5;
-  IHalGpioInputIrq *joyButton6;
+  IHalGpioInput *joyButton;
 
+  IHalGpioWakeUp *joyButtonWakeUp;
+
+  IHalGpioIrq *joyLeftIrq;
+  IHalGpioIrq *joyRightIrq;
+  IHalGpioIrq *joyUpIrq;
+  IHalGpioIrq *joyDownIrq;
+
+  IHalGpioIrq *joyButtonIrq;
   IHalEsbRadioPtx *esbPtx;
 
   IHalRtc *rtcClock;
@@ -46,7 +51,7 @@ typedef struct
 
 } ArcJoyHardwareConfig;
 
-class ArcJoy: public IHalRtcAlarmHandler, public IHalGpioHandler
+class ArcJoy: public IHalRtcAlarmHandler, public IGpioIrqHandler
 {
   private:
     ArcJoyHardwareConfig *m_pHwConfig;
@@ -67,7 +72,7 @@ class ArcJoy: public IHalRtcAlarmHandler, public IHalGpioHandler
     ArcJoy(ArcJoyHardwareConfig *hwConfig);
     void Run();
     void RtcAlarmHandler();
-    void GpioHandler();
+    void IrqGpioHandler();
 };
 
 #endif

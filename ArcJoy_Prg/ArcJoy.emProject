@@ -94,6 +94,17 @@
       <file file_name="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.c" />
     </folder>
     <file file_name="src/nRF5_SDK/assertFix.h" />
+    <folder Name="IHal">
+      <file file_name="src/IHal/IHalEsbRadioPtx.h" />
+      <file file_name="src/IHal/IHalGpioInput.h" />
+      <file file_name="src/IHal/IHalGpioOutput.h" />
+      <file file_name="src/IHal/IHalRtc.h" />
+      <file file_name="src/IHal/IHalLowPowerMode.h" />
+      <file file_name="src/IHal/IHalDelay.h" />
+      <file file_name="src/IHal/IHalGpioIrq.h" />
+      <file file_name="src/IHal/IHalGpioWakeUp.h" />
+    </folder>
+    <configuration Name="Debug" c_preprocessor_definitions="DEBUG_RTT" />
     <folder Name="nRF_Hal">
       <file file_name="src/nRF_Hal/NrfEsbRadioPtx.h" />
       <file file_name="src/nRF_Hal/NrfEsbRadioPtx.cpp" />
@@ -103,25 +114,17 @@
       <file file_name="src/nRF_Hal/NrfGpioOutput.cpp" />
       <file file_name="src/nRF_Hal/NrfRtc.h" />
       <file file_name="src/nRF_Hal/NrfRtc.cpp" />
-      <file file_name="src/nRF_Hal/NrfGpioInputIrq.h" />
-      <file file_name="src/nRF_Hal/NrfGpioInputIrq.cpp" />
       <file file_name="src/nRF_Hal/NrfSystemOffMode.h" />
       <file file_name="src/nRF_Hal/NrfSystemOffMode.cpp" />
       <file file_name="src/nRF_Hal/NrfSleepMode.cpp" />
       <file file_name="src/nRF_Hal/NrfSleepMode.h" />
       <file file_name="src/nRF_Hal/NrfDelay.h" />
       <file file_name="src/nRF_Hal/NrfDelay.cpp" />
+      <file file_name="src/nRF_Hal/NrfGpioIrq.cpp" />
+      <file file_name="src/nRF_Hal/NrfGpioIrq.h" />
+      <file file_name="src/nRF_Hal/NrfGpioWakeUp.cpp" />
+      <file file_name="src/nRF_Hal/NrfGpioWakeUp.h" />
     </folder>
-    <folder Name="IHal">
-      <file file_name="src/IHal/IHalEsbRadioPtx.h" />
-      <file file_name="src/IHal/IHalGpioInput.h" />
-      <file file_name="src/IHal/IHalGpioOutput.h" />
-      <file file_name="src/IHal/IHalRtc.h" />
-      <file file_name="src/IHal/IHalGpioInputIrq.h" />
-      <file file_name="src/IHal/IHalLowPowerMode.h" />
-      <file file_name="src/IHal/IHalDelay.h" />
-    </folder>
-    <configuration Name="Debug" c_preprocessor_definitions="DEBUG_RTT" />
   </project>
   <configuration
     Name="Release"

@@ -40,8 +40,9 @@
 
 #include "ArcJoy.h"
 #include "nRF_Hal/NrfGpioInput.h"
-#include "nRF_Hal/NrfGpioInputIrq.h"
+#include "nRF_Hal/NrfGpioIrq.h"
 #include "nRF_Hal/NrfGpioOutput.h"
+#include "nRF_Hal/NrfGpioWakeUp.h"
 #include "nRF_Hal/NrfEsbRadioPtx.h"
 #include "nRF_Hal/NrfRtc.h"
 #include "nRF_Hal/NrfSystemOffMode.h"
@@ -64,12 +65,7 @@
 #define JOY_UP       8
 #define JOY_DOWN    26
 
-#define JOY_BUTTON_1 9
-#define JOY_BUTTON_2 6
-#define JOY_BUTTON_3 7
-#define JOY_BUTTON_4 5
-#define JOY_BUTTON_5 2
-#define JOY_BUTTON_6 4
+#define JOY_BUTTON 9
 
 int main(void)
 {
@@ -85,18 +81,21 @@ int main(void)
   NrfGpioInput dipSwitch5(DIPSWITCH_5, GPIO_PULL_UP);
   NrfGpioInput dipSwitch6(DIPSWITCH_6, GPIO_PULL_UP);
   
-  NrfGpioInputIrq joyLeft(JOY_LEFT, GPIO_PULL_NONE);
-  NrfGpioInputIrq joyRight(JOY_RIGHT, GPIO_PULL_NONE);
-  NrfGpioInputIrq joyUp(JOY_UP, GPIO_PULL_NONE);
-  NrfGpioInputIrq joyDown(JOY_DOWN, GPIO_PULL_NONE);
+  NrfGpioInput joyLeft(JOY_LEFT, GPIO_PULL_NONE);
+  NrfGpioInput joyRight(JOY_RIGHT, GPIO_PULL_NONE);
+  NrfGpioInput joyUp(JOY_UP, GPIO_PULL_NONE);
+  NrfGpioInput joyDown(JOY_DOWN, GPIO_PULL_NONE);
 
-  NrfGpioInputIrq joyButton1(JOY_BUTTON_1, GPIO_PULL_NONE);
-  joyButton1.EnableSense(SENSE_LOW);
-  NrfGpioInputIrq joyButton2(JOY_BUTTON_2, GPIO_PULL_NONE);
-  NrfGpioInputIrq joyButton3(JOY_BUTTON_3, GPIO_PULL_NONE);
-  NrfGpioInputIrq joyButton4(JOY_BUTTON_4, GPIO_PULL_NONE);
-  NrfGpioInputIrq joyButton5(JOY_BUTTON_5, GPIO_PULL_NONE);
-  NrfGpioInputIrq joyButton6(JOY_BUTTON_6, GPIO_PULL_NONE);
+  NrfGpioInput joyButton(JOY_BUTTON, GPIO_PULL_NONE);
+
+  NrfGpioIrq joyLeftIrq(JOY_LEFT);
+  NrfGpioIrq joyRightIrq(JOY_RIGHT);
+  NrfGpioIrq joyUpIrq(JOY_UP);
+  NrfGpioIrq joyDownIrq(JOY_DOWN);
+  NrfGpioIrq joyButtonIrq(JOY_BUTTON);
+
+  NrfGpioWakeUp joyButtonWakeUp(JOY_BUTTON);
+
 
   NrfEsbRadioPtx ptxRadio(true);
 
@@ -123,12 +122,15 @@ int main(void)
   hwConfig.joyUp = &joyUp;
   hwConfig.joyDown = &joyDown;
 
-  hwConfig.joyButton1 = &joyButton1;
-  hwConfig.joyButton2 = &joyButton2;
-  hwConfig.joyButton3 = &joyButton3;
-  hwConfig.joyButton4 = &joyButton4;
-  hwConfig.joyButton5 = &joyButton5;
-  hwConfig.joyButton6 = &joyButton6;
+  hwConfig.joyButton = &joyButton;
+
+  hwConfig.joyLeftIrq = &joyLeftIrq;
+  hwConfig.joyRightIrq = &joyRightIrq;
+  hwConfig.joyUpIrq = &joyUpIrq;
+  hwConfig.joyDownIrq = &joyDownIrq;
+
+  hwConfig.joyButtonIrq = &joyButtonIrq;
+  hwConfig.joyButtonWakeUp = &joyButtonWakeUp;
 
   hwConfig.esbPtx = &ptxRadio;
 
