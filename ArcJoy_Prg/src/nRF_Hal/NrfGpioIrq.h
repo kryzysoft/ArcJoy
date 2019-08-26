@@ -20,7 +20,7 @@ class NrfGpioIrq: public IHalGpioIrq
     nrfx_gpiote_pin_t m_pinNumber;
   public:
     NrfGpioIrq(uint32_t pinNumber);
-    virtual void SetupHandler(IGpioIrqHandler *iqrHandler);
+    virtual void SetHandler(IGpioIrqHandler *iqrHandler);
 };
 
 

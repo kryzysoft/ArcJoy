@@ -1,6 +1,7 @@
 #include "ArcJoy.h"
 #include "stdint.h"
 #include "RttDebugLog.h"
+#include "nrf_drv_clock.h"
 
 
 void JOYAPP_Run();
@@ -16,7 +17,7 @@ static uint8_t joyButtonsReadState(void);
 #define UP    4
 #define DOWN  8
 
-#define MAX_RADIO_FAILS 5
+#define MAX_RADIO_FAILS 30
 
 #define HEARTBEAT_PERIOD 1
 
@@ -25,7 +26,6 @@ bool ArcJoy::sendJoyState = false;
 
 ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig)
 {
-//  DebugInit();
   m_pHwConfig = hwConfig;
 }
 
@@ -40,19 +40,49 @@ void ArcJoy::Run()
   uint8_t base_addr_1[4] = {'J', 'o', 'y', '2'};
   uint8_t addr_prefix[8] = {'O', 'T', 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 };
 
-  joyInit();
-  joyButtonsInit();
+  DebugInfo("Set up GPIO");
 
+//  joyInit();
+//  joyButtonsInit();
+
+  DebugInfo("Testing timer - remove this");
+ // m_pHwConfig->debounceTimer->SetPeriodMs(100);
+//  m_pHwConfig->debounceTimer->SetPeriodicEventHandler(this);
+//nrf_drv_clock_init();
+ // if(nrf_drv_clock_hfclk_is_running())
+//  while(1)
+//  {
+//  m_pHwConfig->blueLed->Down();
+//
+//  m_pHwConfig->esbPtx->SetupAddress0(base_addr_0);
+//  m_pHwConfig->esbPtx->SetupAddress1(base_addr_1);
+//  m_pHwConfig->esbPtx->SetupAddressPrefixes(addr_prefix,8);
+//  m_pHwConfig->esbPtx->SetRfChannel(27);
+//  m_pHwConfig->esbPtx->On();
+//
+//
+//
+//  //  m_pHwConfig->debounceTimer->Start();
+//    m_pHwConfig->delay->DelayMs(1000);
+////    m_pHwConfig->debounceTimer->Stop();
+//m_pHwConfig->blueLed->Up();  
+//    m_pHwConfig->delay->DelayMs(1000);
+//  };
+
+  DebugInfo("Set up RTC");
   
-  m_pHwConfig->rtcClock->SetupAlarmHandler(this);
+  m_pHwConfig->rtcClock->SetAlarmHandler(this);
   m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
 
+  DebugInfo("Set up ESB");
   m_pHwConfig->esbPtx->SetupAddress0(base_addr_0);
   m_pHwConfig->esbPtx->SetupAddress1(base_addr_1);
   m_pHwConfig->esbPtx->SetupAddressPrefixes(addr_prefix,8);
   m_pHwConfig->esbPtx->SetRfChannel(27);
 
   bool led = false;
+
+  DebugInfo("Application run");
 
   while(true)
   {
@@ -135,10 +165,10 @@ void ArcJoy::Run()
 
 void ArcJoy::joyInit(void)
 {
-  m_pHwConfig->joyLeftIrq->SetupHandler(this);
-  m_pHwConfig->joyRightIrq->SetupHandler(this);
-  m_pHwConfig->joyUpIrq->SetupHandler(this);
-  m_pHwConfig->joyDownIrq->SetupHandler(this);
+  m_pHwConfig->joyLeftIrq->SetHandler(this);
+  m_pHwConfig->joyRightIrq->SetHandler(this);
+  m_pHwConfig->joyUpIrq->SetHandler(this);
+  m_pHwConfig->joyDownIrq->SetHandler(this);
 }
 
 uint8_t ArcJoy::dipSwitchReadState()
@@ -206,14 +236,14 @@ uint8_t ArcJoy::joyReadState(void)
   return joyState;
 } 
 
-void ArcJoy::IrqGpioHandler()
+void ArcJoy::GpioIrqHandler()
 {
   ArcJoy::sendJoyState = true;
 }
 
 void ArcJoy::joyButtonsInit(void)
 {
-  m_pHwConfig->joyButtonIrq->SetupHandler(this);
+  m_pHwConfig->joyButtonIrq->SetHandler(this);
 }
 
 void ArcJoy::joyGpioDisable(void)
@@ -254,4 +284,19 @@ void ArcJoy::RtcAlarmHandler()
 {
   ArcJoy::sendHeartbeat = true;
   m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
+}
+
+static bool state = false;
+void ArcJoy::PeriodicEventHandler()
+{
+  if(state)
+  {
+    m_pHwConfig->blueLed->Up();
+    state = false;
+  }
+  else
+  {
+    m_pHwConfig->blueLed->Down();
+    state = true;
+  }
 }

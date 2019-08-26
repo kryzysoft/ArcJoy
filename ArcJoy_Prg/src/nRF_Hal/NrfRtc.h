@@ -9,11 +9,11 @@ class NrfRtc: public IHalRtc
   private:
     static const nrf_drv_rtc_t rtc;
     static void rtcAlarm(nrf_drv_rtc_int_type_t int_type);
-    static IHalRtcAlarmHandler *rtcAlarmHandler;
+    static IRtcAlarmHandler *rtcAlarmHandler;
   public:
     NrfRtc();
     void SetupAlarmInSeconds(uint32_t seconds);
-    void SetupAlarmHandler(IHalRtcAlarmHandler *rtcAlarmHandler);
+    void SetAlarmHandler(IRtcAlarmHandler *rtcAlarmHandler);
 };
 
 #endif

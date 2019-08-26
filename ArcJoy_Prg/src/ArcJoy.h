@@ -10,6 +10,7 @@
 #include "IHal/IHalDelay.h"
 #include "IHal/IHalGpioIrq.h"
 #include "IHal/IHalGpioWakeUp.h"
+#include "IHal/IHalPeriodicEvent.h"
 
 #include "stdint.h"
 
@@ -49,9 +50,11 @@ typedef struct
 
   IHalDelay *delay;
 
+  IHalPeriodicEvent *debounceTimer;
+
 } ArcJoyHardwareConfig;
 
-class ArcJoy: public IHalRtcAlarmHandler, public IGpioIrqHandler
+class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IPeriodicEventHandler
 {
   private:
     ArcJoyHardwareConfig *m_pHwConfig;
@@ -72,7 +75,8 @@ class ArcJoy: public IHalRtcAlarmHandler, public IGpioIrqHandler
     ArcJoy(ArcJoyHardwareConfig *hwConfig);
     void Run();
     void RtcAlarmHandler();
-    void IrqGpioHandler();
+    void GpioIrqHandler();
+    void PeriodicEventHandler();
 };
 
 #endif

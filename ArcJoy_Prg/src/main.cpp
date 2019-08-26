@@ -48,6 +48,7 @@
 #include "nRF_Hal/NrfSystemOffMode.h"
 #include "nRF_Hal/NrfSleepMode.h"
 #include "nRF_Hal/NrfDelay.h"
+#include "nRF_Hal/NrfTimerPeriodicEvent.h"
 #include "RttDebugLog.h"
 
 #define LED_R 15
@@ -67,43 +68,44 @@
 
 #define JOY_BUTTON 9
 
+static NrfGpioInput dipSwitch1(DIPSWITCH_1, GPIO_PULL_UP);
+static NrfGpioOutput redLed(LED_R);
+static NrfGpioOutput blueLed(LED_B);
+
+static NrfGpioInput dipSwitch2(DIPSWITCH_2, GPIO_PULL_UP);
+static NrfGpioInput dipSwitch3(DIPSWITCH_3, GPIO_PULL_UP);
+static NrfGpioInput dipSwitch4(DIPSWITCH_4, GPIO_PULL_UP);
+static NrfGpioInput dipSwitch5(DIPSWITCH_5, GPIO_PULL_UP);
+static NrfGpioInput dipSwitch6(DIPSWITCH_6, GPIO_PULL_UP);
+  
+static NrfGpioInput joyLeft(JOY_LEFT, GPIO_PULL_NONE);
+static NrfGpioInput joyRight(JOY_RIGHT, GPIO_PULL_NONE);
+static NrfGpioInput joyUp(JOY_UP, GPIO_PULL_NONE);
+static NrfGpioInput joyDown(JOY_DOWN, GPIO_PULL_NONE);
+
+static NrfGpioInput joyButton(JOY_BUTTON, GPIO_PULL_NONE);
+
+static NrfGpioIrq joyLeftIrq(JOY_LEFT);
+static NrfGpioIrq joyRightIrq(JOY_RIGHT);
+static NrfGpioIrq joyUpIrq(JOY_UP);
+static NrfGpioIrq joyDownIrq(JOY_DOWN);
+static NrfGpioIrq joyButtonIrq(JOY_BUTTON);
+
+static NrfGpioWakeUp joyButtonWakeUp(JOY_BUTTON);
+
+static NrfEsbRadioPtx ptxRadio(true);
+
+static NrfRtc rtcClock;
+static NrfSystemOffMode systemOffMode;
+static NrfSleepMode sleepMode;
+static NrfDelay delay;
+
+static NrfTimerPeriodicEvent debounceTimerEvent;
+
 int main(void)
 {
   DebugInit();
-  DebugInfo("Application initialization");
-  NrfGpioOutput redLed(LED_R);
-  NrfGpioOutput blueLed(LED_B);
-
-  NrfGpioInput dipSwitch1(DIPSWITCH_1, GPIO_PULL_UP);
-  NrfGpioInput dipSwitch2(DIPSWITCH_2, GPIO_PULL_UP);
-  NrfGpioInput dipSwitch3(DIPSWITCH_3, GPIO_PULL_UP);
-  NrfGpioInput dipSwitch4(DIPSWITCH_4, GPIO_PULL_UP);
-  NrfGpioInput dipSwitch5(DIPSWITCH_5, GPIO_PULL_UP);
-  NrfGpioInput dipSwitch6(DIPSWITCH_6, GPIO_PULL_UP);
-  
-  NrfGpioInput joyLeft(JOY_LEFT, GPIO_PULL_NONE);
-  NrfGpioInput joyRight(JOY_RIGHT, GPIO_PULL_NONE);
-  NrfGpioInput joyUp(JOY_UP, GPIO_PULL_NONE);
-  NrfGpioInput joyDown(JOY_DOWN, GPIO_PULL_NONE);
-
-  NrfGpioInput joyButton(JOY_BUTTON, GPIO_PULL_NONE);
-
-  NrfGpioIrq joyLeftIrq(JOY_LEFT);
-  NrfGpioIrq joyRightIrq(JOY_RIGHT);
-  NrfGpioIrq joyUpIrq(JOY_UP);
-  NrfGpioIrq joyDownIrq(JOY_DOWN);
-  NrfGpioIrq joyButtonIrq(JOY_BUTTON);
-
-  NrfGpioWakeUp joyButtonWakeUp(JOY_BUTTON);
-
-
-  NrfEsbRadioPtx ptxRadio(true);
-
-  NrfRtc rtcClock;
-
-  NrfSystemOffMode systemOffMode;
-  NrfSleepMode sleepMode;
-  NrfDelay delay;
+  DebugInfo("Hardware initialization");
 
   ArcJoyHardwareConfig hwConfig;
 
@@ -140,7 +142,11 @@ int main(void)
   hwConfig.sleepMode = &sleepMode;
   hwConfig.delay = &delay;
 
+  hwConfig.debounceTimer = &debounceTimerEvent;
+
   ArcJoy arcJoy(&hwConfig);
+
+  DebugInfo("Application run");
 
   arcJoy.Run();
 

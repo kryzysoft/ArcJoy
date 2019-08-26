@@ -4,13 +4,13 @@
 class IGpioIrqHandler
 {
   public:
-    virtual void IrqGpioHandler() = 0;
+    virtual void GpioIrqHandler() = 0;
 };
 
 class IHalGpioIrq
 {
   public:
-    virtual void SetupHandler(IGpioIrqHandler *irqGpioHandler) = 0;
+    virtual void SetHandler(IGpioIrqHandler *irqGpioHandler) = 0;
 };
 
 #endif
