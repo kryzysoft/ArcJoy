@@ -5,6 +5,7 @@ class IHalLowPowerMode
 {
   public:
     virtual void Enter() = 0;
+    virtual ~IHalLowPowerMode(){};
 };
 
 #endif

@@ -5,6 +5,7 @@ class IHalGpioWakeUp
 {
   public:
     virtual void EnableWakeUp() = 0;
+    virtual ~IHalGpioWakeUp(){};
 };
 
 #endif

@@ -15,6 +15,7 @@ class IHalPeriodicEvent
     virtual void SetPeriodicEventHandler(IPeriodicEventHandler *periodicEventHandler) = 0;
     virtual void Start() = 0;
     virtual void Stop() = 0;
+    virtual ~IHalPeriodicEvent(){};
 };
 
 #endif

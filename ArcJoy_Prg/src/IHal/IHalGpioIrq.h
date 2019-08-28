@@ -11,6 +11,7 @@ class IHalGpioIrq
 {
   public:
     virtual void SetHandler(IGpioIrqHandler *irqGpioHandler) = 0;
+    virtual ~IHalGpioIrq(){};
 };
 
 #endif

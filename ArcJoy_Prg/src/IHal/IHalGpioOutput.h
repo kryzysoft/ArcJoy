@@ -6,6 +6,7 @@ class IHalGpioOutput
   public:
     virtual void Up() = 0;
     virtual void Down() = 0;
+    virtual ~IHalGpioOutput(){};
 };
 
 #endif

@@ -119,12 +119,12 @@ int main(void)
   hwConfig.redLed = &redLed;
   hwConfig.blueLed = &blueLed;
 
-  hwConfig.joyLeft = &joyLeft;
-  hwConfig.joyRight = &joyRight;
-  hwConfig.joyUp = &joyUp;
-  hwConfig.joyDown = &joyDown;
+  hwConfig.joySwitch[LEFT_SWITCH] = &joyLeft;
+  hwConfig.joySwitch[RIGHT_SWITCH] = &joyRight;
+  hwConfig.joySwitch[UP_SWITCH] = &joyUp;
+  hwConfig.joySwitch[DOWN_SWITCH] = &joyDown;
 
-  hwConfig.joyButton = &joyButton;
+  hwConfig.joySwitch[BUTTON_SWITCH] = &joyButton;
 
   hwConfig.joyLeftIrq = &joyLeftIrq;
   hwConfig.joyRightIrq = &joyRightIrq;

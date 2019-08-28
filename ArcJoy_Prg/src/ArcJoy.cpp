@@ -2,6 +2,7 @@
 #include "stdint.h"
 #include "RttDebugLog.h"
 #include "nrf_drv_clock.h"
+#include "SwitchController.h"
 
 
 void JOYAPP_Run();
@@ -17,14 +18,19 @@ static uint8_t joyButtonsReadState(void);
 #define UP    4
 #define DOWN  8
 
-#define MAX_RADIO_FAILS 30
+#define MAX_RADIO_FAILS 40
 
 #define HEARTBEAT_PERIOD 1
 
-bool ArcJoy::sendHeartbeat = false;
-bool ArcJoy::sendJoyState = false;
+#define DEBOUNCE_TIMEOUT_MS 5
 
-ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig)
+bool ArcJoy::heartbeatFlag = false;
+bool ArcJoy::switchesFlag = false;
+
+static const char* switchName[5] = {"Left","Right","Up","Down","Button"};
+
+ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig):
+  m_switchController(m_pHwConfig->joySwitch, 5)
 {
   m_pHwConfig = hwConfig;
 }
@@ -42,35 +48,35 @@ void ArcJoy::Run()
 
   DebugInfo("Set up GPIO");
 
-//  joyInit();
-//  joyButtonsInit();
+  joyInit();
+  joyButtonsInit();
 
-  DebugInfo("Testing timer - remove this");
- // m_pHwConfig->debounceTimer->SetPeriodMs(100);
-//  m_pHwConfig->debounceTimer->SetPeriodicEventHandler(this);
-//nrf_drv_clock_init();
- // if(nrf_drv_clock_hfclk_is_running())
+  DebugInfo("Set up 1ms timer");
+  m_pHwConfig->debounceTimer->SetPeriodMs(1);
+  m_pHwConfig->debounceTimer->SetPeriodicEventHandler(this);
+  m_pHwConfig->debounceTimer->Start();
+
 //  while(1)
 //  {
-//  m_pHwConfig->blueLed->Down();
+//    state = !state;
+//    if(state)
+//    {
+//      m_pHwConfig->blueLed->Up();
+//    }
+//    else
+//    {
+//      m_pHwConfig->blueLed->Down();
+//    }
 //
-//  m_pHwConfig->esbPtx->SetupAddress0(base_addr_0);
-//  m_pHwConfig->esbPtx->SetupAddress1(base_addr_1);
-//  m_pHwConfig->esbPtx->SetupAddressPrefixes(addr_prefix,8);
-//  m_pHwConfig->esbPtx->SetRfChannel(27);
-//  m_pHwConfig->esbPtx->On();
-//
-//
-//
-//  //  m_pHwConfig->debounceTimer->Start();
-//    m_pHwConfig->delay->DelayMs(1000);
-////    m_pHwConfig->debounceTimer->Stop();
-//m_pHwConfig->blueLed->Up();  
-//    m_pHwConfig->delay->DelayMs(1000);
-//  };
+//    switchController.Tick(m_currentTime);
+//    if(switchController.HasChanged())
+//    {
+//       
+//       DebugInfo("Change: %x", switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
+//    }
+//  }
 
   DebugInfo("Set up RTC");
-  
   m_pHwConfig->rtcClock->SetAlarmHandler(this);
   m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
 
@@ -82,35 +88,35 @@ void ArcJoy::Run()
 
   bool led = false;
 
+
+  m_pHwConfig->dipSwitch1->Enable();
+  if(m_pHwConfig->dipSwitch1->IsUp())
+  {
+    m_joyNumber = 0;
+  }
+  else
+  {
+    m_joyNumber = 1;
+  }
+  m_pHwConfig->dipSwitch1->Disable();
+
+
   DebugInfo("Application run");
+
 
   while(true)
   {
-    m_pHwConfig->dipSwitch1->Enable();
-    if(m_pHwConfig->dipSwitch1->IsUp())
-    {
-      m_joyNumber = 0;
-    }
-    else
-    {
-      m_joyNumber = 1;
-    }
-    m_pHwConfig->dipSwitch1->Disable();
+    m_switchController.Tick(m_currentTime);
 
-    while(sendHeartbeat || sendJoyState)
+    switchesFlag = m_switchController.HasChanged();
+
+    while(heartbeatFlag || switchesFlag)
     {
-      if(sendHeartbeat)
+      if(heartbeatFlag)
       {
-        sendHeartbeat = false;
-        m_pHwConfig->esbPtx->On();
-        joyState = joyReadState();
-        joyButtonsState = joyButtonsReadState();
-        radioSendState(joyButtonsState,joyState);
-        while(m_pHwConfig->esbPtx->IsRadioBusy())
-        {
-        }
-        m_pHwConfig->esbPtx->Off();
-        if(m_pHwConfig->esbPtx->SendSucceeded())
+        DebugInfo("Heartbeat");
+        heartbeatFlag = false;
+        if(sendJoyState())
         {
           fails = 0;
           m_pHwConfig->blueLed->Up();
@@ -121,31 +127,20 @@ void ArcJoy::Run()
           m_pHwConfig->redLed->Up();
           if(fails < MAX_RADIO_FAILS)
           {
-            sendJoyState = true;
+            switchesFlag = true;
           }
         }
-        m_pHwConfig->delay->DelayMs(50);
+        m_pHwConfig->delay->DelayMs(100);
         m_pHwConfig->redLed->Down();
         m_pHwConfig->blueLed->Down();
       }
-      if(sendJoyState)
+      if(switchesFlag)
       {
-        sendJoyState = false;
-        m_pHwConfig->esbPtx->On();
-        joyState = joyReadState();
-        joyButtonsState = joyButtonsReadState();
-        radioSendState(joyButtonsState,joyState);
-        while(m_pHwConfig->esbPtx->IsRadioBusy())
+        DebugInfo("joyState");
+        switchesFlag = false;
+        if(!sendJoyState())
         {
-
-        }
-        m_pHwConfig->esbPtx->Off();
-        if(!m_pHwConfig->esbPtx->SendSucceeded())
-        {
-          if(fails < MAX_RADIO_FAILS)
-          {
-            sendJoyState = true;
-          }
+          switchesFlag = true;
         }
       }
     }
@@ -160,6 +155,21 @@ void ArcJoy::Run()
       m_pHwConfig->offMode->Enter();
     }
   }
+}
+
+bool ArcJoy::sendJoyState()
+{
+  m_pHwConfig->esbPtx->On();
+  uint8_t joyState = joyReadState();
+  uint8_t joyButtonsState = joyButtonsReadState();
+  radioSendState(joyButtonsState,joyState);
+
+  while(m_pHwConfig->esbPtx->IsRadioBusy())
+  {
+  }
+  m_pHwConfig->esbPtx->Off();
+  
+  return m_pHwConfig->esbPtx->SendSucceeded();
 }
 
 
@@ -210,35 +220,13 @@ uint8_t ArcJoy::dipSwitchReadState()
 
 uint8_t ArcJoy::joyReadState(void)
 {
-  uint8_t joyState = 0;
-  
-  if(m_pHwConfig->joyLeft->IsDown()) 
-  {
-    joyState |= LEFT;
-    DebugInfo("LEFT");
-  }
-  if(m_pHwConfig->joyRight->IsDown())
-  {
-    joyState |= RIGHT;
-    DebugInfo("RIGHT");
-  }
-  if(m_pHwConfig->joyUp->IsDown())
-  {
-    joyState |= UP;
-    DebugInfo("UP");
-  }
-  if(m_pHwConfig->joyDown->IsDown())
-  {
-    joyState |= DOWN;
-    DebugInfo("DOWN");
-  }
-
+  uint8_t joyState = m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH);
   return joyState;
 } 
 
 void ArcJoy::GpioIrqHandler()
 {
-  ArcJoy::sendJoyState = true;
+  ArcJoy::switchesFlag = true;
 }
 
 void ArcJoy::joyButtonsInit(void)
@@ -248,18 +236,15 @@ void ArcJoy::joyButtonsInit(void)
 
 void ArcJoy::joyGpioDisable(void)
 {
-  m_pHwConfig->joyLeft->Disable();
-  m_pHwConfig->joyRight->Disable();
-  m_pHwConfig->joyUp->Disable();
-  m_pHwConfig->joyDown->Disable();
+  m_pHwConfig->joySwitch[LEFT_SWITCH]->Disable();
+  m_pHwConfig->joySwitch[RIGHT_SWITCH]->Disable();
+  m_pHwConfig->joySwitch[UP_SWITCH]->Disable();
+  m_pHwConfig->joySwitch[DOWN_SWITCH]->Disable();
 }
 
 uint8_t ArcJoy::joyButtonsReadState(void)
 {
-  uint8_t retVal = 0;
-
-  if(m_pHwConfig->joyButton->IsDown()) retVal = 1;
-  return retVal;
+  return m_switchController.GetStateAsByte(BUTTON_SWITCH,BUTTON_SWITCH);
 } 
 
 void ArcJoy::radioSendState(uint8_t joyButtons, uint8_t joystick)
@@ -282,21 +267,11 @@ void ArcJoy::radioSendState(uint8_t joyButtons, uint8_t joystick)
 
 void ArcJoy::RtcAlarmHandler()
 {
-  ArcJoy::sendHeartbeat = true;
+  ArcJoy::heartbeatFlag = true;
   m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
 }
 
-static bool state = false;
 void ArcJoy::PeriodicEventHandler()
 {
-  if(state)
-  {
-    m_pHwConfig->blueLed->Up();
-    state = false;
-  }
-  else
-  {
-    m_pHwConfig->blueLed->Down();
-    state = true;
-  }
+  m_currentTime++;
 }

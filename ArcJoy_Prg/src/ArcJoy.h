@@ -12,7 +12,18 @@
 #include "IHal/IHalGpioWakeUp.h"
 #include "IHal/IHalPeriodicEvent.h"
 
+#include "SwitchController.h"
+
 #include "stdint.h"
+
+enum
+{
+  LEFT_SWITCH = 0,
+  RIGHT_SWITCH = 1,
+  UP_SWITCH = 2,
+  DOWN_SWITCH = 3,
+  BUTTON_SWITCH = 4
+};
 
 typedef struct
 {
@@ -26,10 +37,7 @@ typedef struct
   IHalGpioOutput *redLed;
   IHalGpioOutput *blueLed;
 
-  IHalGpioInput *joyLeft;
-  IHalGpioInput *joyRight;
-  IHalGpioInput *joyUp;
-  IHalGpioInput *joyDown;
+  IHalGpioInput *joySwitch[5];
 
   IHalGpioInput *joyButton;
 
@@ -59,8 +67,11 @@ class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IPeriodicE
   private:
     ArcJoyHardwareConfig *m_pHwConfig;
     uint8_t m_joyNumber;
-    static bool sendHeartbeat;
+    static bool heartbeatFlag;
+    static bool switchesFlag;
     uint8_t m_frameCounter;
+    volatile uint32_t m_currentTime;
+    SwitchController m_switchController;
 
     uint8_t dipSwitchReadState();
     void radioSendState(uint8_t joyButtons, uint8_t joystick);
@@ -69,8 +80,8 @@ class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IPeriodicE
     void joyInit();
     void joyButtonsInit();
     void joyGpioDisable();
+    bool sendJoyState();
   public:
-    static bool sendJoyState;
 
     ArcJoy(ArcJoyHardwareConfig *hwConfig);
     void Run();

@@ -7,6 +7,7 @@ class IHalDelay
 {
   public:
     virtual void DelayMs(uint32_t ms) = 0;
+    virtual ~IHalDelay(){};
 };
 
 #endif
