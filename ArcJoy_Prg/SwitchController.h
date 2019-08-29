@@ -13,7 +13,7 @@ class SwitchController
     IHalGPioInput *m_switches;
     bool m_hasChanged;    
   public:
-    SwitchController(IHalGpioInput *switches, uint32_t switchesCount);
+    SwitchController(IHalGpioInput  *(*switches), uint32_t switchesCount);
     void Tick(uint8_t timeMs);
     bool HasChanged();
     uint8_t GetStateAsByte(uint8_t firstSwitch, uint8_t lastSwitch);

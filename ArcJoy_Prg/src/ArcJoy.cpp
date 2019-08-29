@@ -18,7 +18,7 @@ static uint8_t joyButtonsReadState(void);
 #define UP    4
 #define DOWN  8
 
-#define MAX_RADIO_FAILS 40
+#define MAX_RADIO_FAILS 10
 
 #define HEARTBEAT_PERIOD 1
 
@@ -30,7 +30,7 @@ bool ArcJoy::switchesFlag = false;
 static const char* switchName[5] = {"Left","Right","Up","Down","Button"};
 
 ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig):
-  m_switchController(m_pHwConfig->joySwitch, 5)
+  m_switchController(hwConfig->joySwitch, 5)
 {
   m_pHwConfig = hwConfig;
 }
@@ -128,6 +128,10 @@ void ArcJoy::Run()
           if(fails < MAX_RADIO_FAILS)
           {
             switchesFlag = true;
+          }
+          else
+          {
+            switchesFlag = false;
           }
         }
         m_pHwConfig->delay->DelayMs(100);
