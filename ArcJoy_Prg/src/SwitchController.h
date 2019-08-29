@@ -18,6 +18,7 @@ class SwitchController
     void Tick(uint32_t timeMs);
     bool HasChanged();
     uint8_t GetStateAsByte(uint8_t firstSwitch, uint8_t lastSwitch);
+    bool DebouncingInProgress();
 };
 
 #endif

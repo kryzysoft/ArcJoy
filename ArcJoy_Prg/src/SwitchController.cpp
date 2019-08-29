@@ -1,21 +1,14 @@
 #include "SwitchController.h"
 
-
-
-#include "nRF_Hal/NrfGpioInput.h"
-
-
-
 #define DEBOUNCE_TIME_MS 5
 
-SwitchController::SwitchController(IHalGpioInput *(*switches), uint32_t switchesCount):
+SwitchController::SwitchController(IHalGpioInput *switches[MAX_SWITCHES_COUNT], uint32_t switchesCount):
   m_switchesCount(switchesCount),
   m_hasChanged(false),
   m_debouncer(
     {DEBOUNCE_TIME_MS,DEBOUNCE_TIME_MS,DEBOUNCE_TIME_MS,DEBOUNCE_TIME_MS,DEBOUNCE_TIME_MS
     ,DEBOUNCE_TIME_MS,DEBOUNCE_TIME_MS,DEBOUNCE_TIME_MS,DEBOUNCE_TIME_MS,DEBOUNCE_TIME_MS})
 {
-  m_switches[0] = switches[0];
   for(uint8_t i=0; i<switchesCount; i++)
   {
     m_switches[i] = switches[i];
@@ -50,6 +43,19 @@ uint8_t SwitchController::GetStateAsByte(uint8_t firstSwitch, uint8_t lastSwitch
     if(m_debouncer[i].IsDown())
     {
       retVal|=1;
+    }
+  }
+  return retVal;
+}
+
+bool SwitchController::DebouncingInProgress()
+{
+  bool retVal = false;
+  for(uint8_t i=0; i<m_switchesCount; i++)
+  {
+    if(m_debouncer[i].DebouncingOngoing())
+    {
+      retVal = true;
     }
   }
   return retVal;

@@ -150,7 +150,17 @@ void ArcJoy::Run()
     }
     if(fails < MAX_RADIO_FAILS)
     {
-      m_pHwConfig->sleepMode->Enter();
+      if(!m_switchController.DebouncingInProgress())
+      {
+        m_pHwConfig->debounceTimer->Stop();
+        m_pHwConfig->sleepMode->Enter();
+        m_currentTime+= 1000;
+        m_pHwConfig->debounceTimer->Start();
+      }
+      else
+      {
+        m_pHwConfig->sleepMode->Enter();
+      }
     }
     else
     {
