@@ -79,8 +79,6 @@
       <file file_name="src/ArcJoy.cpp" />
       <file file_name="src/ArcJoy.h" />
       <file file_name="src/RttDebugLog.h" />
-      <file file_name="src/Debouncer.cpp" />
-      <file file_name="src/Debouncer.h" />
       <file file_name="src/SwitchController.cpp" />
       <file file_name="src/SwitchController.h" />
     </folder>

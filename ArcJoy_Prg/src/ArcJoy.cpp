@@ -30,7 +30,7 @@ bool ArcJoy::switchesFlag = false;
 static const char* switchName[5] = {"Left","Right","Up","Down","Button"};
 
 ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig):
-  m_switchController(hwConfig->joySwitch, 5)
+  m_switchController(hwConfig->joySwitch, 5, hwConfig->delay)
 {
   m_pHwConfig = hwConfig;
 }
@@ -52,9 +52,6 @@ void ArcJoy::Run()
   joyButtonsInit();
 
   DebugInfo("Set up 1ms timer");
-  m_pHwConfig->debounceTimer->SetPeriodMs(1);
-  m_pHwConfig->debounceTimer->SetPeriodicEventHandler(this);
-  m_pHwConfig->debounceTimer->Start();
 
 //  while(1)
 //  {
@@ -106,7 +103,7 @@ void ArcJoy::Run()
 
   while(true)
   {
-    m_switchController.Tick(m_currentTime);
+    m_switchController.Tick();
 
     switchesFlag = m_switchController.HasChanged();
 
@@ -150,17 +147,7 @@ void ArcJoy::Run()
     }
     if(fails < MAX_RADIO_FAILS)
     {
-      if(!m_switchController.DebouncingInProgress())
-      {
-        m_pHwConfig->debounceTimer->Stop();
-        m_pHwConfig->sleepMode->Enter();
-        m_currentTime+= 1000;
-        m_pHwConfig->debounceTimer->Start();
-      }
-      else
-      {
-        m_pHwConfig->sleepMode->Enter();
-      }
+      m_pHwConfig->sleepMode->Enter();
     }
     else
     {
@@ -285,7 +272,3 @@ void ArcJoy::RtcAlarmHandler()
   m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
 }
 
-void ArcJoy::PeriodicEventHandler()
-{
-  m_currentTime++;
-}

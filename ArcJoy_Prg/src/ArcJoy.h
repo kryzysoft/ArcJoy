@@ -58,11 +58,9 @@ typedef struct
 
   IHalDelay *delay;
 
-  IHalPeriodicEvent *debounceTimer;
-
 } ArcJoyHardwareConfig;
 
-class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IPeriodicEventHandler
+class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler
 {
   private:
     ArcJoyHardwareConfig *m_pHwConfig;
@@ -70,7 +68,6 @@ class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IPeriodicE
     static bool heartbeatFlag;
     static bool switchesFlag;
     uint8_t m_frameCounter;
-    volatile uint32_t m_currentTime;
     SwitchController m_switchController;
 
     uint8_t dipSwitchReadState();
@@ -87,7 +84,6 @@ class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IPeriodicE
     void Run();
     void RtcAlarmHandler();
     void GpioIrqHandler();
-    void PeriodicEventHandler();
 };
 
 #endif

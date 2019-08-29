@@ -100,8 +100,6 @@ static NrfSystemOffMode systemOffMode;
 static NrfSleepMode sleepMode;
 static NrfDelay delay;
 
-static NrfTimerPeriodicEvent debounceTimerEvent;
-
 int main(void)
 {
   DebugInit();
@@ -141,8 +139,6 @@ int main(void)
   hwConfig.offMode = &systemOffMode;
   hwConfig.sleepMode = &sleepMode;
   hwConfig.delay = &delay;
-
-  hwConfig.debounceTimer = &debounceTimerEvent;
 
   ArcJoy arcJoy(&hwConfig);
 
