@@ -22,8 +22,6 @@ static uint8_t joyButtonsReadState(void);
 
 #define HEARTBEAT_PERIOD 1
 
-#define DEBOUNCE_TIMEOUT_MS 5
-
 bool ArcJoy::heartbeatFlag = false;
 bool ArcJoy::switchesFlag = false;
 
@@ -103,9 +101,7 @@ void ArcJoy::Run()
 
   while(true)
   {
-    m_switchController.Tick();
-
-    switchesFlag = m_switchController.HasChanged();
+    switchesFlag =  m_switchController.HasChanged();
 
     while(heartbeatFlag || switchesFlag)
     {
@@ -140,6 +136,10 @@ void ArcJoy::Run()
         DebugInfo("joyState");
         switchesFlag = false;
         if(!sendJoyState())
+        {
+          switchesFlag = true;
+        }
+        if(m_switchController.HasChanged())
         {
           switchesFlag = true;
         }

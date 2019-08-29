@@ -4,7 +4,6 @@
 
 SwitchController::SwitchController(IHalGpioInput *switches[MAX_SWITCHES_COUNT], uint32_t switchesCount, IHalDelay *delay):
   m_switchesCount(switchesCount),
-  m_hasChanged(false),
   m_delay(delay)
 {
   for(uint8_t i=0; i<switchesCount; i++)
@@ -14,36 +13,19 @@ SwitchController::SwitchController(IHalGpioInput *switches[MAX_SWITCHES_COUNT], 
   }
 }
 
-void SwitchController::Tick()
-{
-  bool change = false;
-//  for(uint8_t i=0; i<m_switchesCount; i++)
-//  {
-//    if(m_switchStates[i] != m_switches[i]->IsUp())
-//    {
-//      change = true;
-//      break;
-//    }
-//  }
-//  if(change)
-//  {
-    m_delay->DelayMs(DEBOUNCE_TIME_MS);
-    for(uint8_t i=0; i<m_switchesCount; i++)
-    {
-      if(m_switches[i]->IsUp() != m_switchStates[i])
-      {
-        m_switchStates[i] = m_switches[i]->IsUp();
-        m_hasChanged = true;
-      }
-    }    
-//  }
-}
-
 bool SwitchController::HasChanged()
 {
-  bool retVal = m_hasChanged;
-  m_hasChanged = false;
-  return retVal;
+  bool hasChanged = false;
+  m_delay->DelayMs(DEBOUNCE_TIME_MS);
+  for(uint8_t i=0; i<m_switchesCount; i++)
+  {
+    if(m_switches[i]->IsUp() != m_switchStates[i])
+    {
+      m_switchStates[i] = m_switches[i]->IsUp();
+      hasChanged = true;
+    }
+  }    
+  return hasChanged;
 }
 
 uint8_t SwitchController::GetStateAsByte(uint8_t firstSwitch, uint8_t lastSwitch)

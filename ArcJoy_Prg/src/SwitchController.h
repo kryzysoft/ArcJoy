@@ -14,7 +14,6 @@ class SwitchController
     IHalDelay *m_delay;
     IHalGpioInput *m_switches[MAX_SWITCHES_COUNT];
     bool m_switchStates[MAX_SWITCHES_COUNT];
-    bool m_hasChanged;    
   public:
     SwitchController(IHalGpioInput *switches[MAX_SWITCHES_COUNT], uint32_t switchesCount, IHalDelay *delay);
     void Tick();
