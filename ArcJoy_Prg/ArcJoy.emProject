@@ -78,9 +78,9 @@
       <file file_name="src/main.cpp" />
       <file file_name="src/ArcJoy.cpp" />
       <file file_name="src/ArcJoy.h" />
-      <file file_name="src/RttDebugLog.h" />
       <file file_name="src/SwitchController.cpp" />
       <file file_name="src/SwitchController.h" />
+      <file file_name="src/DebugLog.h" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="src/nRF5_SDK/external/segger_rtt/SEGGER_RTT.c" />
@@ -106,6 +106,7 @@
       <file file_name="src/IHal/IHalGpioIrq.h" />
       <file file_name="src/IHal/IHalGpioWakeUp.h" />
       <file file_name="src/IHal/IHalPeriodicEvent.h" />
+      <file file_name="src/IHal/IHalDelayedEvent.h" />
     </folder>
     <configuration Name="Debug" c_preprocessor_definitions="DEBUG_RTT" />
     <folder Name="nRF_Hal">
@@ -127,8 +128,10 @@
       <file file_name="src/nRF_Hal/NrfGpioIrq.h" />
       <file file_name="src/nRF_Hal/NrfGpioWakeUp.cpp" />
       <file file_name="src/nRF_Hal/NrfGpioWakeUp.h" />
-      <file file_name="src/nRF_Hal/NrfTimerPeriodicEvent.h" />
       <file file_name="src/nRF_Hal/NrfTimerPeriodicEvent.cpp" />
+      <file file_name="src/nRF_Hal/NrfTimerPeriodicEvent.h" />
+      <file file_name="src/nRF_Hal/NrfTimerDelayedEvent.cpp" />
+      <file file_name="src/nRF_Hal/NrfTimerDelayedEvent.h" />
     </folder>
   </project>
   <configuration

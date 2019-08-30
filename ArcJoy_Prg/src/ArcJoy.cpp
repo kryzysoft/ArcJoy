@@ -1,8 +1,9 @@
 #include "ArcJoy.h"
 #include "stdint.h"
-#include "RttDebugLog.h"
+#include "DebugLog.h"
 #include "nrf_drv_clock.h"
 #include "SwitchController.h"
+#include "stdlib.h"
 
 
 void JOYAPP_Run();
@@ -28,7 +29,7 @@ bool ArcJoy::switchesFlag = false;
 static const char* switchName[5] = {"Left","Right","Up","Down","Button"};
 
 ArcJoy::ArcJoy(ArcJoyHardwareConfig *hwConfig):
-  m_switchController(hwConfig->joySwitch, 5, hwConfig->delay)
+  m_switchController(hwConfig->joySwitch, 5, hwConfig->delay), m_delayMs(100)
 {
   m_pHwConfig = hwConfig;
 }
@@ -39,6 +40,7 @@ void ArcJoy::Run()
   uint8_t dipSwitchState = 0;
   uint8_t joyButtonsState = 0;
   uint32_t fails = 0;
+  m_ledOffPending = false;
 
   uint8_t base_addr_0[4] = {'A', 'r', 'c', '1'};
   uint8_t base_addr_1[4] = {'J', 'o', 'y', '2'};
@@ -48,28 +50,6 @@ void ArcJoy::Run()
 
   joyInit();
   joyButtonsInit();
-
-  DebugInfo("Set up 1ms timer");
-
-//  while(1)
-//  {
-//    state = !state;
-//    if(state)
-//    {
-//      m_pHwConfig->blueLed->Up();
-//    }
-//    else
-//    {
-//      m_pHwConfig->blueLed->Down();
-//    }
-//
-//    switchController.Tick(m_currentTime);
-//    if(switchController.HasChanged())
-//    {
-//       
-//       DebugInfo("Change: %x", switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
-//    }
-//  }
 
   DebugInfo("Set up RTC");
   m_pHwConfig->rtcClock->SetAlarmHandler(this);
@@ -107,7 +87,8 @@ void ArcJoy::Run()
     {
       if(heartbeatFlag)
       {
-        DebugInfo("Heartbeat");
+      DebugInfo("Heartbeat %d", m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
+     //   DebugInfo("Heartbeat");
         heartbeatFlag = false;
         if(sendJoyState())
         {
@@ -127,30 +108,42 @@ void ArcJoy::Run()
             switchesFlag = false;
           }
         }
-        m_pHwConfig->delay->DelayMs(100);
-        m_pHwConfig->redLed->Down();
-        m_pHwConfig->blueLed->Down();
+
+        if(DebugInputAvailable())
+        {
+          char inputText[30];
+          DebugInputRead(inputText,30);
+          m_delayMs = atoi(inputText);
+        }
+
+        m_pHwConfig->ledOffEvent->ScheduleEvent(this,m_delayMs);
+        m_ledOffPending = true;
       }
       if(switchesFlag)
       {
-        DebugInfo("joyState");
+        DebugInfo("joyState %d", m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
         switchesFlag = false;
         if(!sendJoyState())
         {
+          DebugInfo("Fail");
           switchesFlag = true;
         }
         if(m_switchController.HasChanged())
         {
+          DebugInfo("New State");
           switchesFlag = true;
         }
       }
     }
     if(fails < MAX_RADIO_FAILS)
     {
+      DebugInfo("Sleep");
       m_pHwConfig->sleepMode->Enter();
     }
     else
     {
+      m_pHwConfig->blueLed->Down();
+      m_pHwConfig->redLed->Down();
       joyGpioDisable();
       m_pHwConfig->joyButtonWakeUp->EnableWakeUp();
       m_pHwConfig->offMode->Enter();
@@ -227,7 +220,6 @@ uint8_t ArcJoy::joyReadState(void)
 
 void ArcJoy::GpioIrqHandler()
 {
-  ArcJoy::switchesFlag = true;
 }
 
 void ArcJoy::joyButtonsInit(void)
@@ -270,5 +262,11 @@ void ArcJoy::RtcAlarmHandler()
 {
   ArcJoy::heartbeatFlag = true;
   m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
+}
+
+void ArcJoy::DelayedEventHandler()
+{
+  m_pHwConfig->blueLed->Down();
+  m_pHwConfig->redLed->Down();
 }
 

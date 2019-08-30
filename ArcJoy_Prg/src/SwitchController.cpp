@@ -19,9 +19,10 @@ bool SwitchController::HasChanged()
   m_delay->DelayMs(DEBOUNCE_TIME_MS);
   for(uint8_t i=0; i<m_switchesCount; i++)
   {
-    if(m_switches[i]->IsUp() != m_switchStates[i])
+    bool switchState = m_switches[i]->IsUp();
+    if(switchState != m_switchStates[i])
     {
-      m_switchStates[i] = m_switches[i]->IsUp();
+      m_switchStates[i] = switchState;
       hasChanged = true;
     }
   }    

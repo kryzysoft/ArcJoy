@@ -10,7 +10,7 @@
 #include "IHal/IHalDelay.h"
 #include "IHal/IHalGpioIrq.h"
 #include "IHal/IHalGpioWakeUp.h"
-#include "IHal/IHalPeriodicEvent.h"
+#include "IHal/IHalDelayedEvent.h"
 
 #include "SwitchController.h"
 
@@ -58,9 +58,11 @@ typedef struct
 
   IHalDelay *delay;
 
+  IHalDelayedEvent *ledOffEvent;
+
 } ArcJoyHardwareConfig;
 
-class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler
+class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IDelayedEventHandler
 {
   private:
     ArcJoyHardwareConfig *m_pHwConfig;
@@ -69,6 +71,8 @@ class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler
     static bool switchesFlag;
     uint8_t m_frameCounter;
     SwitchController m_switchController;
+    bool m_ledOffPending;
+    uint32_t m_delayMs;
 
     uint8_t dipSwitchReadState();
     void radioSendState(uint8_t joyButtons, uint8_t joystick);
@@ -84,6 +88,7 @@ class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler
     void Run();
     void RtcAlarmHandler();
     void GpioIrqHandler();
+    void DelayedEventHandler();
 };
 
 #endif

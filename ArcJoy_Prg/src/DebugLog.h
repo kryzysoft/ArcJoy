@@ -17,12 +17,17 @@
                        SEGGER_RTT_printf(0,__VA_ARGS__);\
                        SEGGER_RTT_printf(0,"\r\n");
 
+#define DebugInputAvailable() SEGGER_RTT_HasKey()
+#define DebugInputRead(buffer, bufferSize) SEGGER_RTT_Read(0, buffer, bufferSize)
+
 #else
 
 #define DebugInit()
 #define DebugInfo(...)
 #define DebugWarn(...)
 #define DebugErr(...)
+#define DebugInputAvailable() 0
+#define DebugInputRead(buffer, bufferSize)
 
 #endif
 

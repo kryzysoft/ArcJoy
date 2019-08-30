@@ -48,8 +48,9 @@
 #include "nRF_Hal/NrfSystemOffMode.h"
 #include "nRF_Hal/NrfSleepMode.h"
 #include "nRF_Hal/NrfDelay.h"
-#include "nRF_Hal/NrfTimerPeriodicEvent.h"
-#include "RttDebugLog.h"
+#include "nRF_Hal/NrfTimerDelayedEvent.h"
+
+#include "DebugLog.h"
 
 #define LED_R 15
 #define LED_B 14
@@ -99,6 +100,7 @@ static NrfRtc rtcClock;
 static NrfSystemOffMode systemOffMode;
 static NrfSleepMode sleepMode;
 static NrfDelay delay;
+static NrfTimerDelayedEvent ledOffEvent;
 
 int main(void)
 {
@@ -139,6 +141,8 @@ int main(void)
   hwConfig.offMode = &systemOffMode;
   hwConfig.sleepMode = &sleepMode;
   hwConfig.delay = &delay;
+
+  hwConfig.ledOffEvent = &ledOffEvent;
 
   ArcJoy arcJoy(&hwConfig);
 
