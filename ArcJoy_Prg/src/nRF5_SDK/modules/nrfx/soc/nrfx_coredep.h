@@ -60,7 +60,7 @@
  *
  * This value can be specified externally (for example, when the SoC is emulated).
  */
-#define NRFX_COREDEP_DELAY_US_LOOP_CYCLES
+//#define NRFX_COREDEP_DELAY_US_LOOP_CYCLES
 
 #elif defined(NRF51)
     #define NRFX_DELAY_CPU_FREQ_MHZ 16
@@ -150,14 +150,14 @@ __STATIC_INLINE void nrfx_coredep_delay_us(uint32_t time_us)
     #ifndef NRFX_COREDEP_DELAY_US_LOOP_CYCLES
         #if defined(NRF51)
             // The loop takes 4 cycles: 1 for SUBS, 3 for BHI.
-            #define NRFX_COREDEP_DELAY_US_LOOP_CYCLES  4
+        //    #define NRFX_COREDEP_DELAY_US_LOOP_CYCLES  4
         #elif defined(NRF52810_XXAA) || defined(NRF52811_XXAA)
             // The loop takes 7 cycles: 1 for SUBS, 2 for BHI, 2 wait states
             // for each instruction.
             #define NRFX_COREDEP_DELAY_US_LOOP_CYCLES  7
         #else
             // The loop takes 3 cycles: 1 for SUBS, 2 for BHI.
-            #define NRFX_COREDEP_DELAY_US_LOOP_CYCLES  3
+       //     #define NRFX_COREDEP_DELAY_US_LOOP_CYCLES  3
         #endif
     #endif // NRFX_COREDEP_DELAY_US_LOOP_CYCLES
     // Align the machine code, so that it can be cached properly and no extra

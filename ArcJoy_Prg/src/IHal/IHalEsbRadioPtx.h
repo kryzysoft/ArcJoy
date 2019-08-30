@@ -15,6 +15,7 @@ class IHalEsbRadioPtx
     virtual bool IsRadioBusy() = 0;
     virtual bool SendSucceeded() = 0;
     virtual void SetRfChannel(uint8_t rfChannel) = 0;
+    virtual ~IHalEsbRadioPtx(){};
 };
 
 #endif

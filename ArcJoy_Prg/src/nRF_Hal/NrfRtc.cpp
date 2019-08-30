@@ -11,7 +11,7 @@
 
 
 const nrf_drv_rtc_t NrfRtc::rtc = NRF_DRV_RTC_INSTANCE(0);
-IHalRtcAlarmHandler *NrfRtc::rtcAlarmHandler = NULL;
+IRtcAlarmHandler *NrfRtc::rtcAlarmHandler = NULL;
 
 NrfRtc::NrfRtc()
 {
@@ -31,7 +31,7 @@ void NrfRtc::SetupAlarmInSeconds(uint32_t seconds)
   nrfx_rtc_cc_set(&rtc,0,seconds*8, true);
 }
 
-void NrfRtc::SetupAlarmHandler(IHalRtcAlarmHandler *rtcAlarmHandler)
+void NrfRtc::SetAlarmHandler(IRtcAlarmHandler *rtcAlarmHandler)
 {
   NrfRtc::rtcAlarmHandler = rtcAlarmHandler;
 }

@@ -2,14 +2,28 @@
 #define ARC_JOY_H
 
 #include "IHal/IHalGpioInput.h"
-#include "IHal/IHalGpioInputIrq.h"
+#include "IHal/IHalGpioIrq.h"
 #include "IHal/IHalGpioOutput.h"
 #include "IHal/IHalEsbRadioPtx.h"
 #include "IHal/IHalRtc.h"
 #include "IHal/IHalLowPowerMode.h"
 #include "IHal/IHalDelay.h"
+#include "IHal/IHalGpioIrq.h"
+#include "IHal/IHalGpioWakeUp.h"
+#include "IHal/IHalDelayedEvent.h"
+
+#include "SwitchController.h"
 
 #include "stdint.h"
+
+enum
+{
+  LEFT_SWITCH = 0,
+  RIGHT_SWITCH = 1,
+  UP_SWITCH = 2,
+  DOWN_SWITCH = 3,
+  BUTTON_SWITCH = 4
+};
 
 typedef struct
 {
@@ -23,18 +37,18 @@ typedef struct
   IHalGpioOutput *redLed;
   IHalGpioOutput *blueLed;
 
-  IHalGpioInputIrq *joyLeft;
-  IHalGpioInputIrq *joyRight;
-  IHalGpioInputIrq *joyUp;
-  IHalGpioInputIrq *joyDown;
+  IHalGpioInput *joySwitch[5];
 
-  IHalGpioInputIrq *joyButton1;
-  IHalGpioInputIrq *joyButton2;
-  IHalGpioInputIrq *joyButton3;
-  IHalGpioInputIrq *joyButton4;
-  IHalGpioInputIrq *joyButton5;
-  IHalGpioInputIrq *joyButton6;
+  IHalGpioInput *joyButton;
 
+  IHalGpioWakeUp *joyButtonWakeUp;
+
+  IHalGpioIrq *joyLeftIrq;
+  IHalGpioIrq *joyRightIrq;
+  IHalGpioIrq *joyUpIrq;
+  IHalGpioIrq *joyDownIrq;
+
+  IHalGpioIrq *joyButtonIrq;
   IHalEsbRadioPtx *esbPtx;
 
   IHalRtc *rtcClock;
@@ -44,15 +58,23 @@ typedef struct
 
   IHalDelay *delay;
 
+  IHalDelayedEvent *ledOffEvent;
+
 } ArcJoyHardwareConfig;
 
-class ArcJoy: public IHalRtcAlarmHandler, public IHalGpioHandler
+class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IDelayedEventHandler
 {
   private:
-    ArcJoyHardwareConfig *m_pHwConfig;
+    ArcJoyHardwareConfig &m_hw;
     uint8_t m_joyNumber;
-    static bool sendHeartbeat;
+    bool m_heartbeatFlag;
+    bool m_switchesFlag;
     uint8_t m_frameCounter;
+    SwitchController m_switchController;
+    bool m_ledOffPending;
+    uint32_t m_delayMs;
+    static const int32_t MAX_RADIO_FAILS = 10;
+    static const int32_t HEARTBEAT_PERIOD = 1;
 
     uint8_t dipSwitchReadState();
     void radioSendState(uint8_t joyButtons, uint8_t joystick);
@@ -61,13 +83,14 @@ class ArcJoy: public IHalRtcAlarmHandler, public IHalGpioHandler
     void joyInit();
     void joyButtonsInit();
     void joyGpioDisable();
+    bool sendJoyState();
   public:
-    static bool sendJoyState;
 
-    ArcJoy(ArcJoyHardwareConfig *hwConfig);
+    ArcJoy(ArcJoyHardwareConfig &hwConfig);
     void Run();
     void RtcAlarmHandler();
-    void GpioHandler();
+    void GpioIrqHandler();
+    void DelayedEventHandler();
 };
 
 #endif

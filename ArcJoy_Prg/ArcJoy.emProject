@@ -15,12 +15,12 @@
       arm_simulator_memory_simulation_parameter="RWX 00000000,00100000,FFFFFFFF;RWX 20000000,00010000,CDCDCDCD"
       arm_target_device_name="nRF52810_xxAA"
       arm_target_interface_type="SWD"
-      c_preprocessor_definitions="BSP_DEFINES_ONLY;CONFIG_GPIO_AS_PINRESET;DEVELOP_IN_NRF52832;ESB_PRESENT;FLOAT_ABI_SOFT;INITIALIZE_USER_SECTIONS;NO_VTOR_CONFIG;NRF52810_XXAA;NRF52_PAN_74;NRFX_COREDEP_DELAY_US_LOOP_CYCLES=3;BOARD_CUSTOM"
+      c_preprocessor_definitions="BSP_DEFINES_ONLY;CONFIG_GPIO_AS_PINRESET;DEVELOP_IN_NRF52832;ESB_PRESENT;FLOAT_ABI_SOFT;INITIALIZE_USER_SECTIONS;NO_VTOR_CONFIG;NRF52810_XXAA;NRF52_PAN_74;BOARD_CUSTOM"
       c_user_include_directories="src;src/JoyHal;src/nRF5_SDK/components;src/nRF5_SDK/components/boards;src/nRF5_SDK/components/drivers_nrf/nrf_soc_nosd;src/nRF5_SDK/components/libraries/atomic;src/nRF5_SDK/components/libraries/balloc;src/nRF5_SDK/components/libraries/bsp;src/nRF5_SDK/components/libraries/delay;src/nRF5_SDK/components/libraries/experimental_section_vars;src/nRF5_SDK/components/libraries/log;src/nRF5_SDK/components/libraries/log/src;src/nRF5_SDK/components/libraries/memobj;src/nRF5_SDK/components/libraries/ringbuf;src/nRF5_SDK/components/libraries/strerror;src/nRF5_SDK/components/libraries/util;src/nRF5_SDK/components/proprietary_rf/esb;src/nRF5_SDK/components/toolchain/cmsis/include;src/nRF5_SDK/external/fprintf;src/nRF5_SDK/external/segger_rtt;src/nRF5_SDK/integration/nrfx;src/nRF5_SDK/integration/nrfx/legacy;src/nRF5_SDK/modules/nrfx;src/nRF5_SDK/modules/nrfx/drivers/include;src/nRF5_SDK/modules/nrfx/hal;src/nRF5_SDK/modules/nrfx/mdk;../config"
       debug_register_definition_file="src/nRF5_SDK/modules/nrfx/mdk/nrf52810.svd"
       debug_start_from_entry_point_symbol="No"
       debug_target_connection="J-Link"
-      gcc_cplusplus_language_standard="gnu++1z"
+      gcc_cplusplus_language_standard="gnu++11"
       gcc_debugging_level="Level 3"
       gcc_entry_point="Reset_Handler"
       linker_output_format="hex"
@@ -78,6 +78,9 @@
       <file file_name="src/main.cpp" />
       <file file_name="src/ArcJoy.cpp" />
       <file file_name="src/ArcJoy.h" />
+      <file file_name="src/SwitchController.cpp" />
+      <file file_name="src/SwitchController.h" />
+      <file file_name="src/DebugLog.h" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="src/nRF5_SDK/external/segger_rtt/SEGGER_RTT.c" />
@@ -92,12 +95,20 @@
     <folder Name="nRF_Properitary_RF">
       <file file_name="src/nRF5_SDK/components/proprietary_rf/esb/nrf_esb.c" />
     </folder>
-    <configuration
-      Name="Release"
-      c_additional_options=""
-      cpp_only_additional_options=""
-      gcc_cplusplus_language_standard="gnu++11" />
     <file file_name="src/nRF5_SDK/assertFix.h" />
+    <folder Name="IHal">
+      <file file_name="src/IHal/IHalEsbRadioPtx.h" />
+      <file file_name="src/IHal/IHalGpioInput.h" />
+      <file file_name="src/IHal/IHalGpioOutput.h" />
+      <file file_name="src/IHal/IHalRtc.h" />
+      <file file_name="src/IHal/IHalLowPowerMode.h" />
+      <file file_name="src/IHal/IHalDelay.h" />
+      <file file_name="src/IHal/IHalGpioIrq.h" />
+      <file file_name="src/IHal/IHalGpioWakeUp.h" />
+      <file file_name="src/IHal/IHalPeriodicEvent.h" />
+      <file file_name="src/IHal/IHalDelayedEvent.h" />
+    </folder>
+    <configuration Name="Debug" c_preprocessor_definitions="DEBUG_RTT" />
     <folder Name="nRF_Hal">
       <file file_name="src/nRF_Hal/NrfEsbRadioPtx.h" />
       <file file_name="src/nRF_Hal/NrfEsbRadioPtx.cpp" />
@@ -107,23 +118,20 @@
       <file file_name="src/nRF_Hal/NrfGpioOutput.cpp" />
       <file file_name="src/nRF_Hal/NrfRtc.h" />
       <file file_name="src/nRF_Hal/NrfRtc.cpp" />
-      <file file_name="src/nRF_Hal/NrfGpioInputIrq.h" />
-      <file file_name="src/nRF_Hal/NrfGpioInputIrq.cpp" />
       <file file_name="src/nRF_Hal/NrfSystemOffMode.h" />
       <file file_name="src/nRF_Hal/NrfSystemOffMode.cpp" />
       <file file_name="src/nRF_Hal/NrfSleepMode.cpp" />
       <file file_name="src/nRF_Hal/NrfSleepMode.h" />
       <file file_name="src/nRF_Hal/NrfDelay.h" />
       <file file_name="src/nRF_Hal/NrfDelay.cpp" />
-    </folder>
-    <folder Name="IHal">
-      <file file_name="src/IHal/IHalEsbRadioPtx.h" />
-      <file file_name="src/IHal/IHalGpioInput.h" />
-      <file file_name="src/IHal/IHalGpioOutput.h" />
-      <file file_name="src/IHal/IHalRtc.h" />
-      <file file_name="src/IHal/IHalGpioInputIrq.h" />
-      <file file_name="src/IHal/IHalLowPowerMode.h" />
-      <file file_name="src/IHal/IHalDelay.h" />
+      <file file_name="src/nRF_Hal/NrfGpioIrq.cpp" />
+      <file file_name="src/nRF_Hal/NrfGpioIrq.h" />
+      <file file_name="src/nRF_Hal/NrfGpioWakeUp.cpp" />
+      <file file_name="src/nRF_Hal/NrfGpioWakeUp.h" />
+      <file file_name="src/nRF_Hal/NrfTimerPeriodicEvent.cpp" />
+      <file file_name="src/nRF_Hal/NrfTimerPeriodicEvent.h" />
+      <file file_name="src/nRF_Hal/NrfTimerDelayedEvent.cpp" />
+      <file file_name="src/nRF_Hal/NrfTimerDelayedEvent.h" />
     </folder>
   </project>
   <configuration

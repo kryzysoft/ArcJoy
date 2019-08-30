@@ -51,6 +51,7 @@
 #include "app_error.h"
 #include "nordic_common.h"
 #include "sdk_errors.h"
+#include "nrf_delay.h"
 
 /**@brief Function for error handling, which is called when an error has occurred.
  *
