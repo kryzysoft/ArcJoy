@@ -8,6 +8,7 @@ class IHalGpioInput
     virtual bool IsDown() = 0;
     virtual void Enable() = 0;
     virtual void Disable() = 0;
+    virtual ~IHalGpioInput(){};
 };
 
 #endif
