@@ -23,7 +23,7 @@ typedef struct
   IHalRtc *rtcClock;
 } ArcBaseHardwareConfig;
 
-class ArcBase: public IHalRtcAlarmHandler
+class ArcBase: public IRtcAlarmHandler
 {
   private:
     ArcBaseHardwareConfig *m_pHwConfig;
