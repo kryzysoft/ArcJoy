@@ -2,7 +2,6 @@
 #define ARC_BASE_H
 
 #include "IHal/IHalGpioInput.h"
-#include "IHal/IHalGpioInputIrq.h"
 #include "IHal/IHalGpioOutput.h"
 #include "IHal/IHalEsbRadioPrx.h"
 #include "IHal/IHalRtc.h"
