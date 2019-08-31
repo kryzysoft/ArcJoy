@@ -196,6 +196,7 @@ uint8_t ArcJoy::joyReadState(void)
 
 void ArcJoy::GpioIrqHandler()
 {
+  DebugInfo("Wake up from gpio");
 }
 
 void ArcJoy::joyButtonsInit(void)
@@ -236,12 +237,14 @@ void ArcJoy::radioSendState(uint8_t joyButtons, uint8_t joystick)
 
 void ArcJoy::RtcAlarmHandler()
 {
+  DebugInfo("Wake up from rtc");
   m_heartbeatFlag = true;
   m_hw.rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
 }
 
 void ArcJoy::DelayedEventHandler()
 {
+  DebugInfo("Wake up from timer");
   m_hw.blueLed->Down();
   m_hw.redLed->Down();
 }
