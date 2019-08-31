@@ -130,7 +130,6 @@
       <file file_name="src/nRF_Hal/NrfEsbRadioPtx.h" />
       <file file_name="src/nRF_Hal/NrfGpioInput.cpp" />
       <file file_name="src/nRF_Hal/NrfGpioInput.h" />
-      <file file_name="src/nRF_Hal/NrfGpioInputIrq.cpp" />
       <file file_name="src/nRF_Hal/NrfGpioInputIrq.h" />
       <file file_name="src/nRF_Hal/NrfGpioOutput.cpp" />
       <file file_name="src/nRF_Hal/NrfGpioOutput.h" />
