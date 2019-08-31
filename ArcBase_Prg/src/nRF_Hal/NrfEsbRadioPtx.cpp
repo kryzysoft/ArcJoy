@@ -22,12 +22,12 @@ void NrfEsbRadioPtx::On()
     while (NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
   }
   nrf_esb_config_t nrf_esb_config         = NRF_ESB_DEFAULT_CONFIG;
-  nrf_esb_config.retransmit_count         = 6;
+  nrf_esb_config.retransmit_count         = 40;
   nrf_esb_config.selective_auto_ack       = false;
   nrf_esb_config.protocol                 = NRF_ESB_PROTOCOL_ESB_DPL;
   nrf_esb_config.bitrate                  = NRF_ESB_BITRATE_1MBPS;
   nrf_esb_config.event_handler            = NrfEsbRadioPtx::nrfEsbEventHandler;
-  nrf_esb_config.mode                     = NRF_ESB_MODE_PRX;
+  nrf_esb_config.mode                     = NRF_ESB_MODE_PTX;
 
   nrf_esb_init(&nrf_esb_config);
   m_enabled = true;
@@ -35,8 +35,6 @@ void NrfEsbRadioPtx::On()
   nrf_esb_set_base_address_0(m_baseAddress0);
   nrf_esb_set_base_address_1(m_baseAddress1);
   nrf_esb_set_prefixes(m_prefixes,8);
-
-  nrf_esb_start_rx();
 }
 
 void NrfEsbRadioPtx::SetupAddress0(uint8_t *address)
@@ -120,4 +118,9 @@ void NrfEsbRadioPtx::nrfEsbEventHandler(nrf_esb_evt_t const * p_event)
       while (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS);
       break;
   }
+}
+
+void NrfEsbRadioPtx::SetRfChannel(uint8_t rfChannel)
+{
+  nrf_esb_set_rf_channel(rfChannel);
 }

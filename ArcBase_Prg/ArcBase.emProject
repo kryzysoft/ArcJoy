@@ -122,7 +122,6 @@
       <file file_name="src/IHal/IHalLowPowerMode.h" />
       <file file_name="src/IHal/IHalRtc.h" />
       <file file_name="src/IHal/IHalEsbRadioPrx.h" />
-      <file file_name="src/IHal/IHalClock.h" />
       <file file_name="src/IHal/IHalUsbJoysticks.h" />
     </folder>
     <folder Name="nRF_Hal">
