@@ -63,8 +63,7 @@ void ArcJoy::Run()
     {
       if(m_heartbeatFlag)
       {
-      DebugInfo("Heartbeat %d", m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
-     //   DebugInfo("Heartbeat");
+        DebugInfo("Heartbeat %d", m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
         m_heartbeatFlag = false;
         if(sendJoyState())
         {
@@ -101,7 +100,7 @@ void ArcJoy::Run()
         m_switchesFlag = false;
         if(!sendJoyState())
         {
-          DebugInfo("Fail");
+          DebugWarn("Fail");
           m_switchesFlag = true;
         }
         if(m_switchController.HasChanged())
@@ -118,6 +117,7 @@ void ArcJoy::Run()
     }
     else
     {
+      DebugErr("Communication lost");
       m_hw.blueLed->Down();
       m_hw.redLed->Down();
       joyGpioDisable();
