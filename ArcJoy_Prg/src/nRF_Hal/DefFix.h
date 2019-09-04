@@ -32,3 +32,23 @@
 
 #undef STATIC_ASSERT_MSG
 #define STATIC_ASSERT_MSG(EXPR, MSG)
+
+
+
+#undef APP_USBD_CLASS_INSTANCE_INITVAL
+#define APP_USBD_CLASS_INSTANCE_INITVAL(p_ram_data,                                     \
+                                        class_methods,                                  \
+                                        interfaces_configs,                             \
+                                        class_config_part)                              \
+    {                                                                                   \
+        .specific = {                                                                   \
+            .p_data = p_ram_data,                                                       \
+            .p_class_methods = class_methods,                                           \
+            .iface = {                                                                  \
+                .cnt    = NUM_VA_ARGS(BRACKET_EXTRACT(interfaces_configs)),             \
+                .config = { APP_USBD_CLASS_IFACES_CONFIG_EXTRACT(interfaces_configs) }, \
+                .ep     = { APP_USBD_CLASS_IFACES_EP_EXTRACT(interfaces_configs) }      \
+            },                                                                          \
+            BRACKET_EXTRACT(class_config_part)                                          \
+        }                                                                               \
+    }

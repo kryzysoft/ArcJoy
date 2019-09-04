@@ -22,7 +22,7 @@ void ArcBase::Run()
   uint8_t addr_prefix[8] = {'O', 'T', 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 };
 
   DebugInfo("RTC setup");
-  m_pHwConfig->rtcClock->SetupAlarmHandler(this);
+  m_pHwConfig->rtcClock->SetAlarmHandler(this);
   m_pHwConfig->rtcClock->SetupAlarmInSeconds(HEARTBEAT_PERIOD);
 
   DebugInfo("ESB setup");

@@ -94,8 +94,6 @@
       <file file_name="src/ArcBase.cpp" />
       <file file_name="src/ArcBase.h" />
       <file file_name="src/IDebugLog.h" />
-      <file file_name="AssertsMacros.h" />
-      <file file_name="src/RttDebugLog.h" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="src/nRF5_SDK/external/segger_rtt/SEGGER_RTT.c" />
@@ -122,7 +120,6 @@
       <file file_name="src/IHal/IHalLowPowerMode.h" />
       <file file_name="src/IHal/IHalRtc.h" />
       <file file_name="src/IHal/IHalEsbRadioPrx.h" />
-      <file file_name="src/IHal/IHalClock.h" />
       <file file_name="src/IHal/IHalUsbJoysticks.h" />
     </folder>
     <folder Name="nRF_Hal">
@@ -133,7 +130,6 @@
       <file file_name="src/nRF_Hal/NrfEsbRadioPtx.h" />
       <file file_name="src/nRF_Hal/NrfGpioInput.cpp" />
       <file file_name="src/nRF_Hal/NrfGpioInput.h" />
-      <file file_name="src/nRF_Hal/NrfGpioInputIrq.cpp" />
       <file file_name="src/nRF_Hal/NrfGpioInputIrq.h" />
       <file file_name="src/nRF_Hal/NrfGpioOutput.cpp" />
       <file file_name="src/nRF_Hal/NrfGpioOutput.h" />

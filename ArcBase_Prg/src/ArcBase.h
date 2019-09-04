@@ -2,7 +2,6 @@
 #define ARC_BASE_H
 
 #include "IHal/IHalGpioInput.h"
-#include "IHal/IHalGpioInputIrq.h"
 #include "IHal/IHalGpioOutput.h"
 #include "IHal/IHalEsbRadioPrx.h"
 #include "IHal/IHalRtc.h"
@@ -23,7 +22,7 @@ typedef struct
   IHalRtc *rtcClock;
 } ArcBaseHardwareConfig;
 
-class ArcBase: public IHalRtcAlarmHandler
+class ArcBase: public IRtcAlarmHandler
 {
   private:
     ArcBaseHardwareConfig *m_pHwConfig;
