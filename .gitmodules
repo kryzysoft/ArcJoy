@@ -1,3 +1,6 @@
 [submodule "ArcJoy_Prg/src/IHal"]
 	path = ArcJoy_Prg/src/IHal
 	url = https://github.com/kryzysoft/IHal.git
+[submodule "ArcBase_Prg/src/IHal"]
+	path = ArcBase_Prg/src/IHal
+	url = https://github.com/kryzysoft/IHal.git
