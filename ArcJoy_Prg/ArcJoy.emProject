@@ -76,7 +76,12 @@
     <folder Name="Application">
       <file file_name="src/sdk_config.h" />
       <file file_name="src/main.cpp" />
-      <file file_name="src/ArcJoy.cpp" />
+      <file file_name="src/ArcJoy.cpp">
+        <configuration
+          Name="Debug"
+          c_enforce_ansi_checking="Yes"
+          gcc_enable_all_warnings="Yes" />
+      </file>
       <file file_name="src/ArcJoy.h" />
       <file file_name="src/SwitchController.cpp" />
       <file file_name="src/SwitchController.h" />

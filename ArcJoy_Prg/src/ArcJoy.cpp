@@ -6,17 +6,14 @@
 #include "stdlib.h"
 
 ArcJoy::ArcJoy(ArcJoyHardwareConfig &hwConfig):
-  m_hw(hwConfig), m_switchController(hwConfig.joySwitch, 5, hwConfig.delay), m_delayMs(100), m_heartbeatFlag(false), m_switchesFlag(false)
+  m_hw(hwConfig), m_switchController(hwConfig.joySwitch, 5, hwConfig.delay), m_heartbeatFlag(false), m_switchesFlag(false)
 {
 }
 
 void ArcJoy::Run()
 {
-  uint8_t joyState = 0;
-  uint8_t dipSwitchState = 0;
-  uint8_t joyButtonsState = 0;
-  uint32_t fails = 0;
   m_ledOffPending = false;
+  m_fails = 0;
 
   uint8_t base_addr_0[4] = {'A', 'r', 'c', '1'};
   uint8_t base_addr_1[4] = {'J', 'o', 'y', '2'};
@@ -37,9 +34,6 @@ void ArcJoy::Run()
   m_hw.esbPtx->SetupAddressPrefixes(addr_prefix,8);
   m_hw.esbPtx->SetRfChannel(27);
 
-  bool led = false;
-
-
   m_hw.dipSwitch1->Enable();
   if(m_hw.dipSwitch1->IsUp())
   {
@@ -51,83 +45,94 @@ void ArcJoy::Run()
   }
   m_hw.dipSwitch1->Disable();
 
-
   DebugInfo("Application run");
-
 
   while(true)
   {
-    m_switchesFlag =  m_switchController.HasChanged();
-
-    while(m_heartbeatFlag || m_switchesFlag)
-    {
-      if(m_heartbeatFlag)
-      {
-        DebugInfo("Heartbeat %d", m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
-        m_heartbeatFlag = false;
-        if(sendJoyState())
-        {
-          fails = 0;
-          m_hw.blueLed->Up();
-        }
-        else
-        {
-          fails++;
-          m_hw.redLed->Up();
-          if(fails < MAX_RADIO_FAILS)
-          {
-            m_switchesFlag = true;
-          }
-          else
-          {
-            m_switchesFlag = false;
-          }
-        }
-
-        if(DebugInputAvailable())
-        {
-          char inputText[30];
-          DebugInputRead(inputText,30);
-          m_delayMs = atoi(inputText);
-        }
-
-        m_hw.ledOffEvent->ScheduleEvent(this,m_delayMs);
-        m_ledOffPending = true;
-      }
-      if(m_switchesFlag)
-      {
-        DebugInfo("joyState %d", m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
-        m_switchesFlag = false;
-        if(!sendJoyState())
-        {
-          DebugWarn("Fail");
-          m_switchesFlag = true;
-        }
-        if(m_switchController.HasChanged())
-        {
-          DebugInfo("New State");
-          m_switchesFlag = true;
-        }
-      }
-    }
-    if(fails < MAX_RADIO_FAILS)
-    {
-      DebugInfo("Sleep");
-      m_hw.sleepMode->Enter();
-    }
-    else
-    {
-      DebugErr("Communication lost");
-      m_hw.blueLed->Down();
-      m_hw.redLed->Down();
-      joyGpioDisable();
-      m_hw.joyButtonWakeUp->EnableWakeUp();
-      m_hw.offMode->Enter();
-    }
+    infiniteLoopBody();
   }
 }
 
-bool ArcJoy::sendJoyState()
+void ArcJoy::infiniteLoopBody()
+{
+  m_switchesFlag =  m_switchController.HasChanged();
+
+  while(m_heartbeatFlag || m_switchesFlag)
+  {
+    if(m_heartbeatFlag)
+    {
+      sendHeartbeat();
+    }
+    if(m_switchesFlag)
+    {
+      sendJoyState();
+    }
+  }
+  manageSleep();
+}
+
+void ArcJoy::sendHeartbeat()
+{
+  DebugInfo("Heartbeat %d", m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
+  m_heartbeatFlag = false;
+  if(sendState())
+  {
+    m_fails = 0;
+    m_hw.blueLed->Up();
+  }
+  else
+  {
+    m_fails++;
+    m_hw.redLed->Up();
+    if(m_fails < MAX_RADIO_FAILS)
+    {
+      m_switchesFlag = true;
+    }
+    else
+    {
+      m_switchesFlag = false;
+    }
+  }
+
+  m_hw.ledOffEvent->ScheduleEvent(this,LED_PERIOD_MS);
+  m_ledOffPending = true;
+}
+
+void ArcJoy::sendJoyState()
+{
+  DebugInfo("joyState %d", m_switchController.GetStateAsByte(LEFT_SWITCH,DOWN_SWITCH));
+  m_switchesFlag = false;
+  if(!sendState())
+  {
+    DebugWarn("Fail");
+    m_switchesFlag = true;
+  }
+  if(m_switchController.HasChanged())
+  {
+    DebugInfo("New State");
+    m_switchesFlag = true;
+  }
+}
+
+void ArcJoy::manageSleep()
+{
+  if(m_fails < MAX_RADIO_FAILS)
+  {
+    DebugInfo("Sleep");
+    m_hw.sleepMode->Enter();
+  }
+  else
+  {
+    DebugErr("Communication lost");
+    m_hw.blueLed->Down();
+    m_hw.redLed->Down();
+    joyGpioDisable();
+    m_hw.joyButtonWakeUp->EnableWakeUp();
+    m_hw.offMode->Enter();
+  }
+}
+
+bool ArcJoy::sendState()
 {
   m_hw.esbPtx->On();
   uint8_t joyState = joyReadState();

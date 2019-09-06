@@ -67,14 +67,15 @@ class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IDelayedEv
   private:
     ArcJoyHardwareConfig &m_hw;
     uint8_t m_joyNumber;
+    SwitchController m_switchController;
     bool m_heartbeatFlag;
     bool m_switchesFlag;
     uint8_t m_frameCounter;
-    SwitchController m_switchController;
     bool m_ledOffPending;
-    uint32_t m_delayMs;
     static const int32_t MAX_RADIO_FAILS = 10;
     static const int32_t HEARTBEAT_PERIOD = 1;
+    static const int32_t LED_PERIOD_MS = 100;
+    uint32_t m_fails;
 
     uint8_t dipSwitchReadState();
     void radioSendState(uint8_t joyButtons, uint8_t joystick);
@@ -83,7 +84,11 @@ class ArcJoy: public IRtcAlarmHandler, public IGpioIrqHandler, public IDelayedEv
     void joyInit();
     void joyButtonsInit();
     void joyGpioDisable();
-    bool sendJoyState();
+    bool sendState();
+    void infiniteLoopBody();
+    void sendHeartbeat();
+    void sendJoyState();
+    void manageSleep();
   public:
 
     ArcJoy(ArcJoyHardwareConfig &hwConfig);
