@@ -4,3 +4,6 @@
 [submodule "ArcBase_Prg/src/IHal"]
 	path = ArcBase_Prg/src/IHal
 	url = https://github.com/kryzysoft/IHal.git
+[submodule "src/nRF_Hal"]
+	path = src/nRF_Hal
+	url = https://github.com/kryzysoft/nRF_Hal.git
