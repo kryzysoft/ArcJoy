@@ -7,3 +7,6 @@
 [submodule "ArcJoy_Prg/src/nRF_Hal"]
 	path = ArcJoy_Prg/src/nRF_Hal
 	url = https://github.com/kryzysoft/nRF_Hal.git
+[submodule "ArcBase_Prg/src/nRF_Hal"]
+	path = ArcBase_Prg/src/nRF_Hal
+	url = https://github.com/kryzysoft/nRF_Hal.git
